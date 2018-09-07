@@ -1,0 +1,21 @@
+{
+  "name": "all-things-being-equal",
+  "version": "0.0.0",
+  "description": "Ploughing through a ton of JavaScript files, grouping similar files",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "esprima",
+    "ast",
+    "diff"
+  ],
+  "author": "Claudius Coenen",
+  "license": "MIT",
+  "dependencies": {
+    "deep-diff": "^0.3.3",
+    "esprima": "^2.7.1",
+    "glob": "^6.0.3"
+  }
+}
