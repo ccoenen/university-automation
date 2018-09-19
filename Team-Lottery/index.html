@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="de">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Team Lottery!</title>
+		<link rel="stylesheet" href="lottery.css">
+	</head>
+	<body>
+		<p id="settings">
+			<input id="groupNumber" value="8" size="2" type="number" min="0"> groups,
+			dice 1: <input id="d1" size="2" type="number" min="1">,
+			dice 2: <input id="d2" size="2" type="number" min="1">
+			<button id="start">start</button>
+		</p>
+		<textarea id="names" placeholder="names, one per line" rows="35"></textarea>
+		<div id="candidates"></div>
+		<div id="playground"></div>
+		<script type="module" src="lottery.js"></script>
+	</body>
+</html>
