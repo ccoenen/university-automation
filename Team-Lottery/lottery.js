@@ -61,7 +61,7 @@ function candidateChange() {
 			const c = document.createElement('div');
 			c.id = "candidate-" + i;
 			c.classList.add("candidate");
-			c.innerHTML = `${hashes[i][0]}<br>(<code>${hashes[i][1]}</code>)`;
+			c.innerHTML = `${hashes[i][0]}`; // <br>(<code>${hashes[i][1]}</code>)
 			candidateList.appendChild(c);
 		}
 	});
@@ -83,7 +83,11 @@ function draw() {
 	const g = $('#group-' + groupPointer);
 
 	if (candidateList.children.length > 0) {
-		const active = candidateList.children[candidateList.children.length - 1];
+		if (candidatePointer >= candidateList.children.length) {
+			candidatePointer = 0;
+		}
+		updatePointerHighlight();
+		const active = candidateList.children[candidatePointer];
 		const first = active.getBoundingClientRect();
 		g.appendChild(active);
 		const last = active.getBoundingClientRect();
@@ -103,11 +107,25 @@ function draw() {
 			transformOrigin: 'top left',
 			transform: 'none'
 		}], {
-			duration: 300,
+			duration: 200,
 			easing: 'ease-in-out',
 			fill: 'both'
 		});
-		setTimeout(draw, 300);
+
+		if (candidateList.children.length > candidatePointer) { // beware we already changed the dom. this IS the following element!
+			const follower = candidateList.children[candidatePointer];
+			follower.animate([{
+				marginTop: first.height + 'px'
+			}, {
+				marginTop: 0
+			}], {
+				delay: 100,
+				duration: 100,
+				easing: 'ease-in-out',
+				fill: 'both'
+			});
+		}
+		setTimeout(draw, 250);
 	}
 	groupPointer = ++groupPointer % groupNumber;
-};
+}
