@@ -27,8 +27,8 @@ function groupChange() {
 	}
 	for (let i = 0; i < groupNumber; i++) {
 		const c = document.createElement('div');
-		c.id = "group-" + i;
-		c.classList.add("group");
+		c.id = 'group-' + i;
+		c.classList.add('group');
 		c.innerHTML = `<h2>Gruppe ${i+1}</h2><ul></ul>`;
 		playground.appendChild(c);
 	}
@@ -41,11 +41,11 @@ function candidateChange() {
 		.filter((c) => c);
 
 	const d1 = parseInt($('#d1').value, 10);
-	const encoder = new TextEncoder("utf-8");
+	const encoder = new TextEncoder('utf-8');
 
 	Promise.all(names.map((name) => {
 		var buffer = encoder.encode(name + d1);
-		return crypto.subtle.digest("SHA-256", buffer).then((hash) => [name, hash]);
+		return crypto.subtle.digest('SHA-256', buffer).then((hash) => [name, hash]);
 	})).then((hashes) => {
 		hashes.forEach((h) => {
 			h[1] = hex(h[1]).substr(0,12);
@@ -59,8 +59,8 @@ function candidateChange() {
 		}
 		for (let i = 0; i < hashes.length; i++) {
 			const c = document.createElement('div');
-			c.id = "candidate-" + i;
-			c.classList.add("candidate");
+			c.id = 'candidate-' + i;
+			c.classList.add('candidate');
 			c.innerHTML = `${hashes[i][0]}`; // <br>(<code>${hashes[i][1]}</code>)
 			candidateList.appendChild(c);
 		}
@@ -70,7 +70,7 @@ function candidateChange() {
 function updatePointerHighlight() {
 	document.querySelectorAll('.candidate').forEach((c) => {
 		c.classList.remove('active');
-	})
+	});
 	const candidates = $('#candidates');
 	if (candidatePointer >= candidates.children.length) {
 		candidatePointer = 0;
