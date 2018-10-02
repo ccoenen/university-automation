@@ -13,11 +13,11 @@
   "author": "Claudius Coenen",
   "license": "MIT",
   "dependencies": {
-    "bluebird": "^3.5.0",
-    "fast-csv": "^1.1.0",
+    "bluebird": "^3.5.2",
+    "fast-csv": "^2.4.1",
     "hogan": "^1.0.2",
-    "nodemailer": "^2.3.1",
-    "webdav-fs": "1.0.0-rc7",
-    "xml2js": "^0.4.16"
+    "nodemailer": "^2.7.2",
+    "webdav-fs": "1.11.0",
+    "xml2js": "^0.4.19"
   }
 }
