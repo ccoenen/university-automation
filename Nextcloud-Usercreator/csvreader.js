@@ -51,6 +51,7 @@ module.exports = function read(filename) {
 				preparedObject.password = passwordGenerator(preparedObject.userid);
 
 				if (data.Gruppe) { preparedObject.gruppe = data.Gruppe; }
+				if (data.veranstaltung) { preparedObject.veranstaltung = data.veranstaltung; }
 				if (data.Veranstaltung) { preparedObject.veranstaltung = data.Veranstaltung; }
 
 				if (preparedObject.name.length < 1 || preparedObject.userid.length < 1) {

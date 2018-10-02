@@ -2,6 +2,9 @@
 config/*.js
 input-data/
 
+# ignores old import data (personal convention)
+import ??????_/
+
 
 # Created by https://www.gitignore.io/api/node
 
