@@ -1,0 +1,18 @@
+### Project ###
+config/*.js
+input-data/
+
+
+# Created by https://www.gitignore.io/api/node
+
+### Node ###
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Dependency directories
+node_modules
+
+# Optional npm cache directory
+.npm

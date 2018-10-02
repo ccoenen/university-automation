@@ -1,0 +1,23 @@
+{
+  "name": "nextcloud-usercreator",
+  "version": "0.0.0",
+  "description": "mass creation of users on a nextcloud-instance from csv-sheets",
+  "main": "creator.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "nextcloud",
+    "user-provisioning"
+  ],
+  "author": "Claudius Coenen",
+  "license": "MIT",
+  "dependencies": {
+    "bluebird": "^3.5.0",
+    "fast-csv": "^1.1.0",
+    "hogan": "^1.0.2",
+    "nodemailer": "^2.3.1",
+    "webdav-fs": "1.0.0-rc7",
+    "xml2js": "^0.4.16"
+  }
+}

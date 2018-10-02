@@ -1,0 +1,29 @@
+// most of these values will be given directly to https.request()
+// see https://nodejs.org/api/https.html for additional options
+module.exports = {
+	auth: 'admin-username:admin-password',
+	hostname: 'nextcloud.example.com',
+	port: 443,
+	headers: {
+		'Connection': 'keep-alive'
+	},
+
+
+	// We'll prefix all requests with this, it might be different on your server
+	// If you don't run your setup in the /my-nextcloud-subdir/ subdir, remove the first part.
+	api_path: '/my-nextcloud-subdir/ocs/v1.php/',
+
+	// WebDav-Path
+	webdav_path: 'https://example.com/my-nextcloud-subdir/remote.php/webdav',
+
+	// admin password, repeated
+	adminpwd: 'admin-password',
+
+
+	// for sending email
+	smtp_auth: 'smtps://user:password@mail.example.com',
+	mail_template_file: './password-mail.mustache',
+	mail_subject: 'Automated Password Mail',
+	mail_from: 'nextcloud-admin@example.com',
+	mail_bcc_recipients: 'nextcloud-admin@example.com'
+};
