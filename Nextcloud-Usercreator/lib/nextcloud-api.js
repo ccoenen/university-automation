@@ -22,11 +22,11 @@ module.exports = function apiFactory(baseOptions) {
 							password: user.password
 						}).then((result) => {
 							fulfill(result);
-						});
+						}).catch(reject);
 					} else {
 						fulfill(result);
 					}
-				});
+				}).catch(reject);
 			});
 		},
 
@@ -132,12 +132,13 @@ module.exports = function apiFactory(baseOptions) {
 				if (data) {
 					req.write(formdata);
 				}
-				req.end();
 
 				req.on('error', (e) => {
 					console.error(e);
 					reject(e);
 				});
+
+				req.end();
 			});
 		}
 	};

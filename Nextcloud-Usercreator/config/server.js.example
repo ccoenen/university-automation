@@ -25,5 +25,6 @@ module.exports = {
 	mail_template_file: './password-mail.mustache',
 	mail_subject: 'Automated Password Mail',
 	mail_from: 'nextcloud-admin@example.com',
+	mail_reply_to: 'nextcloud-admin@example.com',
 	mail_bcc_recipients: 'nextcloud-admin@example.com'
 };

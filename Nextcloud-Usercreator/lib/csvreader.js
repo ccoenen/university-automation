@@ -1,7 +1,7 @@
 const fs = require('fs');
 const csv = require('fast-csv');
 
-const passwordGenerator = require('./lib/passwordGenerator')('input-data/password.salt');
+const passwordGenerator = require('./passwordGenerator')('input-data/password.salt');
 
 
 function nameFromRow(row) {

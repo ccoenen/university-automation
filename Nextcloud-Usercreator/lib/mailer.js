@@ -30,6 +30,10 @@ function send(user) {
 			text: template.render(user)
 		};
 
+		if (CONFIG.mail_reply_to) {
+			mailOptions.replyTo = CONFIG.mail_reply_to;
+		}
+
 		// send mail with defined transport object
 		transporter.sendMail(mailOptions, function(error, info){
 			if(error){

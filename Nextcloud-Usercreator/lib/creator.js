@@ -24,9 +24,9 @@ function debuginfo(result) {
 			console.log("Status Code 102 %s for %s", result.xml.ocs.meta[0].message[0], JSON.stringify(result.request));
 		} else if (result.xml.ocs.meta[0].statuscode[0] == 100) {
 			// all is well
-		} else if (result.xml.ocs.meta[0].statuscode[0] == 403 && result.xml.ocs.meta[0].message[0] == 'Path already shared with this group') {
+		} else if (result.xml.ocs.meta[0].statuscode[0] == 403 && result.xml.ocs.meta[0].message[0] == 'Path is already shared with this group') {
 			// all is well
-		} else if (result.xml.ocs.meta[0].statuscode[0] == 403 && result.xml.ocs.meta[0].message[0] == 'Path already shared with this user') {
+		} else if (result.xml.ocs.meta[0].statuscode[0] == 403 && result.xml.ocs.meta[0].message[0] == 'Path is already shared with this user') {
 			// all is well
 		} else {
 			console.dir(result.request);
@@ -42,6 +42,7 @@ function updateUser(user) {
 		promises.push(api.changeUserProperty(user.userid, 'email', user.email));
 	}
 	if (user.password && creator.options.resetPassword) {
+		console.log(`attempting to reset password for ${user.userid}`);
 		promises.push(api.changeUserProperty(user.userid, 'password', user.password));
 	}
 	if (user.name) {
@@ -68,21 +69,23 @@ function createSingleUser(currentUser) {
 		// console.log(" - groups: " + currentUser.groups.join(', '));
 		return api.setGroups(currentUser.userid, currentUser.groups).then(debuginfo);
 	}).then(() => {
-		return Promise.all(Object.keys(currentUser.shares).map((dirname) => {
+		let chain = Promise.resolve();
+		Object.keys(currentUser.shares).forEach((dirname) => {
 			// console.log(' - create dir %s', dirname);
-			return createDirectoryAs(dirname, [creator.options.webdav_path, currentUser.userid, currentUser.password]).then(() => {
-				// console.log('   - share %s with %s', dirname, currentUser.shares[dirname].shareWith);
-				return api.share(dirname, currentUser.shares[dirname], { auth: currentUser.userid + ':' + currentUser.password }).then(debuginfo);
-			}, (err) => {
-				if (err.status != 405) { // 405 is
-					console.error("createDirectoryAs failed: ", JSON.stringify(err), dirname);
-				} else {
-					console.log("Directory exists: ", dirname);
-				}
-				// console.log('   - share %s with %s', dirname, currentUser.shares[dirname].shareWith);
-				return api.share(dirname, currentUser.shares[dirname], { auth: currentUser.userid + ':' + currentUser.password }).then(debuginfo);
+			chain = chain.then(() => {
+				return createDirectoryAs(dirname, [creator.options.webdav_path, currentUser.userid, currentUser.password]).catch((err) => {
+					if (err.status != 405) { // 405 is
+						console.error("createDirectoryAs failed: ", JSON.stringify(err), dirname);
+					} else {
+						console.log("Directory exists: ", dirname);
+					}
+				}).then(() => {
+					// console.log('   - share %s with %s', dirname, currentUser.shares[dirname].shareWith);
+					return api.share(dirname, currentUser.shares[dirname], { auth: currentUser.userid + ':' + currentUser.password }).then(debuginfo);
+				});
 			});
-		}));
+		});
+		return chain;
 	});
 }
 
