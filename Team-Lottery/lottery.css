@@ -48,7 +48,8 @@ code, textarea {
 }
 
 .candidate {
-	padding: 3px;
+	margin-bottom: 1px;
+	padding: 4px;
 	border-radius: 3px;
 	transition: position 0.3s ease;
 	background-color: #3e424d;
@@ -67,4 +68,10 @@ code, textarea {
 .group h2 {
 	text-align: center;
 	margin-top: 0;
+}
+
+span.tag {
+	background-color: #32363f;
+	padding: 4px;
+	margin: 0 3px;
 }

@@ -1,7 +1,11 @@
 import {hex} from './helpers.js';
+import Group from './model/Group.js';
+import Item from './model/Item.js';
 
 const $ = document.querySelector.bind(document);
+const candidates = [];
 let candidatePointer = 0;
+const groups = [];
 let groupNumber;
 let groupPointer = 0;
 
@@ -25,12 +29,12 @@ function groupChange() {
 	while (playground.children.length > 0) {
 		playground.removeChild(playground.children[0]);
 	}
+	groups.splice(0,groups.length); // empty the array as well.
+
 	for (let i = 0; i < groupNumber; i++) {
-		const c = document.createElement('div');
-		c.id = 'group-' + i;
-		c.classList.add('group');
-		c.innerHTML = `<h2>Gruppe ${i+1}</h2><ul></ul>`;
-		playground.appendChild(c);
+		const g = new Group(i);
+		playground.appendChild(g.domElement);
+		groups.push(g);
 	}
 }
 
@@ -42,13 +46,14 @@ function candidateChange() {
 
 	const d1 = parseInt($('#d1').value, 10);
 	const encoder = new TextEncoder('utf-8');
+	candidates.splice(0, candidates.length);
 
 	Promise.all(names.map((name) => {
 		var buffer = encoder.encode(name + d1);
 		return crypto.subtle.digest('SHA-256', buffer).then((hash) => [name, hash]);
 	})).then((hashes) => {
 		hashes.forEach((h) => {
-			h[1] = hex(h[1]).substr(0,12);
+			h[1] = hex(h[1]).substr(0,6);
 		});
 		hashes = hashes.sort((a, b) => {
 			return a[1].localeCompare(b[1]);
@@ -58,13 +63,12 @@ function candidateChange() {
 			candidateList.removeChild(candidateList.children[0]);
 		}
 		for (let i = 0; i < hashes.length; i++) {
-			const c = document.createElement('div');
-			c.id = 'candidate-' + i;
-			c.classList.add('candidate');
-			c.innerHTML = `${hashes[i][0]}`; // <br>(<code>${hashes[i][1]}</code>)
-			candidateList.appendChild(c);
+			const item = new Item(i, hashes[i][0], hashes[i][1]);
+			candidateList.appendChild(item.domElement);
+			candidates.push(item);
 		}
 	});
+	groupChange();
 }
 
 function updatePointerHighlight() {
@@ -79,25 +83,45 @@ function updatePointerHighlight() {
 }
 
 function draw() {
-	const candidateList = $('#candidates');
-	const g = $('#group-' + groupPointer);
+	if (candidates.length == 0) { return; }
 
-	if (candidateList.children.length > 0) {
-		if (candidatePointer >= candidateList.children.length) {
-			candidatePointer = 0;
-		}
+	const g = groups[groupPointer];
+	if (candidatePointer >= candidates.length) {
+		candidatePointer = 0;
+	}
+	const active = candidates[candidatePointer];
+
+	var rejection = rejectMemberReason(active, g);
+	if (rejection) {
+		candidatePointer++;
+		// wiggle
+		active.domElement.animate([
+			{transform: 'translate(-10px, 0)'},
+			{transform: 'translate(10px, 0)'}
+		], {
+			duration: 200,
+			easing: 'ease-in-out',
+		});
+		rejection.domElement.animate([
+			{transform: 'translate(-10px, 0)'},
+			{transform: 'translate(10px, 0)'}
+		], {
+			duration: 200,
+			easing: 'ease-in-out',
+		});
+	} else {
 		updatePointerHighlight();
-		const active = candidateList.children[candidatePointer];
-		const first = active.getBoundingClientRect();
-		g.appendChild(active);
-		const last = active.getBoundingClientRect();
+		const first = active.domElement.getBoundingClientRect();
+		g.add(active);
+		candidates.splice(candidatePointer,1);
+		const last = active.domElement.getBoundingClientRect();
 
 		const deltaX = first.left - last.left;
 		const deltaY = first.top - last.top;
 		const deltaW = first.width / last.width;
 		const deltaH = first.height / last.height;
 
-		active.animate([{
+		active.domElement.animate([{
 			transformOrigin: 'top left',
 			transform: `
 				translate(${deltaX}px, ${deltaY}px)
@@ -112,9 +136,9 @@ function draw() {
 			fill: 'both'
 		});
 
-		if (candidateList.children.length > candidatePointer) { // beware we already changed the dom. this IS the following element!
-			const follower = candidateList.children[candidatePointer];
-			follower.animate([{
+		if (candidates.length > candidatePointer) { // beware we already changed the dom. this IS the following element!
+			const follower = candidates[candidatePointer];
+			follower.domElement.animate([{
 				marginTop: first.height + 'px'
 			}, {
 				marginTop: 0
@@ -125,7 +149,34 @@ function draw() {
 				fill: 'both'
 			});
 		}
-		setTimeout(draw, 250);
+		groupPointer = ++groupPointer % groupNumber;
 	}
-	groupPointer = ++groupPointer % groupNumber;
+
+	setTimeout(draw, 250);
+}
+
+function rejectMemberReason(candidate, group) {
+	// conflicts with another team member
+	for (let m in group.members) {
+		const existingMember = group.members[m];
+		for (let t in candidate.tags) {
+			const candidateTag = candidate.tags[t];
+			if (existingMember.tags.includes(candidateTag)) {
+				return existingMember;
+			}
+		}
+	}
+
+	// conflicts with gender diversity
+	const genders = group.members.map((m) => m.gender);
+	const sameGender = genders.reduce((n, value) => {
+		return n + (value === candidate.gender);
+	}, 0);
+	if (sameGender / group.members.length > 0.67) {
+		// more than two thirds already have the same gender, this is not a good idea.
+		return group;
+	}
+
+	// if we end up here, we return false, which means "no rejection"
+	return false;
 }

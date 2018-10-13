@@ -10,7 +10,7 @@ Eingabe:
 * Nimmt optional kategorische Ausschlusskriterien (z.B. soundsoviele Männer/Frauen)
 * Nimmt optional "alte" Gruppenlisten oder sonstige Ausschlusskriterien als Input
 
-Ziele: 
+Ziele:
 
 * Zufällige Gruppenzusammenstellung
 * Diverse Gruppen
