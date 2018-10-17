@@ -3,6 +3,7 @@ import Group from './model/Group.js';
 import Item from './model/Item.js';
 
 const $ = document.querySelector.bind(document);
+let autorun = false;
 const candidates = [];
 let candidatePointer = 0;
 let stepSize = 1;
@@ -18,7 +19,17 @@ $('#d1').addEventListener('change', candidateChange);
 $('#d2').addEventListener('change', (e) => {
 	stepSize = parseInt(e.currentTarget.value, 10);
 });
-$('#start').addEventListener('click', draw);
+$('#run').addEventListener('click', () => {
+	autorun = true;
+	draw();
+});
+$('#step').addEventListener('click', () => {
+	autorun = false;
+	draw();
+});
+$('#pause').addEventListener('click', () => {
+	autorun = false;
+});
 groupChange();
 candidateChange();
 
@@ -155,7 +166,9 @@ function draw() {
 		candidatePointer += (stepSize - 1); // -1 because we just removed one person from the list anyway.
 	}
 
-	setTimeout(draw, 250);
+	if (autorun) {
+		setTimeout(draw, $('#animations').checked ? 250 : 5);
+	}
 }
 
 function rejectMemberReason(candidate, group) {
