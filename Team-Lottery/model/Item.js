@@ -12,7 +12,8 @@ export default class Item {
 		this.domElement.id = 'candidate-' + id;
 		this.domElement.classList.add('candidate');
 		this.domElement.classList.add(`gender-${this.gender}`);
+		const tagStuff = this.tags.map((t) => `<span class="tag" data-tag-name="${t}"></span>`).join('');
 		this.domElement.innerHTML = `<span class="name">${this.label}</span><br><code class="hash">${this.hash}</code>
-			<span class="tag">${this.tags.join('</span><span class="tag">')}</span>`;
+			${tagStuff}`;
 	}
 }

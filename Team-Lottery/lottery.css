@@ -76,11 +76,17 @@ textarea {
 	text-align: center;
 	margin-top: 0;
 }
+.group h2 span.markdown {
+	font-size: 0;
+}
 
 span.tag {
 	background-color: #32363f;
 	padding: 4px;
 	margin: 0 3px;
+}
+span.tag::before {
+	content: attr(data-tag-name);
 }
 
 code.hash {
