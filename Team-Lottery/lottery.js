@@ -163,7 +163,7 @@ function rejectMemberReason(candidate, group) {
 	const sameGender = genders.reduce((n, value) => {
 		return n + (value === candidate.gender);
 	}, 0);
-	if (sameGender / group.members.length > 0.5) {
+	if (sameGender / group.members.length > 0.67) {
 		// more than two thirds already have the same gender, this is not a good idea.
 		reasons.push(group.domElement.querySelector('h2'));
 		reasons.push(...group.members.filter((m) => m.gender === candidate.gender).map((m) => m.domElement));
