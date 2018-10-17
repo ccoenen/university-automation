@@ -40,7 +40,9 @@ export function rejectionWiggle(rejected, rejectionReasons) {
 		{transform: 'translate(-10px, 0)', color: 'red'},
 		{transform: 'translate(10px, 0)', color: 'inherit'}
 	], {
-		duration: ANIMATION_DURATION,
+		duration: ANIMATION_DURATION / 3,
+		direction: 'alternate',
+		iterations: 3,
 		easing: 'ease-in-out',
 	});
 	rejectionReasons.forEach((element) => {

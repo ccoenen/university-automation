@@ -18,9 +18,7 @@ $('#groupNumber').addEventListener('keyup', groupChange);
 $('#names').addEventListener('change', candidateChange);
 $('#names').addEventListener('keyup', candidateChange);
 $('#d1').addEventListener('change', candidateChange);
-$('#d2').addEventListener('change', (e) => {
-	stepSize = parseInt(e.currentTarget.value, 10);
-});
+$('#d2').addEventListener('change', candidateChange);
 $('#run').addEventListener('click', () => {
 	autorun = true;
 	draw();
@@ -66,6 +64,7 @@ function candidateChange() {
 		.filter((c) => c);
 
 	const d1 = parseInt($('#d1').value, 10);
+	stepSize = parseInt($('#d2').value, 10);
 	const encoder = new TextEncoder('utf-8');
 	candidates.splice(0, candidates.length);
 
@@ -145,7 +144,7 @@ function draw() {
 		g.add(active);
 		const after = active.domElement.getBoundingClientRect();
 		moveCandidateToGroup(active, before, after);
-		if (follower) {
+		if (follower && $('#animations').checked) {
 			closeGap(follower, before.height);
 		}
 
@@ -156,7 +155,7 @@ function draw() {
 	}
 
 	if (autorun) {
-		setTimeout(draw, $('#animations').checked ? ANIMATION_DURATION + 50 : 5);
+		setTimeout(draw, $('#animations').checked ? ANIMATION_DURATION + 50 : 0);
 	}
 }
 
@@ -181,6 +180,7 @@ function rejectMemberReason(candidate, group) {
 	if (sameGender / group.members.length > 0.67) {
 		// more than two thirds already have the same gender, this is not a good idea.
 		reasons.push(group.domElement.querySelector('h2'));
+		// pushing all the members with same gender to the reasons array.
 		reasons.push(...group.members.filter((m) => m.gender === candidate.gender).map((m) => m.domElement));
 	}
 
