@@ -21,6 +21,11 @@ code, textarea {
 	font-family:Consolas,Monaco,Hack,Adobe Source Code Pro,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;
 }
 
+textarea {
+	white-space: pre;
+	overflow-x: auto;
+}
+
 #settings {
 	grid-column: 1/-1;
 	grid-row: 1;
@@ -35,6 +40,7 @@ code, textarea {
 #candidates {
 	grid-column: 2;
 	grid-row: 2;
+	overflow-x: hidden;
 	overflow-y: scroll;
 }
 
@@ -75,4 +81,17 @@ span.tag {
 	background-color: #32363f;
 	padding: 4px;
 	margin: 0 3px;
+}
+
+code.hash {
+	display: none;
+}
+body.hashes code.hash {
+	display: inline;
+}
+span.name {
+	display: none;
+}
+body.names span.name {
+	display: inline;
 }

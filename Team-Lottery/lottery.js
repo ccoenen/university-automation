@@ -1,6 +1,7 @@
 import {hex} from './helpers.js';
 import Group from './model/Group.js';
 import Item from './model/Item.js';
+import {ANIMATION_DURATION, closeGap, moveCandidateToGroup, rejectionWiggle} from './animations.js';
 
 const $ = document.querySelector.bind(document);
 let autorun = false;
@@ -29,6 +30,12 @@ $('#step').addEventListener('click', () => {
 });
 $('#pause').addEventListener('click', () => {
 	autorun = false;
+});
+$('#showHashes').addEventListener('change', (e) => {
+	document.body.classList.toggle('hashes', e.currentTarget.checked);
+});
+$('#showNames').addEventListener('change', (e) => {
+	document.body.classList.toggle('names', e.currentTarget.checked);
 });
 groupChange();
 candidateChange();
@@ -88,15 +95,21 @@ function updatePointerHighlight() {
 	document.querySelectorAll('.candidate').forEach((c) => {
 		c.classList.remove('active');
 	});
-	const candidates = $('#candidates');
-	if (candidatePointer >= candidates.children.length) {
+	if (candidates.length === 0) {
+		return;
+	}
+
+	if (candidatePointer >= candidates.length) {
 		candidatePointer = candidatePointer % candidates.length;
 	}
-	candidates.children[candidatePointer].classList.add('active');
+	candidates[candidatePointer].domElement.classList.add('active');
 }
 
 function draw() {
-	if (candidates.length == 0) { return; }
+	if (candidates.length == 0) {
+		updatePointerHighlight();
+		return;
+	}
 
 	const g = groups[groupPointer];
 	if (candidatePointer >= candidates.length) {
@@ -105,80 +118,42 @@ function draw() {
 	updatePointerHighlight();
 	const active = candidates[candidatePointer];
 
-	var rejection = rejectMemberReason(active, g);
-	if (rejection) {
+	var reasons = rejectMemberReason(active, g);
+	if (reasons.length > 0) {
 		candidatePointer += stepSize;
-		// wiggle
-		active.domElement.animate([
-			{transform: 'translate(-10px, 0)'},
-			{transform: 'translate(10px, 0)'}
-		], {
-			duration: 200,
-			easing: 'ease-in-out',
-		});
-		rejection.domElement.animate([
-			{transform: 'translate(-10px, 0)'},
-			{transform: 'translate(10px, 0)'}
-		], {
-			duration: 200,
-			easing: 'ease-in-out',
-		});
-	} else {
-		const first = active.domElement.getBoundingClientRect();
-		g.add(active);
-		candidates.splice(candidatePointer, 1);
-		const last = active.domElement.getBoundingClientRect();
-
-		const deltaX = first.left - last.left;
-		const deltaY = first.top - last.top;
-		const deltaW = first.width / last.width;
-		const deltaH = first.height / last.height;
-
-		active.domElement.animate([{
-			transformOrigin: 'top left',
-			transform: `
-				translate(${deltaX}px, ${deltaY}px)
-				scale(${deltaW}, ${deltaH})
-			`
-		}, {
-			transformOrigin: 'top left',
-			transform: 'none'
-		}], {
-			duration: 200,
-			easing: 'ease-in-out',
-			fill: 'both'
-		});
-
-		if (candidates.length > candidatePointer) { // beware we already changed the dom. this IS the following element!
-			const follower = candidates[candidatePointer];
-			follower.domElement.animate([{
-				marginTop: first.height + 'px'
-			}, {
-				marginTop: 0
-			}], {
-				delay: 100,
-				duration: 100,
-				easing: 'ease-in-out',
-				fill: 'both'
-			});
+		if ($('#animations').checked) {
+			rejectionWiggle(active, reasons);
 		}
+	} else {
+		const follower = active.domElement.nextSibling;
+		const before = active.domElement.getBoundingClientRect();
+		g.add(active);
+		const after = active.domElement.getBoundingClientRect();
+		moveCandidateToGroup(active, before, after);
+		if (follower) {
+			closeGap(follower, before.height);
+		}
+
+		candidates.splice(candidatePointer, 1);
+
 		groupPointer = ++groupPointer % groups.length;
 		candidatePointer += (stepSize - 1); // -1 because we just removed one person from the list anyway.
 	}
 
 	if (autorun) {
-		setTimeout(draw, $('#animations').checked ? 250 : 5);
+		setTimeout(draw, $('#animations').checked ? ANIMATION_DURATION + 50 : 5);
 	}
 }
 
 function rejectMemberReason(candidate, group) {
+	const reasons = [];
 	// conflicts with another team member
 	for (let m in group.members) {
 		const existingMember = group.members[m];
 		for (let t in candidate.tags) {
 			const candidateTag = candidate.tags[t];
 			if (existingMember.tags.includes(candidateTag)) {
-				return existingMember;
+				reasons.push(existingMember.domElement.querySelectorAll('span.tag')[t]);
 			}
 		}
 	}
@@ -188,11 +163,11 @@ function rejectMemberReason(candidate, group) {
 	const sameGender = genders.reduce((n, value) => {
 		return n + (value === candidate.gender);
 	}, 0);
-	if (sameGender / group.members.length > 0.67) {
+	if (sameGender / group.members.length > 0.5) {
 		// more than two thirds already have the same gender, this is not a good idea.
-		return group;
+		reasons.push(group.domElement.querySelector('h2'));
+		reasons.push(...group.members.filter((m) => m.gender === candidate.gender).map((m) => m.domElement));
 	}
 
-	// if we end up here, we return false, which means "no rejection"
-	return false;
+	return reasons;
 }
