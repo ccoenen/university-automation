@@ -47,10 +47,11 @@ Namensliste -> Kandidatenliste -> Gruppenliste
 
 * Würfeln #2 für die Schrittgröße
   -> Um so viele Stellen wird nach jedem Kandidaten weiter gezählt. Wird zB eine 2 gewürfelt, wird immer eine Person übersprungen.
+  -> Ausnahme: wenn die Schrittgröße ein Vielfaches der Länge der Kandidatenliste ist, ergibt es keinen Sinn (weil in jedem Durchlauf die selbe Person dran wäre). In dem Fall wird ausnahmsweise einfach um _eine_ Person weiter gezählt.
 
 * Auslosung
-  -> Kandidaten der Reihe nach auf Gruppen verteilt.
   -> Die Liste ist ausreichend zufällig, so dass dadurch kein Nachteil für die "hinteren" Plätze entsteht.
-  -> Bei Verteilung wird auf Ausschlusskriterien geachtet, Wenn die nächste Person in der Liste nicht "passt" wird sie übersprungen
+  -> Im Normalfall wird die aktuelle Person der aktuellen Gruppe zugeordnet. Danach geht es mit der nächsten Person und der nächsten Gruppe weiter.
+  -> Bei Verteilung wird auf Ausschlusskriterien geachtet, Wenn die nächste Person in der Liste nicht "passt" wird sie übersprungen und die nächste Person der aktuellen Gruppe zugeordnet.
 
 * Kann die Liste nicht vollständig abgearbeitet werden, wird einfach neu gewürfelt.

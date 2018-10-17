@@ -10,6 +10,7 @@ let candidatePointer = 0;
 let stepSize = 1;
 const groups = [];
 let groupPointer = 0;
+let rejectionCounter = 0;
 
 $('#groupNumber').addEventListener('change', groupChange);
 $('#groupNumber').addEventListener('pointerup', groupChange);
@@ -120,11 +121,25 @@ function draw() {
 
 	var reasons = rejectMemberReason(active, g);
 	if (reasons.length > 0) {
-		candidatePointer += stepSize;
+		rejectionCounter++;
 		if ($('#animations').checked) {
 			rejectionWiggle(active, reasons);
 		}
+		candidatePointer += stepSize;
+		if (stepSize % candidates.length === 0) {
+			candidatePointer++;
+		}
+		if (rejectionCounter > candidates.length) {
+			// too many retries.
+			rejectionCounter = 0;
+			autorun = false;
+
+			// we're not currently skipping groups. Without further work this would
+			// lead to uneven group sizes.
+			// groupPointer = ++groupPointer % groups.length;
+		}
 	} else {
+		rejectionCounter = 0;
 		const follower = active.domElement.nextSibling;
 		const before = active.domElement.getBoundingClientRect();
 		g.add(active);
