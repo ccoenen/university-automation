@@ -12,7 +12,7 @@ export default class Item {
 		this.domElement.id = 'candidate-' + id;
 		this.domElement.classList.add('candidate');
 		this.domElement.classList.add(`gender-${this.gender}`);
-		this.domElement.innerHTML = `${this.label} (<code>${this.hash}</code>)<br>
+		this.domElement.innerHTML = `${this.label}<br>(<code>${this.hash}</code>)
 			<span class="tag">${this.tags.join('</span><span class="tag">')}</span>`;
 	}
 }

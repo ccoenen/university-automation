@@ -45,9 +45,11 @@ Namensliste -> Kandidatenliste -> Gruppenliste
   -> nachvollziehbare aber zufällige Kandidatenliste
   -> Personen werden nicht bevorzugt, weil sie im Alphabet weit vorne stehen
 
-* Würfeln #2 für einen Initialisierungsvektor ("IV")
-  -> Höchste erlaubte Zahl ist die Anzahl der Kandidaten. Liegt das Würfel-Ergebnis darüber, wird neu geworfen.
-  -> Am Index des Würfelwurfes wird begonnen, Kandidaten der Reihe nach auf Gruppen zu verteilen.
+* Würfeln #2 für die Schrittgröße
+  -> Um so viele Stellen wird nach jedem Kandidaten weiter gezählt. Wird zB eine 2 gewürfelt, wird immer eine Person übersprungen.
+
+* Auslosung
+  -> Kandidaten der Reihe nach auf Gruppen verteilt.
   -> Die Liste ist ausreichend zufällig, so dass dadurch kein Nachteil für die "hinteren" Plätze entsteht.
   -> Bei Verteilung wird auf Ausschlusskriterien geachtet, Wenn die nächste Person in der Liste nicht "passt" wird sie übersprungen
 

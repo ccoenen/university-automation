@@ -5,8 +5,8 @@ import Item from './model/Item.js';
 const $ = document.querySelector.bind(document);
 const candidates = [];
 let candidatePointer = 0;
+let stepSize = 1;
 const groups = [];
-let groupNumber;
 let groupPointer = 0;
 
 $('#groupNumber').addEventListener('change', groupChange);
@@ -16,15 +16,14 @@ $('#names').addEventListener('change', candidateChange);
 $('#names').addEventListener('keyup', candidateChange);
 $('#d1').addEventListener('change', candidateChange);
 $('#d2').addEventListener('change', (e) => {
-	candidatePointer = parseInt(e.currentTarget.value, 10) - 1;
-	updatePointerHighlight();
+	stepSize = parseInt(e.currentTarget.value, 10);
 });
 $('#start').addEventListener('click', draw);
 groupChange();
 candidateChange();
 
 function groupChange() {
-	groupNumber = parseInt($('#groupNumber').value, 10);
+	const groupNumber = parseInt($('#groupNumber').value, 10);
 	const playground = $('#playground');
 	while (playground.children.length > 0) {
 		playground.removeChild(playground.children[0]);
@@ -36,6 +35,9 @@ function groupChange() {
 		playground.appendChild(g.domElement);
 		groups.push(g);
 	}
+
+	stepSize = parseInt($('#d2').value, 10);
+	groupPointer = 0;
 }
 
 function candidateChange() {
@@ -77,7 +79,7 @@ function updatePointerHighlight() {
 	});
 	const candidates = $('#candidates');
 	if (candidatePointer >= candidates.children.length) {
-		candidatePointer = 0;
+		candidatePointer = candidatePointer % candidates.length;
 	}
 	candidates.children[candidatePointer].classList.add('active');
 }
@@ -87,13 +89,14 @@ function draw() {
 
 	const g = groups[groupPointer];
 	if (candidatePointer >= candidates.length) {
-		candidatePointer = 0;
+		candidatePointer = candidatePointer % candidates.length;
 	}
+	updatePointerHighlight();
 	const active = candidates[candidatePointer];
 
 	var rejection = rejectMemberReason(active, g);
 	if (rejection) {
-		candidatePointer++;
+		candidatePointer += stepSize;
 		// wiggle
 		active.domElement.animate([
 			{transform: 'translate(-10px, 0)'},
@@ -110,10 +113,9 @@ function draw() {
 			easing: 'ease-in-out',
 		});
 	} else {
-		updatePointerHighlight();
 		const first = active.domElement.getBoundingClientRect();
 		g.add(active);
-		candidates.splice(candidatePointer,1);
+		candidates.splice(candidatePointer, 1);
 		const last = active.domElement.getBoundingClientRect();
 
 		const deltaX = first.left - last.left;
@@ -149,7 +151,8 @@ function draw() {
 				fill: 'both'
 			});
 		}
-		groupPointer = ++groupPointer % groupNumber;
+		groupPointer = ++groupPointer % groups.length;
+		candidatePointer += (stepSize - 1); // -1 because we just removed one person from the list anyway.
 	}
 
 	setTimeout(draw, 250);
