@@ -161,6 +161,7 @@ function draw() {
 
 function rejectMemberReason(candidate, group) {
 	const reasons = [];
+
 	// conflicts with another team member
 	for (let m in group.members) {
 		const existingMember = group.members[m];
@@ -173,15 +174,17 @@ function rejectMemberReason(candidate, group) {
 	}
 
 	// conflicts with gender diversity
-	const genders = group.members.map((m) => m.gender);
-	const sameGender = genders.reduce((n, value) => {
-		return n + (value === candidate.gender);
-	}, 0);
-	if (sameGender / group.members.length > 0.67) {
-		// more than two thirds already have the same gender, this is not a good idea.
-		reasons.push(group.domElement.querySelector('h2'));
-		// pushing all the members with same gender to the reasons array.
-		reasons.push(...group.members.filter((m) => m.gender === candidate.gender).map((m) => m.domElement));
+	if (candidate.gender) {
+		const genders = group.members.map((m) => m.gender);
+		const sameGender = genders.reduce((n, value) => {
+			return n + (value === candidate.gender);
+		}, 0);
+		if (sameGender / group.members.length > 0.67) {
+			// more than two thirds already have the same gender, this is not a good idea.
+			reasons.push(group.domElement.querySelector('h2'));
+			// pushing all the members with same gender to the reasons array.
+			reasons.push(...group.members.filter((m) => m.gender === candidate.gender).map((m) => m.domElement));
+		}
 	}
 
 	return reasons;
