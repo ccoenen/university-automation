@@ -48,10 +48,14 @@ Homescreen
 
 
 # Product- und Brand Names, Common Abbreviations
+ABPO
 ADHS
 Appstore
 Arduino
+ARCore
+ARKit
 AWS
+Beidou
 BigData
 Bitkom
 BMI
@@ -60,7 +64,10 @@ CMYK
 DarkNet
 Destatis
 ESA
+GFK
+GLONASS
 heise
+HMD
 HoloLens
 Instagram
 JavaScript
@@ -69,12 +76,14 @@ Jameda
 KI
 LGBTQ
 MAMP
+MMO
 MongoDB
 MVP
 Netdoktor
 NuxtJS
 OpenCV
 PDF
+Playstation
 Shopify
 Smartphone
 Smartwatch
@@ -134,8 +143,9 @@ Researcharbeit
 Research-Arbeit
 Research-Projekt
 Mehrspielervernetzung
-spielfremden
 spielaffine
+Spieleindustrie
+spielfremden
 Spieleraccount
 technikaffin
 Gamern
@@ -159,3 +169,4 @@ Applogo
 Appfunktionen
 wertig
 nutzerzentrierte
+zerstörungsresistent

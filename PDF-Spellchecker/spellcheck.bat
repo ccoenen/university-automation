@@ -7,7 +7,7 @@ echo Usage: run spellcheck.bat filename
 :: - xpdf (more specifically: pdftotext)
 :: - sort, grep, uniq, date (included in git, for example)
 
-set DICPATH=C:\Users\amenthes\workspace\h_da Automatisierungs-Tools\PDF-Spellchecker\dictionaries
+set DICPATH=C:\Users\amenthes\workspace\university-automation\PDF-Spellchecker\dictionaries
 set DICTIONARIES=de_DE_frami,en_GB,en_US,imd-special-words
 set HUNSPELL_EXE=C:\Tools\msys64\mingw32\bin\hunspell.exe
 set PDFTOTEXT_EXE=C:\Tools\xpdfbin-win-3.04\bin64\pdftotext.exe
@@ -76,6 +76,6 @@ echo. >> "%REPORT_FILE%"
 echo [7m%REPORT_FILE%[0m written.
 
 :: opening the report in the default editor
-"%REPORT_FILE%"
+start "first parameter is not used anyway. Hi, everyone." "%REPORT_FILE%"
 
 ENDLOCAL
