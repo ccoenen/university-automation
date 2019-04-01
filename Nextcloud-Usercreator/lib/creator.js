@@ -66,6 +66,8 @@ function createSingleUser(currentUser) {
 		// console.log(" - settings");
 		return updateUser(currentUser).then(debuginfo);
 	}).then(() => {
+		return api.enableUser(currentUser).then(debuginfo);
+	}).then(() => {
 		// console.log(" - groups: " + currentUser.groups.join(', '));
 		return api.setGroups(currentUser.userid, currentUser.groups).then(debuginfo);
 	}).then(() => {
@@ -99,9 +101,11 @@ const creator = {
 	createUserGroups: (users) => {
 		var groups = [];
 		users.forEach((user) => {
-			user.groups.forEach((group) => {
-				if (groups.indexOf(group) < 0) { groups.push(group); }
-			});
+			if (user.groups) {
+				user.groups.forEach((group) => {
+					if (groups.indexOf(group) < 0) { groups.push(group); }
+				});
+			}
 		});
 		// console.log("- Attempting to create these groups:", groups);
 		return api.addGroups(groups);

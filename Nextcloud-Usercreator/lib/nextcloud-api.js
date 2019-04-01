@@ -30,6 +30,14 @@ module.exports = function apiFactory(baseOptions) {
 			});
 		},
 
+		enableUser: (user) => {
+			return new Promise(function (fulfill, reject) {
+				api.put('cloud/users/' + user.userid + '/enable')
+					.then(fulfill)
+					.catch(reject);
+			});
+		},
+
 		changeUserProperty: (userid, propertyName, propertyValue, opts) => {
 			return api.put('cloud/users/' + userid, {
 				key: propertyName,
