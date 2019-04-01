@@ -2,6 +2,7 @@
   "name": "nextcloud-usercreator",
   "version": "1.1.0",
   "description": "mass creation of users on a nextcloud-instance from csv-sheets",
+  "repository": "https://github.com/ccoenen/university-automation",
   "main": "creator.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
