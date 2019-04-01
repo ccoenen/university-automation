@@ -27,3 +27,12 @@ D
 The score is calculated based on the abstract syntax tree, so white space and
 trivial changes are irrelevant. Another score is calculated ignoring names and
 numbers, discovering simplistic refactoring like changing variable names.
+
+"S" is for structural differences (variable names are irrelevant)
+"L" is for literal differences (variable names and values are relevant)
+S will always be smaller than L.
+
+Literal similarity (lack of differences, small number) may point at someone copying verbatim.
+Structural similarity (lack of differences, small number) may point at someone copying with slight changes.
+
+You'll also be presented with the number of tokens in the file pair. It is more meant as a measure of complexity of each file. Very dissimilar token counts can't be the same file.
