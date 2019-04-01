@@ -64,6 +64,11 @@ module.exports = function read(filename) {
 			.on('end', () => {
 				console.log('CSV %s has been parsed, %d entries', filename, lines.length);
 				fulfill(lines);
+			})
+
+			.on('error', (err) => {
+				console.error(`Failed to parse ${filename}: ${err.message}`);
+				process.exit(1);
 			});
 		
 		fileStream.pipe(csvStream);

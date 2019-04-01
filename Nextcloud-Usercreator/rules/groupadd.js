@@ -1,4 +1,4 @@
-module.exports = function (lists, config) {
+module.exports = function (lists) {
 	var users = [];
 
 	const groupname = process.env.GROUPNAME; // "Mitarbeiter";
@@ -7,7 +7,7 @@ module.exports = function (lists, config) {
 		process.exit(1);
 	}
 
-	lists[0].forEach((list) => {
+	lists.forEach((list) => {
 		list.forEach((item) => {
 			item.groups = [groupname];
 			users.push(item);
