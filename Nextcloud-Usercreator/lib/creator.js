@@ -24,6 +24,8 @@ function debuginfo(result) {
 			console.log("Status Code 102 %s for %s", result.xml.ocs.meta[0].message[0], JSON.stringify(result.request));
 		} else if (result.xml.ocs.meta[0].statuscode[0] == 100) {
 			// all is well
+		} else if (result.xml.ocs.meta[0].statuscode[0] == 101 && result.request.path.endsWith('/enable')) {
+			console.log("User already enabled, nothing to do.");
 		} else if (result.xml.ocs.meta[0].statuscode[0] == 403 && result.xml.ocs.meta[0].message[0] == 'Path is already shared with this group') {
 			// all is well
 		} else if (result.xml.ocs.meta[0].statuscode[0] == 403 && result.xml.ocs.meta[0].message[0] == 'Path is already shared with this user') {

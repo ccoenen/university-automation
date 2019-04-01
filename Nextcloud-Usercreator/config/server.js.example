@@ -17,7 +17,9 @@ module.exports = {
 	webdav_path: 'https://example.com/my-nextcloud-subdir/remote.php/webdav',
 
 	// admin password, repeated
+	adminuser: 'inspectorgadget',
 	adminpwd: 'admin-password',
+	adminemail: 'example@example.com',
 
 
 	// for sending email
