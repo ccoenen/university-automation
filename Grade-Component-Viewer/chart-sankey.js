@@ -1,8 +1,8 @@
 function chart(graph, options) {
 	options = options || {};
-	var margin = options.margin || {top: 10, right: 10, bottom: 10, left: 10};
-	var width = options.width || 1200 - margin.left - margin.right;
-	var height = options.height || 1100 - margin.top - margin.bottom;
+	var margin = options.margin || {top: 20, right: 20, bottom: 20, left: 20};
+	var width = options.width || window.innerWidth - margin.left - margin.right - 20;
+	var height = options.height || window.innerHeight - margin.top - margin.bottom - 20;
 
 	var formatNumber = d3.format(",.1f");
 	var format = function(d) { return formatNumber(d) + "%"; };
@@ -99,7 +99,7 @@ function chart(graph, options) {
 		.attr("dy", ".35em")
 		.attr("text-anchor", "end")
 		.attr("transform", null)
-		.text(function(d) { return d.name; })
+		.text(function(d) { return `${d.name} (${Math.round(d.relativeValue * 100)} %)` ; })
 	.filter(function(d) { return d.x < width / 2; })
 		.attr("x", 6 + sankey.nodeWidth())
 		.attr("text-anchor", "start");
