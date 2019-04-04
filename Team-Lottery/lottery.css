@@ -6,6 +6,7 @@ body {
 
 	margin: 0;
 	height: 100vh;
+	overflow: hidden;
 
 	background-color: #282c34;
 	color: #abb2bf;
@@ -26,6 +27,11 @@ textarea {
 	overflow-x: auto;
 }
 
+h2 {
+	font-weight: normal;
+	opacity: 0.5;
+}
+
 #settings {
 	grid-column: 1/-1;
 	grid-row: 1;
@@ -42,6 +48,7 @@ textarea {
 	grid-row: 2;
 	overflow-x: hidden;
 	overflow-y: scroll;
+	scrollbar-width: none;
 }
 
 #playground {
@@ -55,9 +62,12 @@ textarea {
 }
 
 .candidate {
+	position: relative;
+
 	margin-bottom: 1px;
-	padding: 4px;
+	padding: 4px 0 4px 8px;
 	border-radius: 3px;
+
 	transition: position 0.3s ease;
 	background-color: #3e424d;
 }
@@ -65,6 +75,15 @@ textarea {
 .candidate.active {
 	color: white;
 }
+
+.candidate::after {
+	content: '.';
+	visibility: hidden;
+	display: block;
+	height: 0;
+	clear: right;
+}
+
 
 .group {
 	float: left;
@@ -80,24 +99,47 @@ textarea {
 	font-size: 0;
 }
 
+span.tags {
+	float:right;
+	text-align: right;
+	opacity: 0.8;
+}
+
 span.tag {
 	background-color: #32363f;
-	padding: 4px;
-	margin: 0 3px;
+	padding: 2px;
+	margin: 0;
+	white-space: nowrap;
+	font-size: 0.7em;
+	line-height: 0.7em;
 }
 span.tag::before {
 	content: attr(data-tag-name);
 }
 
 code.hash {
-	display: none;
+	display: block;
+	position: absolute;
+	visibility: hidden;
+
+	top: -8px;
+	left: 0;
+
+	color: #282c34;
+	font-family: 'Consolas', 'DejaVu Sans Mono', monospace;
+	font-size: 4em;
+	z-index: 0;
 }
 body.hashes code.hash {
-	display: inline;
+	visibility: visible;
 }
 span.name {
-	display: none;
+	position: relative;
+	visibility: hidden;
+
+	font-size: 1.5em;
+	letter-spacing: 0.04em;
 }
 body.names span.name {
-	display: inline;
+	visibility: visible;
 }
