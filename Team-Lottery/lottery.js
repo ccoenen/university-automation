@@ -43,7 +43,17 @@ $('#namebox .tab').addEventListener('click', () => {
 groupChange();
 candidateChange();
 
+document.addEventListener('paste', (e) => {
+	e.preventDefault();
+	const clipboardData = e.clipboardData || window.clipboardData;
+	const data = clipboardData.getData('text/plain');
+	$('#names').value = data;
+	candidateChange();
+});
+
 document.addEventListener('copy', (e) => {
+	e.preventDefault();
+
 	e.clipboardData.setData('text/plain', groups.map((g) => {
 		const members = g.members.map(m => `- ${m.label}`).sort().join('\n');
 		return '# ' + g.domElement.querySelector('h2').innerText + '\n' + members;
@@ -54,16 +64,15 @@ document.addEventListener('copy', (e) => {
 		const items = g.members.map(m => m.label).sort().join('</li><li>');
 		return `<h2>${heading}</h2><ul><li>${items}</li></ul>`;
 	}).join('\n'));
-
-	e.preventDefault();
 });
 
 document.addEventListener('cut', (e) => {
+	e.preventDefault();
+
 	e.clipboardData.setData('text/plain', '"Name"\t"Gruppe"\r\n' + groups.map((g) => {
 		const group = `"${g.domElement.querySelector('h2').innerText}"`;
 		return g.members.map(m => `"${m.label}"\t${group}`).sort().join('\r\n');
 	}).sort().join('\r\n'));
-	e.preventDefault();
 });
 
 function groupChange() {
