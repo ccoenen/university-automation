@@ -8,7 +8,6 @@ const $ = document.querySelector.bind(document);
 let autorun = false;
 const candidates = [];
 let candidatePointer = 0;
-let stepSize = 1;
 const groups = [];
 let groupPointer = 0;
 let rejectionCounter = 0;
@@ -18,8 +17,7 @@ $('#groupNumber').addEventListener('pointerup', groupChange);
 $('#groupNumber').addEventListener('keyup', groupChange);
 $('#names').addEventListener('change', candidateChange);
 $('#names').addEventListener('keyup', candidateChange);
-$('#d1').addEventListener('change', candidateChange);
-$('#d2').addEventListener('change', candidateChange);
+$('#randomness').addEventListener('change', candidateChange);
 $('#run').addEventListener('click', () => {
 	autorun = true;
 	draw();
@@ -112,7 +110,6 @@ function groupChange() {
 		groups.push(g);
 	}
 
-	stepSize = parseInt($('#d2').value, 10);
 	groupPointer = 0;
 }
 
@@ -122,8 +119,7 @@ function candidateChange() {
 		.map((c) => c.trim())
 		.filter((c) => c);
 
-	const d1 = parseInt($('#d1').value, 10);
-	stepSize = parseInt($('#d2').value, 10);
+	const d1 = parseInt($('#randomness').value, 10);
 	const encoder = new TextEncoder('utf-8');
 	candidates.splice(0, candidates.length);
 
@@ -198,10 +194,7 @@ function draw() {
 		if ($('#animations').checked) {
 			rejectionWiggle(active, reasons);
 		}
-		candidatePointer += stepSize;
-		if (stepSize % candidates.length === 0) {
-			candidatePointer++;
-		}
+		candidatePointer += 1;
 		if (rejectionCounter > candidates.length) {
 			// too many retries.
 			rejectionCounter = 0;
@@ -225,7 +218,7 @@ function draw() {
 		candidates.splice(candidatePointer, 1);
 
 		groupPointer = ++groupPointer % groups.length;
-		candidatePointer += (stepSize - 1); // -1 because we just removed one person from the list anyway.
+		// not modifying candidatePointer because we just removed one person from the list anyway.
 	}
 
 	if (autorun) {
