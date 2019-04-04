@@ -14,5 +14,16 @@ export default class Group {
 	add(item) {
 		this.domElement.appendChild(item.domElement);
 		this.members.push(item);
+
+		// remove from previous group
+		let oldGroup = item.group;
+		if (oldGroup !== null) {
+			const oldId = oldGroup.members.indexOf(item);
+			if (oldId > -1) {
+				oldGroup.members.splice(oldId, 1);
+			}
+		}
+
+		item.group = this;
 	}
 }

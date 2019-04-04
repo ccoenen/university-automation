@@ -35,12 +35,12 @@ export function moveCandidateToGroup(candidate, first, last) {
 	});
 }
 
-export function rejectionWiggle(rejected, rejectionReasons) {
+export function rejectionWiggle(rejected, rejectionReasons, duration = ANIMATION_DURATION) {
 	rejected.domElement.animate([
 		{transform: 'translate(-10px, 0)', color: 'red'},
 		{transform: 'translate(10px, 0)', color: 'inherit'}
 	], {
-		duration: ANIMATION_DURATION / 3,
+		duration: duration / 3,
 		direction: 'alternate',
 		iterations: 3,
 		easing: 'ease-in-out',
@@ -50,8 +50,15 @@ export function rejectionWiggle(rejected, rejectionReasons) {
 			{color: 'red'},
 			{color: 'inherit'}
 		], {
-			duration: ANIMATION_DURATION,
+			duration: duration,
 			easing: 'ease-in-out',
 		});
+	});
+}
+
+export function eternalRejectionDisplay(rejected, rejectionReasons, color) {
+	rejected.domElement.style.color = color;
+	rejectionReasons.forEach((element) => {
+		element.style.color = color;
 	});
 }

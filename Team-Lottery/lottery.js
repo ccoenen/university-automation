@@ -1,7 +1,8 @@
 import {hex} from './helpers.js';
 import Group from './model/Group.js';
 import Item from './model/Item.js';
-import {ANIMATION_DURATION, closeGap, moveCandidateToGroup, rejectionWiggle} from './animations.js';
+import {grabify, dropify} from './dragAndDrop.js';
+import {ANIMATION_DURATION, closeGap, moveCandidateToGroup, rejectionWiggle, eternalRejectionDisplay} from './animations.js';
 
 const $ = document.querySelector.bind(document);
 let autorun = false;
@@ -49,6 +50,29 @@ function groupChange() {
 
 	for (let i = 0; i < groupNumber; i++) {
 		const g = new Group(i);
+
+		dropify(g.domElement, (event, draggable) => {
+			const item = draggable.original.lotteryItem;
+			const group = event.currentTarget.lotteryGroup;
+
+			const follower = item.domElement.nextSibling;
+			const shadow = item.domElement.getBoundingClientRect();
+			const before = draggable.element.getBoundingClientRect();
+			if (item.group === null) {
+				let index = candidates.indexOf(item);
+				if (index > -1) {
+					candidates.splice(index, 1);
+				}
+			}
+			group.add(item);
+			const after = item.domElement.getBoundingClientRect();
+			moveCandidateToGroup(item, before, after);
+			if (follower && $('#animations').checked) {
+				closeGap(follower, shadow.height);
+			}
+			updatePointerHighlight();
+		});
+
 		playground.appendChild(g.domElement);
 		groups.push(g);
 	}
@@ -73,7 +97,7 @@ function candidateChange() {
 		return crypto.subtle.digest('SHA-256', buffer).then((hash) => [name, hash]);
 	})).then((hashes) => {
 		hashes.forEach((h) => {
-			h[1] = hex(h[1]).substr(0,6);
+			h[1] = hex(h[1]).substr(0,4);
 		});
 		hashes = hashes.sort((a, b) => {
 			return a[1].localeCompare(b[1]);
@@ -86,6 +110,21 @@ function candidateChange() {
 			const item = new Item(i, hashes[i][0], hashes[i][1]);
 			candidateList.appendChild(item.domElement);
 			candidates.push(item);
+			item.domElement.addEventListener('pointerdown', () => {
+				groups.forEach((group) => {
+					var reasons = rejectMemberReason(item, group);
+					if (reasons.length > 0) {
+						eternalRejectionDisplay(item, reasons, 'red');
+					}
+				});
+				document.addEventListener('pointerup', () => {
+					groups.forEach((group) => {
+						var reasons = rejectMemberReason(item, group);
+						eternalRejectionDisplay(item, reasons, null);
+					});
+				});
+			});
+			grabify(item.domElement);
 		}
 	});
 	groupChange();
@@ -183,7 +222,7 @@ function rejectMemberReason(candidate, group) {
 			// more than two thirds already have the same gender, this is not a good idea.
 			reasons.push(group.domElement.querySelector('h2'));
 			// pushing all the members with same gender to the reasons array.
-			reasons.push(...group.members.filter((m) => m.gender === candidate.gender).map((m) => m.domElement));
+			reasons.push(...group.members.filter((m) => m.gender === candidate.gender).map((m) => m.domElement.querySelector('.name')));
 		}
 	}
 
