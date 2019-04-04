@@ -1,6 +1,6 @@
 export default class Item {
 	constructor(id, line, hash) {
-		const bits = line.split('\t');
+		const bits = line.split(/[\t;]/);
 		this.id = id;
 		this.label = bits.shift();
 		this.gender = bits.shift();
