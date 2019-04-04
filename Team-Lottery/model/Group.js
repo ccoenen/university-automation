@@ -8,7 +8,7 @@ export default class Group {
 
 		this.domElement.id = 'group-' + this.id;
 		this.domElement.classList.add('group');
-		this.domElement.innerHTML = `<h2><span class="markdown"># </span><span contentEditable="true">Gruppe ${this.id + 1}</span></h2><ul></ul>`;
+		this.domElement.innerHTML = `<h2><span contentEditable="true">Gruppe ${this.id + 1}</span></h2><ul></ul>`;
 	}
 
 	add(item) {
