@@ -37,6 +37,9 @@ $('#showHashes').addEventListener('change', (e) => {
 $('#showNames').addEventListener('change', (e) => {
 	document.body.classList.toggle('names', e.currentTarget.checked);
 });
+$('#namebox .tab').addEventListener('click', () => {
+	$('#namebox').classList.toggle('expanded');
+});
 groupChange();
 candidateChange();
 

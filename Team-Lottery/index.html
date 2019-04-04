@@ -18,7 +18,10 @@
 			<input id="showNames" accesskey="n" type="checkbox" checked> <label for="showNames">names visible</label>
 			<input id="showHashes" accesskey="h" type="checkbox"> <label for="showHashes">hashes visible</label>
 		</p>
-		<textarea id="names" placeholder="names, one per line" rows="35"></textarea>
+		<div id="namebox">
+			<textarea id="names" placeholder="names, one per line"></textarea>
+			<div class="tab"></div>
+		</div>
 		<div id="candidates"></div>
 		<div id="playground"></div>
 		<script type="module" src="lottery.js"></script>
