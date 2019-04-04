@@ -96,6 +96,18 @@ h2 {
 	scrollbar-width: none;
 }
 
+#candidates:empty::after {
+	display: inline-block;
+	box-sizing: border-box;
+	margin: 15px;
+	border-radius: 3px;
+	padding: 5px;
+	background-color: #32363f;
+	font-size: 1.5em;
+	text-align: center;
+	content: attr(title);
+}
+
 #playground {
 	grid-column: 2;
 	grid-row: 2;
