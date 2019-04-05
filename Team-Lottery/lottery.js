@@ -29,7 +29,8 @@ $('#step').addEventListener('click', () => {
 $('#pause').addEventListener('click', () => {
 	autorun = false;
 });
-document.addEventListener('keydown', (e) => {
+document.addEventListener('keypress', (e) => {
+	if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 	switch (e.key) {
 	case '+':
 		$('#groupNumber').value = parseInt($('#groupNumber').value, 10) + 1;
