@@ -29,6 +29,22 @@ $('#step').addEventListener('click', () => {
 $('#pause').addEventListener('click', () => {
 	autorun = false;
 });
+document.addEventListener('keydown', (e) => {
+	switch (e.key) {
+	case '+':
+		$('#groupNumber').value = parseInt($('#groupNumber').value, 10) + 1;
+		groupChange();
+		break;
+	case '-':
+		$('#groupNumber').value = parseInt($('#groupNumber').value, 10) - 1;
+		groupChange();
+		break;
+	case 's':
+		autorun = false;
+		draw();
+		break;
+	}
+});
 $('#showHashes').addEventListener('change', (e) => {
 	document.body.classList.toggle('hashes', e.currentTarget.checked);
 });

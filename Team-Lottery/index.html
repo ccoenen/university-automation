@@ -10,12 +10,12 @@
 		<p id="settings">
 			<input id="groupNumber" value="6" size="2" type="number" min="0"> groups,
 			randomness: <input id="randomness" size="10" placeholder="random value here">
-			<button id="run" accesskey="r">run</button>
-			<button id="pause" accesskey="p">pause</button>
-			<button id="step" accesskey="s">step</button>
-			<input id="animations" accesskey="a" type="checkbox" checked> <label for="animations">animations!</label>
-			<input id="showNames" accesskey="n" type="checkbox" checked> <label for="showNames">names visible</label>
-			<input id="showHashes" accesskey="h" type="checkbox"> <label for="showHashes">hashes visible</label>
+			<button id="run" accesskey="r" title="press alt+shift+r to run">run</button>
+			<button id="pause" accesskey="p" title="press alt+shift+p to pause">pause</button>
+			<button id="step" accesskey="s" title="press alt+shift+s or simply s for a single step">step</button>
+			<input id="animations" accesskey="a" type="checkbox" checked> <label for="animations" title="press alt+shift+a to toggle animations"><u>a</u>nimations!</label>
+			<input id="showNames" accesskey="n" type="checkbox" checked> <label for="showNames" title="press alt+shift+n to toggle names"><u>n</u>ames visible</label>
+			<input id="showHashes" accesskey="h" type="checkbox"> <label for="showHashes" title="press alt+shift+h to toggle hashes"><u>h</u>ashes visible</label>
 		</p>
 		<div id="namebox">
 			<textarea id="names" placeholder="names, one per line"></textarea>
