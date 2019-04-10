@@ -15,7 +15,7 @@ Ziele:
 * Zufällige Gruppenzusammenstellung
 * Diverse Gruppen
 * Nachvollziehbare, deterministische Losung
-* Zufallskomponente basiert auf externen Faktoren, z.B. einem echten Würfel oder Münzwurf.
+* Zufallskomponente basiert auf externen Faktoren, z.B. einem echten Würfel.
 * Personen, die bereits gemeinsam in Gruppen waren, werden nicht wieder zusammen gelost.
 
 Bonuspunkte:
@@ -37,21 +37,17 @@ Namensliste -> Kandidatenliste -> Gruppenliste
   -> jede Zeile ist ein Name
   -> jede Zeile wird mit .trim() bearbeitet um whitespace zu entfernen.
 
-* Würfeln #1 für die Kandidatenliste ("Salt")
-  -> Allen Namen der Namensliste wird die Zahl angehängt und sie werden gehasht
+* Würfeln/Zufallskomponente für die Kandidatenliste ("Salt")
+  -> Allen Namen der Namensliste wird ein zufälliges Element angehängt und das Ergebnis wird gehasht
 
 * nach dem Hashwert wird sortiert
-  -> Sortierung ist von Würfelwurf abhängig
+  -> Sortierung ist von Zufall abhängig
   -> nachvollziehbare aber zufällige Kandidatenliste
   -> Personen werden nicht bevorzugt, weil sie im Alphabet weit vorne stehen
-
-* Würfeln #2 für die Schrittgröße
-  -> Um so viele Stellen wird nach jedem Kandidaten weiter gezählt. Wird zB eine 2 gewürfelt, wird immer eine Person übersprungen.
-  -> Ausnahme: wenn die Schrittgröße ein Vielfaches der Länge der Kandidatenliste ist, ergibt es keinen Sinn (weil in jedem Durchlauf die selbe Person dran wäre). In dem Fall wird ausnahmsweise einfach um _eine_ Person weiter gezählt.
 
 * Auslosung
   -> Die Liste ist ausreichend zufällig, so dass dadurch kein Nachteil für die "hinteren" Plätze entsteht.
   -> Im Normalfall wird die aktuelle Person der aktuellen Gruppe zugeordnet. Danach geht es mit der nächsten Person und der nächsten Gruppe weiter.
-  -> Bei Verteilung wird auf Ausschlusskriterien geachtet, Wenn die nächste Person in der Liste nicht "passt" wird sie übersprungen und die nächste Person der aktuellen Gruppe zugeordnet.
+  -> Bei Verteilung wird auf Ausschlusskriterien geachtet, Wenn die aktuelle Person in der Liste nicht "passt" wird sie übersprungen und die nächste Person der aktuellen Gruppe zugeordnet.
 
-* Kann die Liste nicht vollständig abgearbeitet werden, wird einfach neu gewürfelt.
+* Kann die Liste nicht vollständig abgearbeitet werden, wird einfach neu gewürfelt oder die restlichen Kandidaten von Hand zugeordnet.

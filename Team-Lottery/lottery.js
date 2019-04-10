@@ -138,12 +138,12 @@ function candidateChange() {
 		.map((c) => c.trim())
 		.filter((c) => c);
 
-	const d1 = parseInt($('#randomness').value, 10);
+	const randomness = $('#randomness').value;
 	const encoder = new TextEncoder('utf-8');
 	candidates.splice(0, candidates.length);
 
 	Promise.all(names.map((name) => {
-		var buffer = encoder.encode(name + d1);
+		var buffer = encoder.encode(name + randomness);
 		return crypto.subtle.digest('SHA-256', buffer).then((hash) => [name, hash]);
 	})).then((hashes) => {
 		hashes.forEach((h) => {
