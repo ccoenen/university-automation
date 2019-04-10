@@ -141,6 +141,7 @@ function candidateChange() {
 	const randomness = $('#randomness').value;
 	const encoder = new TextEncoder('utf-8');
 	candidates.splice(0, candidates.length);
+	candidatePointer = 0;
 
 	Promise.all(names.map((name) => {
 		var buffer = encoder.encode(name + randomness);
