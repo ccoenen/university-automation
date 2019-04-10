@@ -1,4 +1,4 @@
-export const ANIMATION_DURATION = 300;
+export const ANIMATION_DURATION = 500;
 
 export function closeGap(element, height) {
 	element.animate([{
