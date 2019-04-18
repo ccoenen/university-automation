@@ -18,7 +18,7 @@ Automated creation of nextcloud users, including
 ## Ingredients
 
 - a rule file
-- one or more users lists (CSV files)
+- one or more users lists (CSV files, seperator: `,`, encoding: `utf-8`)
 
 ### Rule File example
 

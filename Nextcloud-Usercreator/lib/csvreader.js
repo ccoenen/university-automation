@@ -48,6 +48,7 @@ module.exports = function read(filename) {
 				};
 
 				preparedObject.userid = data.userid || useridFromEmail(preparedObject.email) || useridFromName(preparedObject.name);
+				preparedObject.userid = preparedObject.userid.toLowerCase();
 				preparedObject.password = passwordGenerator(preparedObject.userid);
 
 				if (data.Gruppe) { preparedObject.gruppe = data.Gruppe; }
