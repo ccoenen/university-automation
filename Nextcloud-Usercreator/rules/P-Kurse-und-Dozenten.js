@@ -20,7 +20,13 @@ module.exports = function (lists, config) {
 		],
 		shares: {}
 	};
+
+	// @see https://docs.nextcloud.com/server/15/developer_manual/core/ocs-share-api.html#create-a-new-share
 	admin.shares[`/${timecode}-${course}`] = []; // this will just create a directory.
+	admin.shares[`/${timecode}-${course}/${course} Administratives`] = [
+		{shareType: 1, shareWith: `Dozierende-${course}`, permissions: 31},
+		{shareType: 1, shareWith: `Studierende-${course}`, permissions: 1}
+	];
 
 	for (let teamID = 1; teamID <= 8; teamID++) {
 		admin.groups.push(`${course}-Team-${teamID}`);
@@ -32,18 +38,20 @@ module.exports = function (lists, config) {
 			{shareType: 1, shareWith: `Dozierende-${course}`, permissions: 1}
 		];
 	}
-	
+
 	users.push(admin);
 
 	lists[0].forEach((item) => {
 		item.groups = [`Dozierende-${course}`];
 		item.quota = '10GB';
 		item.shares = {};
-		item.shares[`/${timecode}-${course}`] = []; // this will just create a directory.
-		item.shares[`/${timecode}-${course}/` + item.veranstaltung + ' Unterlagen ' + item.name] = [
-			{shareType: 1, shareWith: `Dozierende-${course}`, permissions: 1},
-			{shareType: 1, shareWith: `Studierende-${course}`, permissions: 1}
-		];
+		if (item.tutor !== 'tutor') { // tutors don't get their own directories!
+			item.shares[`/${timecode}-${course}`] = []; // this will just create a directory.
+			item.shares[`/${timecode}-${course}/` + item.veranstaltung + ' Unterlagen ' + item.name] = [
+				{shareType: 1, shareWith: `Dozierende-${course}`, permissions: 1},
+				{shareType: 1, shareWith: `Studierende-${course}`, permissions: 1}
+			];
+		}
 		users.push(item);
 		if (!veranstaltungen[item.veranstaltung]) {
 			veranstaltungen[item.veranstaltung] = [];
@@ -59,9 +67,9 @@ module.exports = function (lists, config) {
 			let s = item.shares[`/${timecode}-${course}/${v} Upload ${item.name}`] = [];
 			veranstaltungen[v].forEach(dozent => {
 				s.push({shareType: 0, shareWith: dozent, permissions: 1});
-			})
+			});
 		}
-	
+
 		users.push(item);
 	});
 

@@ -54,6 +54,8 @@ module.exports = function read(filename) {
 				if (data.Gruppe) { preparedObject.gruppe = data.Gruppe; }
 				if (data.veranstaltung) { preparedObject.veranstaltung = data.veranstaltung; }
 				if (data.Veranstaltung) { preparedObject.veranstaltung = data.Veranstaltung; }
+				if (data.tutor) { preparedObject.tutor = data.tutor; }
+				if (data.Tutor) { preparedObject.tutor = data.Tutor; }
 
 				if (preparedObject.name.length < 1 || preparedObject.userid.length < 1) {
 					console.warn("skipping entry in %s because of missing name or userid\n  Row: %s\n  Object: %s", filename, JSON.stringify(data), JSON.stringify(preparedObject));

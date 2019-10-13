@@ -18,6 +18,7 @@ program
 	.option('-l, --list [filename.csv]', 'list of user names to be parsed', collectLists, [])
 	.option('--rules [rules.js]', 'processing instructions for the files, receives parsed lists, must return promise that resolves to users')
 	.option('--print-parsed', 'print parsed data', false)
+	.option('--print-directories', 'print all directories that will be created', false)
 	.option('--overwrite-passwords', 'reset passwords for existing users', false)
 	.option('--create-users', 'create new users if neccessary', false)
 	.option('--move-directories', 'groups directories in subdirs by prefix', false)
@@ -36,6 +37,16 @@ let chain = Promise.all(listPromises).then((lists) => processingPromise(lists, B
 if (program.printParsed) {
 	chain = chain.then((users) => {
 		console.log(users);
+		return users;
+	})
+}
+
+if (program.printDirectories) {
+	chain = chain.then((users) => {
+		const dirs = new Set(users.map((u) => {
+			return Object.keys(u.shares || {});
+		}).flat());
+		console.log(dirs);
 		return users;
 	})
 }

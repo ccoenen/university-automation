@@ -7,28 +7,44 @@ module.exports = function (lists, config) {
 		process.exit(1);
 	}
 
-	users.push({
+	const admin = {
 		userid: config.adminuser,
 		password: config.adminpwd,
 		email: config.adminemail,
 		groups: [
-			'Studierende-Bachelor',
-			'Dozierende-Bachelor',
+			'Studierende-P7',
+			'Dozierende-P7',
 		],
 		shares: {}
-	});
-	
-	users[0].shares[`/${timecode}-Bachelor`] = [], // this will just create a directory.
-	users[0].shares[`/${timecode}-Bachelor/P7 Bachelor Unterlagen`] = {shareType: 1, shareWith: 'Studierende-Bachelor', permissions: 1},
-	users[0].shares[`/${timecode}-Bachelor/P7 Bachelor Unterlagen`] = {shareType: 1, shareWith: 'Dozierende-Bachelor', permissions: 31},
+	};
+	users.push(admin);
+
+	// @see https://docs.nextcloud.com/server/15/developer_manual/core/ocs-share-api.html#create-a-new-share
+	admin.shares[`/${timecode}-P7`] = []; // this will just create a directory.
+	admin.shares[`/${timecode}-P7/P7 Administratives`] = [
+		{shareType: 1, shareWith: 'Studierende-P7', permissions: 1},
+		{shareType: 1, shareWith: 'Dozierende-P7', permissions: 31}
+	];
 
 	lists[0].forEach((item) => {
-		item.groups = ['Studierende-Bachelor'];
+		item.groups = ['Dozierende-P7'];
 		item.shares = {};
-		item.shares[`/${timecode}-Bachelor`] = []; // this will just create a directory.
-		item.shares[`/${timecode}-Bachelor/P7 Bachelor ${item.name}`] = [];
+		item.shares[`/${timecode}-P7`] = [];
 		users.push(item);
 	});
-	
+
+	lists[1].forEach((item) => {
+		item.groups = ['Studierende-P7'];
+		item.shares = {};
+		item.shares[`/${timecode}-P7`] = []; // this will just create a directory.
+		item.shares[`/${timecode}-P7/P7 Bachelor Abgabe ${item.name}`] = [
+			{shareType: 1, shareWith: 'Dozierende-P7', permissions: 1}
+		];
+		item.shares[`/${timecode}-P7/R7 Research Abgabe ${item.name}`] = [
+			{shareType: 1, shareWith: 'Dozierende-P7', permissions: 1}
+		];
+		users.push(item);
+	});
+
 	return users;
 };
