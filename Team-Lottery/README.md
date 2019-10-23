@@ -51,3 +51,7 @@ Namensliste -> Kandidatenliste -> Gruppenliste
   -> Bei Verteilung wird auf Ausschlusskriterien geachtet, Wenn die aktuelle Person in der Liste nicht "passt" wird sie übersprungen und die nächste Person der aktuellen Gruppe zugeordnet.
 
 * Kann die Liste nicht vollständig abgearbeitet werden, wird einfach neu gewürfelt oder die restlichen Kandidaten von Hand zugeordnet.
+
+## Beispiel-Listen
+
+in [example-list.csv](example-list.csv) ist eine Beispiel-Liste von 20 Personen mit Geschlecht und je zwei Teams.
