@@ -5,7 +5,7 @@ const SALT = 'ohai, this will be changed for the actual run. For sure.';
 module.exports = class Paper {
 	constructor(author, authorDirectory, filename) {
 		this.author = author;
-		this.authorTeam = 'uninitialized';
+		this.authorTeam;
 		this.authorDirectory = authorDirectory;
 		this.filename = filename;
 		this.randomIdentifier = 'uninitialized';
@@ -24,6 +24,10 @@ module.exports = class Paper {
 	}
 
 	toString() {
-		return `${this.author} is reviewed by ${this.reviewedBy.map(r=>r.author).join(', ')}`;
+		return this.author;
+	}
+
+	allReviewedBy() {
+		return `Paper by ${this.author} will be reviewed by ${this.reviewedBy.map(r=>r.author).join(', ')}`;
 	}
 };

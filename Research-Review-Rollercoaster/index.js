@@ -1,6 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
+const csv = require('fast-csv');
+
 const Paper = require('./Paper');
 
 const BASEPATH = 'this will be changed.';
@@ -8,6 +10,7 @@ const NAME_REGEX = /^some basename (.+)$/;
 const FILENAME_CONVENTION = /^\w{1,2}\d_\d{6}_(.+)_(.+)\.(.+)/;
 const PDFTK_PATH = 'C:/Tools/PDFtk/bin/pdftk.exe';
 const REVIEW_TEMPLATE_PATH = 'somewhere/review-template.txt';
+const TEAM_FILE = 'some-csv-somewhere.csv';
 
 function findAllPapers(basepath) {
 	return new Promise((resolve, reject) => {
@@ -33,29 +36,93 @@ function assignRandomIdentifiers(papers) {
 	return papers;
 }
 
+function readTeamsFromFile(papers) {
+	return new Promise((resolve, reject) =>  {
+		
+		var fileStream = fs.createReadStream(TEAM_FILE);
+
+		var csvStream = csv({headers: true, trim: true, comment: '#'})
+			.on('data', (data) => {
+				const paper = papers.find((p) => p.author === data.Name);
+				if (paper) {
+					paper.authorTeam = data.Gruppe;
+				} else {
+					console.warn(`No paper found for ${data.Name}`);
+				}
+			})
+
+			.on('end', () => {
+				papers.forEach(p => {
+					if (!p.authorTeam) console.warn(`No Team found for ${p.author}`);
+				});
+				resolve(papers);
+			})
+
+			.on('error', (err) => {
+				return reject(`Failed to parse ${TEAM_FILE}: ${err.message}`);
+			});
+
+		fileStream.pipe(csvStream);
+	});
+}
+
 function assignReviewers(papers) {
-	let reviewers = [];
+	let reviewers = []; // this way is very convoluted, but continuing in the place where the previous assignment left off gives better result than starting from the top of the list every time.
 	papers.forEach((paper) => {
-		if (reviewers.length === 0) reviewers = [].concat(papers); // cloning the array
 		let randomReviewer;
-		while (paper.reviewedBy.length < 3 && reviewers.length > 0) {
-			randomReviewer = reviewers.pop();
-			if (paper.reviewedBy.includes(randomReviewer)) {
-				continue; // person already reviewes this one
-			} else if (paper.reviewing.includes(randomReviewer)) {
-				continue; // person is under review by this papers author. No quid-pro-quos.
-			} else if (randomReviewer.reviewing.length >= 3) {
-				continue; // this reviewer already has a lot on his plate
+		const rejectionReasons = [];
+		let tieBreaker = false;
+		while (paper.reviewedBy.length < 3) {
+			if (reviewers.length === 0) {
+				if (tieBreaker) {
+					console.error(`no solution for ${paper} because\n${rejectionReasons.map(r => `- ${r}`).join('\n')}`);
+					break; // ends this paper's assignments
+				} else {
+					reviewers = [].concat(papers); // cloning the array
+					tieBreaker = true;
+				}
 			}
-			paper.reviewedBy.push(randomReviewer);
-			randomReviewer.reviewing.push(paper);
+			randomReviewer = reviewers.pop();
+			const rejection = checkAuthorPair(paper, randomReviewer);
+			if (rejection) {
+				rejectionReasons.push(rejection);
+			} else {
+				paper.reviewedBy.push(randomReviewer);
+				randomReviewer.reviewing.push(paper);
+			}
 		}
+		console.log(paper.allReviewedBy());
+	});
+	return papers;
+}
+
+function checkAuthorPair(paper, reviewer) {
+	if (paper.author === reviewer.author) {
+		return `${reviewer.author} can't review themselves`;
+	} else if (paper.reviewedBy.includes(reviewer)) {
+		return `${reviewer.author} already reviews this one`;
+	} else if (paper.reviewing.includes(reviewer)) {
+		return `${reviewer.author} is under review by ${paper.author}. No quid-pro-quos.`;
+	} else if (paper.authorTeam && reviewer.authorTeam && paper.authorTeam === reviewer.authorTeam) {
+		return `${reviewer.author} and ${paper.author} are on team ${paper.authorTeam}`;
+	} else if (paper.reviewedBy.map(r => r.authorTeam).includes(reviewer.authorTeam)) {
+		return `${reviewer.author}'s Team ${paper.authorTeam} already reviews this. Must be one of: ${paper.reviewedBy.join(',')}`;
+	} else if (reviewer.reviewing.length >= 3) {
+		return `${reviewer.author} already has a lot of reviews to do`;
+	}
+	// else return nothing = no rejection
+}
+
+function checks(papers) {
+	papers.forEach(p => {
+		if (p.reviewing.length !== 3) console.warn(`${p.author} is not supposed to review ${p.reviewing}`);
+		if (p.reviewedBy.length !== 3) console.warn(`${p.author} is not supposed to be reviewed by ${p.reviewedBy.length} people`);
 	});
 	return papers;
 }
 
 function print(papers) {
-	papers.forEach(paper => console.log(paper.toString()));
+	papers.forEach(paper => console.log(paper.allReviewedBy()));
 	return papers;
 }
 
@@ -74,8 +141,9 @@ function writeToDisk(papers) {
 
 findAllPapers(BASEPATH)
 	.then(assignRandomIdentifiers)
-	// .then(readTeamsFromFile) // will be added later
+	.then(readTeamsFromFile)
 	.then(assignReviewers)
+	.then(checks)
 	.then(print)
 	.then(writeToDisk)
 	.catch(console.error);
