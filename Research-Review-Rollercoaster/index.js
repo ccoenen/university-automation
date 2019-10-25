@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const csv = require('fast-csv');
+const pdftk = require('node-pdftk');
 
 const Paper = require('./Paper');
 
@@ -9,6 +10,7 @@ const BASEPATH = 'this will be changed.';
 const NAME_REGEX = /^some basename (.+)$/;
 const FILENAME_CONVENTION = /^\w{1,2}\d_\d{6}_(.+)_(.+)\.(.+)/;
 const PDFTK_PATH = 'C:/Tools/PDFtk/bin/pdftk.exe';
+pdftk.configure({bin: PDFTK_PATH});
 const REVIEW_TEMPLATE_PATH = 'somewhere/review-template.txt';
 const TEAM_FILE = 'some-csv-somewhere.csv';
 
@@ -129,14 +131,23 @@ function print(papers) {
 function writeToDisk(papers) {
 	let currentPromise = Promise.resolve();
 	papers.forEach(paper => {
-		currentPromise = currentPromise.then(() => { // current = current.then chains it!
-			paper.reviewedBy.forEach(reviewer => {
-				console.log(`${PDFTK_PATH} "${paper.filename}" cat 2-end output "${path.resolve(reviewer.authorDirectory, reviewer.randomReviewName(paper))}.pdf"`);
-				console.log(`cp "${REVIEW_TEMPLATE_PATH}" "${path.resolve(reviewer.authorDirectory, reviewer.randomReviewName(paper))}.txt"`);
+		paper.reviewedBy.forEach(reviewer => {
+			currentPromise = currentPromise.then(() => { // current = current.then chains it!
+				console.debug(`converting ${paper.filename} to ${reviewer.randomReviewName(paper)}`);
+				return pdftk
+					.input(paper.filename)
+					.cat('2-end')
+					.output(`${path.resolve(reviewer.authorDirectory, reviewer.randomReviewName(paper))}.pdf`);
+
+				// console.log(`${PDFTK_PATH} "${paper.filename}" cat 2-end output "${}.pdf"`);
+			}).then(() => {
+				fs.copyFile(REVIEW_TEMPLATE_PATH, `${path.resolve(reviewer.authorDirectory, reviewer.randomReviewName(paper))}.txt`, (err) => {
+					if (err) currentPromise.reject(err);
+				});
 			});
 		});
 	});
-	return currentPromise;
+	return currentPromise.then(papers);
 }
 
 findAllPapers(BASEPATH)
