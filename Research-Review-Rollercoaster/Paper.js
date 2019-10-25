@@ -20,7 +20,7 @@ module.exports = class Paper {
 	}
 
 	randomReviewName(paper) {
-		return `${paper.randomIdentifier}-${this.randomIdentifier}`;
+		return `review-${paper.randomIdentifier}-${this.randomIdentifier}`;
 	}
 
 	toString() {

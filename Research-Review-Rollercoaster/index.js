@@ -20,7 +20,10 @@ function findAllPapers(basepath) {
 			if (err) return reject(err);
 			const names = result.map((input) => {
 				const author = input.match(NAME_REGEX)[1];
-				const files = fs.readdirSync(path.resolve(basepath,input));
+				let files = fs.readdirSync(path.resolve(basepath,input));
+				files = files.filter((f) => {
+					return f.endsWith('.pdf') && !f.startsWith('review-');
+				});
 				if (files.length !== 1) {
 					return reject(`not exactly one file in ${input}, instead found ${files}.`);
 				} else if (!FILENAME_CONVENTION.test(files[0])) {
@@ -77,7 +80,8 @@ function assignReviewers(papers) {
 		while (paper.reviewedBy.length < 3) {
 			if (reviewers.length === 0) {
 				if (tieBreaker) {
-					console.error(`no solution for ${paper} because\n${rejectionReasons.map(r => `- ${r}`).join('\n')}`);
+					console.error(`no solution for ${paper} (${paper.randomIdentifier}) because\n${rejectionReasons.map(r => `- ${r}`).join('\n')}`);
+					console.error(`now only reviewed by ${paper.allReviewedBy()}`);
 					break; // ends this paper's assignments
 				} else {
 					reviewers = [].concat(papers); // cloning the array
@@ -93,7 +97,6 @@ function assignReviewers(papers) {
 				randomReviewer.reviewing.push(paper);
 			}
 		}
-		console.log(paper.allReviewedBy());
 	});
 	return papers;
 }
