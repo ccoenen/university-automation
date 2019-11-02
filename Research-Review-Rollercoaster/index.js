@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
+const chalk = require('chalk');
 const csv = require('fast-csv');
 const pdftk = require('node-pdftk');
 
@@ -13,40 +14,22 @@ const PDFTK_PATH = 'C:/Tools/PDFtk/bin/pdftk.exe';
 pdftk.configure({bin: PDFTK_PATH});
 const REVIEW_TEMPLATE_PATH = 'somewhere/review-template.txt';
 const TEAM_FILE = 'some-csv-somewhere.csv';
+const MAPPING_FILE = 'mappings.csv';
+const RANDOM_IDENTIFIER_SALT = 'ohai, this will be changed for the actual run. For sure.';
 
-function findAllPapers(basepath) {
-	return new Promise((resolve, reject) => {
-		fs.readdir(basepath, (err, result) => {
-			if (err) return reject(err);
-			const names = result.map((input) => {
-				const author = input.match(NAME_REGEX)[1];
-				let files = fs.readdirSync(path.resolve(basepath,input));
-				files = files.filter((f) => {
-					return f.endsWith('.pdf') && !f.startsWith('review-');
-				});
-				if (files.length !== 1) {
-					return reject(`not exactly one file in ${input}, instead found ${files}.`);
-				} else if (!FILENAME_CONVENTION.test(files[0])) {
-					console.warn(`${input}/${files[0]} does not conform to naming standards.`);
-				}
-				return new Paper(author, path.resolve(basepath, input), path.resolve(basepath, input, files[0]));
-			});
-			resolve(names);
-		});
-	});
-}
+const highlight = chalk.redBright.bgBlack;
 
 function assignRandomIdentifiers(papers) {
-	papers.forEach(paper => paper.setRandomIdentifier());
+	papers.forEach(paper => paper.setRandomIdentifier(RANDOM_IDENTIFIER_SALT));
 	return papers;
 }
 
 function readTeamsFromFile(papers) {
 	return new Promise((resolve, reject) =>  {
-		
-		var fileStream = fs.createReadStream(TEAM_FILE);
 
-		var csvStream = csv({headers: true, trim: true, comment: '#'})
+		const fileStream = fs.createReadStream(TEAM_FILE);
+
+		const csvStream = csv({headers: true, trim: true, comment: '#'})
 			.on('data', (data) => {
 				const paper = papers.find((p) => p.author === data.Name);
 				if (paper) {
@@ -80,8 +63,8 @@ function assignReviewers(papers) {
 		while (paper.reviewedBy.length < 3) {
 			if (reviewers.length === 0) {
 				if (tieBreaker) {
-					console.error(`no solution for ${paper} (${paper.randomIdentifier}) because\n${rejectionReasons.map(r => `- ${r}`).join('\n')}`);
-					console.error(`now only reviewed by ${paper.allReviewedBy()}`);
+					console.error(`no solution for ${highlight(paper.author)} (${paper.randomIdentifier}) because\n${rejectionReasons.map(r => `- ${r}`).join('\n')}`);
+					console.error(`  conclusion: ${paper.allReviewedBy()}`);
 					break; // ends this paper's assignments
 				} else {
 					reviewers = [].concat(papers); // cloning the array
@@ -98,6 +81,22 @@ function assignReviewers(papers) {
 			}
 		}
 	});
+	return papers;
+}
+
+function resolveReviewer(papers) {
+	// in contrast to assignReviewers this does not perform ANY checks!
+	// this is intentional, so you can change the mappings file in any way
+	// that you like.
+	papers.forEach((paper) => {
+		paper.reviewedByRaw.forEach((reviewerIdentifier) => {
+			const reviewer = papers.find((p) => p.randomIdentifier === reviewerIdentifier);
+			if (!reviewer) {throw `Reviewer ${reviewerIdentifier} not found for the paper by ${paper.author}`;}
+			paper.reviewedBy.push(reviewer);
+			reviewer.reviewing.push(paper);
+		});
+	});
+
 	return papers;
 }
 
@@ -120,8 +119,8 @@ function checkAuthorPair(paper, reviewer) {
 
 function checks(papers) {
 	papers.forEach(p => {
-		if (p.reviewing.length !== 3) console.warn(`${p.author} is not supposed to review ${p.reviewing}`);
-		if (p.reviewedBy.length !== 3) console.warn(`${p.author} is not supposed to be reviewed by ${p.reviewedBy.length} people`);
+		if (p.reviewing.length !== 3) console.warn(`${p.author} is not supposed to review ${p.reviewing.length} people (${p.reviewing})`);
+		if (p.reviewedBy.length !== 3) console.warn(`${p.author} is not supposed to be reviewed by ${p.reviewedBy.length} people (${p.reviewedBy})`);
 	});
 	return papers;
 }
@@ -129,6 +128,41 @@ function checks(papers) {
 function print(papers) {
 	papers.forEach(paper => console.log(paper.allReviewedBy()));
 	return papers;
+}
+
+function writeMappingCSV(papers, file) {
+	const stream = csv.format({
+		headers: true
+	});
+
+	stream.pipe(fs.createWriteStream(file));
+	papers.forEach((paper) => {
+		stream.write(paper.toCSV());
+	});
+	stream.end();
+
+	return papers;
+}
+
+function readMappingCSV(file) {
+	return new Promise((resolve, reject) =>  {
+		const fileStream = fs.createReadStream(file);
+		const papers = [];
+
+		const csvStream = csv({headers: true, trim: true, comment: '#'})
+			.on('data', (data) => {
+				papers.push(Paper.fromCSV(data));
+			})
+
+			.on('end', () => {
+				resolve(papers);
+			})
+
+			.on('error', (err) => {
+				return reject(`Failed to parse ${MAPPING_FILE}: ${err.message}`);
+			});
+		fileStream.pipe(csvStream);
+	}).then(resolveReviewer);
 }
 
 function writeToDisk(papers) {
@@ -153,11 +187,43 @@ function writeToDisk(papers) {
 	return currentPromise.then(papers);
 }
 
-findAllPapers(BASEPATH)
-	.then(assignRandomIdentifiers)
-	.then(readTeamsFromFile)
-	.then(assignReviewers)
-	.then(checks)
-	.then(print)
-	.then(writeToDisk)
-	.catch(console.error);
+function printError(error) {
+	console.error(error);
+	process.exit(1);
+}
+
+switch(process.argv[2]) {
+case 'discover':
+	Paper.findIn(BASEPATH, NAME_REGEX, FILENAME_CONVENTION)
+		.then(assignRandomIdentifiers)
+		.then(readTeamsFromFile)
+		.then(assignReviewers)
+		.then(checks)
+		.then(p => writeMappingCSV(p, MAPPING_FILE))
+		.then(print)
+		.catch(printError);
+	break;
+case 'distribute':
+	readMappingCSV(MAPPING_FILE)
+		.then(print)
+		.then(writeToDisk)
+		.catch(printError);
+	break;
+case 'collect':
+	readMappingCSV(MAPPING_FILE);
+	// read CSV
+	// resolve reviews
+	// collect review files and write to original author dir
+	break;
+default:
+	console.log(`
+use these commands:
+	- discover: finds all papers, assigns reviewers and writes ${MAPPING_FILE}
+	- distribute: writes anonymized files into reviewer's directories
+	- collect: combines feedback files into one in the author's directory
+
+example:
+	node . discover
+	will create mappings.csv
+	`);
+}
