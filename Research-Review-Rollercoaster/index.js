@@ -7,33 +7,39 @@ const pdftk = require('node-pdftk');
 
 const Paper = require('./Paper');
 
-const BASEPATH = 'this will be changed.';
-const NAME_REGEX = /^some basename (?<author>.+)$/;
-const FILENAME_CONVENTION = /^(?<course>\w{1,2}\d)_(?<date>\d{6})_(?<title>.+)_(?<name>[^_.]+)\.(.+)$/u;
-const PDFTK_PATH = 'C:/Tools/PDFtk/bin/pdftk.exe';
-pdftk.configure({bin: PDFTK_PATH});
-const REVIEW_TEMPLATE_PATH = 'somewhere/review-template.txt';
-const TEAM_FILE = 'some-csv-somewhere.csv';
-const MAPPING_FILE = 'mappings.csv';
-const RANDOM_IDENTIFIER_SALT = 'ohai, this will be changed for the actual run. For sure.';
+let CONFIG;
+try {
+	CONFIG = require('./config');
+} catch (e) {
+	console.error('could not open config file, did you copy yours from the config.js.example?');
+	printError(e);
+}
+
+if (CONFIG.PDFTK_PATH) {
+	pdftk.configure({bin: CONFIG.PDFTK_PATH});
+}
 
 const highlight = chalk.redBright.bgBlack;
 
 function assignRandomIdentifiers(papers) {
-	papers.forEach(paper => paper.setRandomIdentifier(RANDOM_IDENTIFIER_SALT));
+	papers.forEach(paper => paper.setRandomIdentifier(CONFIG.RANDOM_IDENTIFIER_SALT));
 	return papers;
 }
 
 function readTeamsFromFile(papers) {
 	return new Promise((resolve, reject) =>  {
+		if (!CONFIG.TEAM_FILE) {
+			console.warn('no team file specified, will skip the team step.');
+			return resolve(papers);
+		}
 
-		const fileStream = fs.createReadStream(TEAM_FILE);
+		const fileStream = fs.createReadStream(CONFIG.TEAM_FILE);
 
 		const csvStream = csv({headers: true, trim: true, comment: '#'})
 			.on('data', (data) => {
-				const paper = papers.find((p) => p.author === data.Name);
+				const paper = papers.find((p) => p.author === data[CONFIG.TEAM_FILE_NAME || 'Name']);
 				if (paper) {
-					paper.authorTeam = data.Gruppe;
+					paper.authorTeam = data[CONFIG.TEAM_FILE_TEAM || 'Gruppe'];
 				} else {
 					console.warn(`No paper found for ${data.Name}`);
 				}
@@ -47,7 +53,7 @@ function readTeamsFromFile(papers) {
 			})
 
 			.on('error', (err) => {
-				return reject(`Failed to parse ${TEAM_FILE}: ${err.message}`);
+				return reject(`Failed to parse ${CONFIG.TEAM_FILE}: ${err.message}`);
 			});
 
 		fileStream.pipe(csvStream);
@@ -159,7 +165,7 @@ function readMappingCSV(file) {
 			})
 
 			.on('error', (err) => {
-				return reject(`Failed to parse ${MAPPING_FILE}: ${err.message}`);
+				return reject(`Failed to parse ${CONFIG.MAPPING_FILE}: ${err.message}`);
 			});
 		fileStream.pipe(csvStream);
 	}).then(resolveReviewer);
@@ -178,7 +184,7 @@ function writeToDisk(papers) {
 
 				// console.log(`${PDFTK_PATH} "${paper.filename}" cat 2-end output "${}.pdf"`);
 			}).then(() => {
-				fs.copyFile(REVIEW_TEMPLATE_PATH, `${path.resolve(reviewer.authorDirectory, reviewer.randomReviewName(paper))}.txt`, (err) => {
+				fs.copyFile(CONFIG.REVIEW_TEMPLATE_PATH, `${path.resolve(reviewer.authorDirectory, reviewer.randomReviewName(paper))}.txt`, (err) => {
 					if (err) currentPromise.reject(err);
 				});
 			});
@@ -194,24 +200,24 @@ function printError(error) {
 
 switch(process.argv[2]) {
 case 'discover':
-	Paper.findIn(BASEPATH, NAME_REGEX, FILENAME_CONVENTION)
+	Paper.findIn(CONFIG.BASEPATH, CONFIG.NAME_REGEX, CONFIG.FILENAME_CONVENTION)
 		.then(assignRandomIdentifiers)
 		.then(readTeamsFromFile)
 		.then(assignReviewers)
 		.then(checks)
-		.then(p => writeMappingCSV(p, MAPPING_FILE))
+		.then(p => writeMappingCSV(p, CONFIG.MAPPING_FILE))
 		.then(print)
 		.catch(printError);
 	break;
 case 'distribute':
-	readMappingCSV(MAPPING_FILE)
+	readMappingCSV(CONFIG.MAPPING_FILE)
 		.then(checks)
 		.then(print)
 		.then(writeToDisk)
 		.catch(printError);
 	break;
 case 'collect':
-	readMappingCSV(MAPPING_FILE)
+	readMappingCSV(CONFIG.MAPPING_FILE)
 		.then(checks);
 	// read CSV
 	// resolve reviews
@@ -220,7 +226,7 @@ case 'collect':
 default:
 	console.log(`
 use these commands:
-	- discover: finds all papers, assigns reviewers and writes ${MAPPING_FILE}
+	- discover: finds all papers, assigns reviewers and writes ${CONFIG.MAPPING_FILE}
 	- distribute: writes anonymized files into reviewer's directories
 	- collect: combines feedback files into one in the author's directory
 

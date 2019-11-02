@@ -1,0 +1,33 @@
+module.exports = {
+	// papers are in directories below this directory
+	BASEPATH: 'this will be changed.',
+
+	// directories will contain the author name
+	NAME_REGEX: /^Directory For (?<author>.+)$/,
+	
+	// please change: this will create pseudo-random identifiers for each author
+	RANDOM_IDENTIFIER_SALT: 'ohai, this will be changed for the actual run. For sure.',
+
+	// filenames may contain the title. Generates a warning if the files does not match.
+	// We will try to extract the (?<title>....) atom.
+	FILENAME_CONVENTION: /^(?<course>\w{1,2}\d)_(?<date>\d{6})_(?<title>.+)_(?<name>[^_.]+)\.(.+)$/u,
+
+	// set this, if your pdftk binary is not on the PATH.
+	// PDFTK_PATH: '/bin/pdftk',
+
+	// reviewers recieve empty review files. This template will be copied over
+	REVIEW_TEMPLATE_PATH: 'somewhere/review-template.txt',
+
+	// optional: you can specify teams for each author via this team file.
+	TEAM_FILE: 'some-csv-somewhere.csv',
+
+	// optional: if we use the team file, where do we find the name to match up?
+	TEAM_FILE_NAME: 'Name',
+
+	// optional: if we have the team file, what team should ba assigned to that author?
+	TEAM_FILE_TEAM: 'Gruppe',
+
+	// where do we store the intermediary csv file?
+	MAPPING_FILE: 'mappings.csv',
+
+};
