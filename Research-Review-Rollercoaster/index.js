@@ -8,8 +8,8 @@ const pdftk = require('node-pdftk');
 const Paper = require('./Paper');
 
 const BASEPATH = 'this will be changed.';
-const NAME_REGEX = /^some basename (.+)$/;
-const FILENAME_CONVENTION = /^\w{1,2}\d_\d{6}_(.+)_(.+)\.(.+)/;
+const NAME_REGEX = /^some basename (?<author>.+)$/;
+const FILENAME_CONVENTION = /^(?<course>\w{1,2}\d)_(?<date>\d{6})_(?<title>.+)_(?<name>[^_.]+)\.(.+)$/u;
 const PDFTK_PATH = 'C:/Tools/PDFtk/bin/pdftk.exe';
 pdftk.configure({bin: PDFTK_PATH});
 const REVIEW_TEMPLATE_PATH = 'somewhere/review-template.txt';

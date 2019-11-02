@@ -72,18 +72,26 @@ module.exports = class Paper {
 			fs.readdir(basepath, (err, result) => {
 				if (err) return reject(err);
 				const names = result.map((input) => {
-					const author = input.match(nameRegex)[1];
-					let files = fs.readdirSync(path.resolve(basepath,input));
+					const author = input.match(nameRegex).groups.author;
+					const authorDir = path.resolve(basepath,input);
+					let files = fs.readdirSync(authorDir);
 					files = files.filter((f) => {
 						// ignoring our own files
 						return f.endsWith('.pdf') && !f.startsWith('review-');
 					});
 					if (files.length !== 1) {
 						return reject(`not exactly one file in ${input}, instead found ${files}.`);
-					} else if (!filenameConvention.test(files[0])) {
-						console.warn(`${input}/${files[0]} does not conform to naming standards.`);
 					}
-					return new Paper(author, path.resolve(basepath, input), path.resolve(basepath, input, files[0]));
+					const firstFile = files[0];
+					const paper = new Paper(author, authorDir, path.resolve(basepath, input, firstFile));
+					const match = firstFile.match(filenameConvention);
+					if (match && match.groups && match.groups.title) {
+						paper.title = match.groups.title;
+					} else {
+						console.warn(`${input}/${firstFile} does not conform to naming standards.`);
+					}
+
+					return paper;
 				});
 				resolve(names);
 			});
