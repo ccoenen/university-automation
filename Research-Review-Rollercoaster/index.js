@@ -119,8 +119,8 @@ function checkAuthorPair(paper, reviewer) {
 
 function checks(papers) {
 	papers.forEach(p => {
-		if (p.reviewing.length !== 3) console.warn(`${p.author} is not supposed to review ${p.reviewing.length} people (${p.reviewing})`);
-		if (p.reviewedBy.length !== 3) console.warn(`${p.author} is not supposed to be reviewed by ${p.reviewedBy.length} people (${p.reviewedBy})`);
+		if (p.reviewing.length !== 3) console.warn(`${highlight(p.author)} is not supposed to review ${p.reviewing.length} people (${p.reviewing})`);
+		if (p.reviewedBy.length !== 3) console.warn(`${highlight(p.author)} is not supposed to be reviewed by ${p.reviewedBy.length} people (${p.reviewedBy})`);
 	});
 	return papers;
 }
@@ -205,12 +205,14 @@ case 'discover':
 	break;
 case 'distribute':
 	readMappingCSV(MAPPING_FILE)
+		.then(checks)
 		.then(print)
 		.then(writeToDisk)
 		.catch(printError);
 	break;
 case 'collect':
-	readMappingCSV(MAPPING_FILE);
+	readMappingCSV(MAPPING_FILE)
+		.then(checks);
 	// read CSV
 	// resolve reviews
 	// collect review files and write to original author dir
