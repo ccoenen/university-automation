@@ -33,7 +33,7 @@ function readTeamsFromFile(papers) {
 			return resolve(papers);
 		}
 
-		const fileStream = fs.createReadStream(CONFIG.TEAM_FILE);
+		const fileStream = fs.createReadStream(CONFIG.TEAM_FILE, {encoding: 'UTF-8'});
 
 		const csvStream = csv({headers: true, trim: true, comment: '#'})
 			.on('data', (data) => {
@@ -141,7 +141,7 @@ function writeMappingCSV(papers, file) {
 		headers: true
 	});
 
-	stream.pipe(fs.createWriteStream(file));
+	stream.pipe(fs.createWriteStream(file, {flags: 'wx', encoding: 'UTF-8'}));
 	papers.forEach((paper) => {
 		stream.write(paper.toCSV());
 	});
@@ -152,7 +152,7 @@ function writeMappingCSV(papers, file) {
 
 function readMappingCSV(file) {
 	return new Promise((resolve, reject) =>  {
-		const fileStream = fs.createReadStream(file);
+		const fileStream = fs.createReadStream(file, {encoding: 'UTF-8'});
 		const papers = [];
 
 		const csvStream = csv({headers: true, trim: true, comment: '#'})
