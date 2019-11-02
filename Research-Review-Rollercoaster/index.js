@@ -173,7 +173,7 @@ function writeToDisk(papers) {
 				console.debug(`converting ${paper.filename} to ${reviewer.randomReviewName(paper)}`);
 				return pdftk
 					.input(paper.filename)
-					.cat('2-end')
+					.cat(`${paper.titlePages + 1}-end`) // cuts away title pages
 					.output(`${path.resolve(reviewer.authorDirectory, reviewer.randomReviewName(paper))}.pdf`);
 
 				// console.log(`${PDFTK_PATH} "${paper.filename}" cat 2-end output "${}.pdf"`);
