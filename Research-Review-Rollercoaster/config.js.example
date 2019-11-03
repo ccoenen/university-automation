@@ -1,6 +1,6 @@
 module.exports = {
 	// papers are in directories below this directory
-	BASEPATH: 'this will be changed.',
+	PAPER_CONTAINER: 'this will be changed.',
 
 	// directories will contain the author name
 	NAME_REGEX: /^Directory For (?<author>.+)$/,

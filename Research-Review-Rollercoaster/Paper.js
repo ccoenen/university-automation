@@ -55,7 +55,7 @@ module.exports = class Paper {
 		p.randomIdentifier = csvData.randomIdentifier;
 		p.authorTeam = csvData.authorTeam;
 		p.reviewedByRaw = [];
-		p.titlePages = csvData.titlePages;
+		p.titlePages = parseInt(csvData.titlePages, 10) || 0;
 		p.title = csvData.title;
 		for (var key of Object.keys(csvData)) {
 			if (key.startsWith('reviewedBy')) {
