@@ -22,10 +22,6 @@ module.exports = class Paper {
 		this.randomIdentifier = hash.digest('hex').substr(0,6);
 	}
 
-	randomReviewName(paper) {
-		return `review-${paper.randomIdentifier}-${this.randomIdentifier}`;
-	}
-
 	allReviewedBy() {
 		return `Paper by ${this.author} (${this.randomIdentifier}) will be reviewed by ${this.reviewedBy.map(r=>r.author).join(', ')}`;
 	}

@@ -2,7 +2,7 @@ const pdftk = require('node-pdftk');
 
 const Paper = require('./Paper');
 const mappingCSV = require('./lib/mapping-csv');
-const {prettyPrintPapers, printError, writeReviewFiles} = require('./lib/helpers');
+const {prettyPrintPapers, printError, writeReviewFiles, collectReviewFiles} = require('./lib/helpers');
 const reviewers = require('./lib/reviewers');
 const teams = require('./lib/teams');
 
@@ -48,6 +48,7 @@ case 'collect-reviews':
 	mappingCSV.read(CONFIG.MAPPING_FILE)
 		.then(reviewers.check)
 		.then(prettyPrintPapers)
+		.then(collectReviewFiles)
 		.catch(printError);
 	break;
 
