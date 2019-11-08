@@ -2,6 +2,8 @@ const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 
+const helpers = require('./helpers');
+
 module.exports = class Paper {
 	constructor(author, authorDirectory, filename) {
 		this.author = author;
@@ -12,6 +14,7 @@ module.exports = class Paper {
 		this.reviewing = [];
 		this.reviewedBy = [];
 		this.reviewedByRaw = []; // temporary variable to make reading from CSV possible
+		this.supervisor = '';
 		this.title = '';
 		this.titlePages = 1;
 	}
@@ -30,6 +33,22 @@ module.exports = class Paper {
 		return this.author;
 	}
 
+	collectReviews(target) {
+		if (!target) { throw 'please set a target to collect the reviews in'; }
+		const reviewCollectionStream = fs.createWriteStream(target, {flag: 'w'}); // always overwrite
+
+		const REVIEW_HEADER = `Reviews for ${this.author}\n===\n\nThese reviews belong to ${path.basename(this.filename)}.`;
+		reviewCollectionStream.write(REVIEW_HEADER);
+
+		this.reviewedBy.forEach((reviewer, index) => {
+			const singleReview = fs.readFileSync(helpers.reviewPath(this, reviewer, '.txt'));
+			reviewCollectionStream.write(`\n\n***\nReview ${index+1}\n----\n`);
+			reviewCollectionStream.write(singleReview);
+		});
+
+		reviewCollectionStream.end();
+	}
+
 	toCSV() {
 		const csv = {
 			randomIdentifier: this.randomIdentifier,
@@ -38,6 +57,7 @@ module.exports = class Paper {
 			title: this.title,
 			authorTeam: this.authorTeam,
 			authorDirectory: this.authorDirectory,
+			supervisor: this.supervisor,
 			filename: this.filename,
 		};
 		this.reviewedBy.forEach((r, i) => {
@@ -51,6 +71,7 @@ module.exports = class Paper {
 		p.randomIdentifier = csvData.randomIdentifier;
 		p.authorTeam = csvData.authorTeam;
 		p.reviewedByRaw = [];
+		p.supervisor = csvData.supervisor;
 		p.titlePages = parseInt(csvData.titlePages, 10) || 0;
 		p.title = csvData.title;
 		for (var key of Object.keys(csvData)) {

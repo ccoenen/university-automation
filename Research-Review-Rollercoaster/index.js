@@ -1,9 +1,12 @@
+const path = require('path');
+
 const pdftk = require('node-pdftk');
 
-const Paper = require('./Paper');
 const mappingCSV = require('./lib/mapping-csv');
-const {prettyPrintPapers, printError, writeReviewFiles, collectReviewFiles} = require('./lib/helpers');
+const {prettyPrintPapers, printError, writeReviewFiles} = require('./lib/helpers');
+const Paper = require('./lib/Paper');
 const reviewers = require('./lib/reviewers');
+const supervision = require('./lib/supervision');
 const teams = require('./lib/teams');
 
 let CONFIG;
@@ -48,9 +51,23 @@ case 'collect-reviews':
 	mappingCSV.read(CONFIG.MAPPING_FILE)
 		.then(reviewers.check)
 		.then(prettyPrintPapers)
-		.then(collectReviewFiles)
+		.then((papers) => {
+			papers.forEach((p) => {
+				p.collectReviews(path.resolve(p.authorDirectory, `P3_191103_Paper reviews for ${p.author}.txt`));
+			});
+			return papers;
+		})
 		.catch(printError);
 	break;
+
+case 'prepare-supervision':
+	mappingCSV.read(CONFIG.MAPPING_FILE)
+		.then(supervision.check)
+		.then(supervision.createTargetDirs)
+		.then(supervision.writeSupervisionFiles)
+		.catch(printError);
+	break;
+
 
 default:
 	console.log(`

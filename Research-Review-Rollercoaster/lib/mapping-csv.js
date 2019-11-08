@@ -2,7 +2,7 @@ const fs = require('fs');
 
 const csv = require('fast-csv');
 
-const Paper = require('../Paper');
+const Paper = require('./Paper');
 
 module.exports = {
 	write: function (papers, file) {
