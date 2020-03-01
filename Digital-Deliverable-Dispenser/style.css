@@ -1,0 +1,21 @@
+body {
+	font-family: sans-serif;
+}
+
+ul#preview, ul#preview ul {
+	list-style: none;
+	padding-bottom: 0.5em;
+}
+
+li.file::before {
+	display: inline-block;
+	width: 1.2em;
+	height: 1em;
+	content: '📄';
+}
+li.directory::before {
+	display: inline-block;
+	width: 1.2em;
+	height: 1em;
+	content: '📂'
+}

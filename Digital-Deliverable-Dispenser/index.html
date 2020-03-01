@@ -4,12 +4,19 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Titel</title>
-		<script src="vendor/jszip-3.2.2-3.js"></script>
-		<script src="vendor/FileSaver-2.0.2.js"></script>
-		<script src="dispenser.js"></script>
+		<link rel="stylesheet" href="style.css">
 	</head>
 	<body>
-		<input id="teamname" name="teamname" placeholder="teamname">
+		<input id="author" name="author" placeholder="Vendy">
 		<button onclick="dispense()">dispense</button>
+		<button onclick="preparePreview(structure)">preview</button>
+
+		<ul id="preview"></ul>
+
+		<script src="vendor/jszip-3.2.2-3.js"></script>
+		<script src="vendor/FileSaver-2.0.2.js"></script>
+		<script src="structure.js"></script>
+		<script src="dispenser.js"></script>
+		<script>preparePreview(structure);</script>
 	</body>
 </html>
