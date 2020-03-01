@@ -1,4 +1,4 @@
-/* globals moment, */
+/* globals moment, structure, dispense, structureToDom */
 (function () {
 	'use strict';
 
