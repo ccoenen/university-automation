@@ -3,19 +3,25 @@ body {
 }
 
 ul#preview, ul#preview ul {
+	padding-left: 1.4em;
+	font-family: 'Consolas', monospace;
 	list-style: none;
 	padding-bottom: 0.5em;
 }
 
-li.file::before {
+li::before {
 	display: inline-block;
-	width: 1.2em;
+	position: relative;
+	top: -0.05em;
+	width: 1.4em;
 	height: 1em;
-	content: '📄';
 }
+
+li.file::before {
+	content: '📄';
+	left: 0.075em;
+}
+
 li.directory::before {
-	display: inline-block;
-	width: 1.2em;
-	height: 1em;
 	content: '📂'
 }

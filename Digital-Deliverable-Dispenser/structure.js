@@ -45,7 +45,7 @@
 				{ name: '<%= course %>_<%= yymmdd %>_Produktvideo_<%= author %>.mp4', type: 'file' },
 				{ name: '<%= course %>_<%= yymmdd %>_Produktvideo-Link_<%= author %>.txt', type: 'file' },
 			]},
-			{ name: 'project.json', type: 'file'}
+			{ name: 'project.json', type: 'file', contains: JSON.stringify({name: '<%= author %>'}, null, '\t')+'\n' }
 		]
 	};
 

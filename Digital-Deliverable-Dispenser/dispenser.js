@@ -1,46 +1,37 @@
-/* globals JSZip, saveAs, _, structure */
+/* globals JSZip, saveAs, _ */
 (function () {
 	'use strict';
 
 
-	function propertiesFromDom() {
-		return {
-			course: document.getElementById('course').value || document.getElementById('course').placeholder,
-			yymmdd: document.getElementById('yymmdd').value || document.getElementById('yymmdd').placeholder,
-			title: document.getElementById('title').value || document.getElementById('title').placeholder,
-			author: document.getElementById('author').value || document.getElementById('author').placeholder,
-			term: document.getElementById('term').value || document.getElementById('term').placeholder,
-		};
-	}
-
-	function dispense() {
-		const properties = propertiesFromDom();
-		recursiveRendering(structure, properties);
-		prepareZip(properties);
+	function dispense(structure, properties) {
+		const renderedStructure = recursiveRendering(structure, properties);
+		prepareZip(renderedStructure);
 	}
 
 	function recursiveRendering(structure, properties) {
 		return _.mapObject(structure, (val, key) => {
 			if (key === 'name') {
+				// render name
+				return _.template(val)(properties).replace(/ /g, '-');
+			} else if (key === 'contains' && structure.type === 'file') {
+				// render file contents
 				return _.template(val)(properties);
 			} else if (key === 'contains' && structure.type !== 'file') {
+				// render subtree
 				return val.map((i) => recursiveRendering(i, properties));
 			} else {
+				// nothing to do
 				return val;
 			}
 		});
 	}
 
-	function preparePreview() {
-		const container = document.getElementById('preview');
-		while (container.firstChild) {
-			container.removeChild(container.firstChild);
-		}
 
-		const properties = propertiesFromDom();
+	//// Concerning HTML output
+
+	function structureToDom(structure, properties) {
 		const renderedStructure = recursiveRendering(structure, properties);
-
-		container.appendChild(entryToDom(recursiveRendering(renderedStructure)));
+		return entryToDom(recursiveRendering(renderedStructure));
 	}
 
 	function entryToDom(entry) {
@@ -59,11 +50,12 @@
 		return element;
 	}
 
+
+	//// Concerning ZIP output
+
 	function prepareZip(renderedStructure) {
 		const zip = new JSZip();
-		zip.file('Hello.txt', 'Hello World\n');
-		var img = zip.folder('images');
-		img.file('smile.gif', 'test');
+		entryToZipContent(zip, renderedStructure);
 		zip.generateAsync({type:'blob'})
 			.then(function(content) {
 				// see FileSaver.js
@@ -71,6 +63,19 @@
 			});
 	}
 
+	function entryToZipContent(zipHierarchy, entry) {
+		if (entry.type !== 'file') {
+			const f = zipHierarchy.folder(entry.name);
+			if (entry.contains) {
+				entry.contains.forEach((item) => {
+					entryToZipContent(f, item);
+				});
+			}
+		} else {
+			zipHierarchy.file(entry.name, entry.contains || '');
+		}
+	}
+
 	window.dispense = dispense;
-	window.preparePreview = preparePreview;
+	window.structureToDom = structureToDom;
 }());
