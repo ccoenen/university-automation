@@ -17,7 +17,7 @@
 	 */
 
 	const structure = {
-		name: '<%= course %>_<%= yymmdd %>_Endabgabe_<%= author %>.zip',
+		name: '<%= course %>_<%= yymmdd %>_Endabgabe_<%= author %>',
 		contains: [
 			{ name: '<%= course %>_<%= yymmdd %>_Doku_<%= author %>', contains: [
 				{ name: '<%= course %>_<%= yymmdd %>_Forschungsarbeiten_<%= author %>' },
