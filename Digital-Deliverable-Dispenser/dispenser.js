@@ -1,16 +1,15 @@
-/* globals JSZip, saveAs, structure */
+/* globals JSZip, saveAs, _, structure */
 (function () {
 	'use strict';
 
 
 	function propertiesFromDom() {
 		return {
-			course: document.getElementById('term').value || document.getElementById('term').placeholder,
+			course: document.getElementById('course').value || document.getElementById('course').placeholder,
 			yymmdd: document.getElementById('yymmdd').value || document.getElementById('yymmdd').placeholder,
 			title: document.getElementById('title').value || document.getElementById('title').placeholder,
 			author: document.getElementById('author').value || document.getElementById('author').placeholder,
 			term: document.getElementById('term').value || document.getElementById('term').placeholder,
-			type: document.getElementById('type').value || document.getElementById('type').placeholder
 		};
 	}
 
@@ -19,24 +18,29 @@
 		recursiveRendering(structure, properties);
 		prepareZip(properties);
 	}
-/*
-	function recursiveRendering(structure, properties, recursionDepth = 0) {
-		for (let [key, value] of Object.entries(structure)) {
-			if (key === 'contains' && typeof value.forEach === 'function') {
-				value.map((item) => {
-					return recursiveRendering(item, properties, recursionDepth + 1);
-				});
+
+	function recursiveRendering(structure, properties) {
+		return _.mapObject(structure, (val, key) => {
+			if (key === 'name') {
+				return _.template(val)(properties);
+			} else if (key === 'contains' && structure.type !== 'file') {
+				return val.map((i) => recursiveRendering(i, properties));
+			} else {
+				return val;
 			}
-		}
+		});
 	}
-*/
-	function preparePreview(structure) {
+
+	function preparePreview() {
 		const container = document.getElementById('preview');
 		while (container.firstChild) {
 			container.removeChild(container.firstChild);
 		}
 
-		container.appendChild(entryToDom(structure));
+		const properties = propertiesFromDom();
+		const renderedStructure = recursiveRendering(structure, properties);
+
+		container.appendChild(entryToDom(recursiveRendering(renderedStructure)));
 	}
 
 	function entryToDom(entry) {

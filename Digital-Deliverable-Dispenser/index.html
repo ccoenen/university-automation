@@ -7,16 +7,29 @@
 		<link rel="stylesheet" href="style.css">
 	</head>
 	<body>
-		<input id="author" name="author" placeholder="Vendy">
-		<button onclick="dispense()">dispense</button>
-		<button onclick="preparePreview(structure)">preview</button>
+		<form>
+			<select id="course" value="P2">
+				<option>P2</option>
+				<option>P3</option>
+				<option>P4</option>
+				<option>P6</option>
+				<option>P7</option>
+			</select>
+			<input id="yymmdd" name="yymmdd" placeholder="201125">
+			<input id="author" name="author" placeholder="Team-1">
+			<input id="title" name="title" placeholder="Die dicken Brummer">
+			<input id="term" name="term" placeholder="2020-WS">
+			<button id="dispense">dispense</button>
+		</form>
 
 		<ul id="preview"></ul>
 
+		<script src="vendor/underscore-1.9.2.js"></script>
 		<script src="vendor/jszip-3.2.2-3.js"></script>
 		<script src="vendor/FileSaver-2.0.2.js"></script>
+		<script src="vendor/moment-2.24.0.js"></script>
 		<script src="structure.js"></script>
 		<script src="dispenser.js"></script>
-		<script>preparePreview(structure);</script>
+		<script src="ui.js"></script>
 	</body>
 </html>
