@@ -29,7 +29,7 @@
 		dispense(structure, propertiesFromDom());
 	});
 	form.addEventListener('keyup', updatePreview);
-	form.addEventListener('change', updatePreview());
+	form.addEventListener('change', updatePreview);
 
 	function updatePreview() {
 		const container = document.getElementById('preview');
