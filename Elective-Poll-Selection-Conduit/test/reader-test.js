@@ -1,8 +1,10 @@
 const assert = require('assert');
 const fs = require('fs');
 
+const { Choice } = require('../lib/Choice');
+const { Voter } = require('../lib/Voter');
+
 const reader = require('../lib/reader');
-const Voter = require('../lib/voter');
 
 describe('reader', function() {
 	let htmlString = '';
@@ -57,15 +59,38 @@ describe('reader', function() {
 
 		it('extracts the correct voters (students)', () => {
 			const expected = [
-				new Voter('Test-User-C', ['yes', 'maybe', 'undefined', 'yes', 'undefined', 'undefined', 'undefined', 'yes', 'maybe', 'undefined']),
-				new Voter('Test-User-A', ['no', 'no', 'no', 'no', 'no', 'yes', 'no', 'no', 'no', 'no']),
-				new Voter('example.one@example.com', ['undefined', 'yes', 'undefined', 'undefined', 'maybe', 'undefined', 'yes', 'undefined', 'undefined', 'undefined']),
-				new Voter('example.allmoi@example.com', ['yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes'])
+				new Voter('Test-User-C', [new Choice('', 'yes'), new Choice('', 'maybe'), new Choice('', 'undefined'), new Choice('', 'yes'), new Choice('', 'undefined'), new Choice('', 'undefined'), new Choice('', 'undefined'), new Choice('', 'yes'), new Choice('', 'maybe'), new Choice('', 'undefined')]),
+				new Voter('Test-User-A', [new Choice('', 'no'), new Choice('', 'no'), new Choice('', 'no'), new Choice('', 'no'), new Choice('', 'no'), new Choice('', 'yes'), new Choice('', 'no'), new Choice('', 'no'), new Choice('', 'no'), new Choice('', 'no')]),
+				new Voter('example.one@example.com', [new Choice('', 'undefined'), new Choice('', 'yes'), new Choice('', 'undefined'), new Choice('', 'undefined'), new Choice('', 'maybe'), new Choice('', 'undefined'), new Choice('', 'yes'), new Choice('', 'undefined'), new Choice('', 'undefined'), new Choice('', 'undefined')]),
+				new Voter('example.allmoi@example.com', [new Choice('', 'yes'), new Choice('', 'yes'), new Choice('', 'yes'), new Choice('', 'yes'), new Choice('', 'yes'), new Choice('', 'yes'), new Choice('', 'yes'), new Choice('', 'yes'), new Choice('', 'yes'), new Choice('', 'yes')])
 			];
 
 			expected[1].userid = 'test.user.a';
 
 			assert.deepStrictEqual(reader.parse(htmlString).voters, expected);
+		});
+	});
+
+
+	describe('#resolveOptionNames', () => {
+		it('assigns the correct option names to the choices', () => {
+			const parsedData = reader.parse(htmlString);
+			const expected = new Voter('Test-User-A', [
+				new Choice('Kurs A (Dozent A)', 'no'),
+				new Choice('Kurs B (Dozent B)', 'no'),
+				new Choice('Kurs C (Dozent C)', 'no'),
+				new Choice('Kurs D (Dozent D)', 'no'),
+				new Choice('Kurs E (Dozent E)', 'no'),
+				new Choice('Kurs F (Dozent F)', 'yes'),
+				new Choice('Kurs G (Dozent G)', 'no'),
+				new Choice('Kurs H (Dozent H)', 'no'),
+				new Choice('Kurs I (Dozent I)', 'no'),
+				new Choice('Kurs J (Dozent J)', 'no')
+			]);
+			expected.userid = 'test.user.a';
+			reader.resolveOptionNames(parsedData);
+
+			assert.deepStrictEqual(parsedData.voters[1], expected);
 		});
 	});
 });

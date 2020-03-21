@@ -1,19 +1,11 @@
 const HTMLParser = require('node-html-parser');
 
-const Voter = require('./voter.js');
+const { Voter } = require('./Voter.js');
+const { Choice, PREFERENCE } = require('./Choice.js');
 
 const USERID_REGEX = /^\/avatar\/(.+)\/32$/;
 
-const VOTING_STATE = {
-	YES: 'yes',
-	MAYBE: 'maybe',
-	NO: 'no',
-	UNDEFINED: 'undefined',
-};
-
 module.exports = {
-	VOTING_STATE: VOTING_STATE,
-
 	findVoters: function (htmlDomLike) {
 		const output = [];
 		htmlDomLike.querySelectorAll('.vote-table div').forEach((row) => {
@@ -31,10 +23,19 @@ module.exports = {
 
 			const choices = row.querySelectorAll('.vote-table-item');
 			voter.choices = choices.map((c) => {
-				if (c.classNames.includes('yes')) return VOTING_STATE.YES;
-				if (c.classNames.includes('maybe')) return VOTING_STATE.MAYBE;
-				if (c.classNames.includes('no')) return VOTING_STATE.NO;
-				return VOTING_STATE.UNDEFINED;
+				const output = new Choice();
+
+				if (c.classNames.includes('yes')) {
+					output.preference = PREFERENCE.YES;
+				} else if (c.classNames.includes('maybe')) {
+					output.preference = PREFERENCE.MAYBE;
+				} else if (c.classNames.includes('no')) {
+					output.preference = PREFERENCE.NO;
+				} else {
+					output.preference = PREFERENCE.UNDEFINED;
+				}
+
+				return output;
 			});
 
 			output.push(voter);
@@ -44,11 +45,13 @@ module.exports = {
 		return output;
 	},
 
+
 	findOptions: function (htmlDomLike) {
 		const output = htmlDomLike.querySelectorAll('.vote-header .text-box').map((h) => h.text.trim());
 		if (output.length < 1) { throw new Error('no options found in document'); }
 		return output;
 	},
+
 
 	parse: function (htmlString) {
 		const output = {};
@@ -57,5 +60,14 @@ module.exports = {
 		output.voters = module.exports.findVoters(root);
 
 		return output;
+	},
+
+
+	resolveOptionNames: function (data) {
+		data.voters.forEach((voter) => {
+			voter.choices.forEach((choice, index) => {
+				choice.name = data.options[index];
+			});
+		});
 	}
 };
