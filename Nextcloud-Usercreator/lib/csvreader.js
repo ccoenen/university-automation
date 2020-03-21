@@ -71,8 +71,7 @@ module.exports = function read(filename) {
 			})
 
 			.on('error', (err) => {
-				console.error(`Failed to parse ${filename}: ${err.message}`);
-				process.exit(1);
+				return reject(`Failed to parse ${filename}: ${err.message}`);
 			});
 		
 		fileStream.pipe(csvStream);

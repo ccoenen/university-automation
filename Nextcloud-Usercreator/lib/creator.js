@@ -57,8 +57,8 @@ function updateUser(user) {
 	return Promise.all(promises);
 }
 
-function createSingleUser(currentUser) {
-	console.log("Processing " + currentUser.userid + ' / ' + currentUser.password);
+function createSingleUser(currentUser, index = 0, total = 0) {
+	console.log(`Processing ${index+1}/${total}: ${currentUser.userid} / ${currentUser.password}`);
 
 	currentUser.shares = currentUser.shares || {};
 	currentUser.groups = currentUser.groups || [];
