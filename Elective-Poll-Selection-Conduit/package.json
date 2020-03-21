@@ -1,0 +1,26 @@
+{
+  "name": "university-automation",
+  "version": "1.0.0",
+  "description": "Feel free to expand or suggest changes. Each Project has their own README, describing how they work.",
+  "main": ".eslintrc.js",
+  "dependencies": {
+    "node-html-parser": "^1.2.13"
+  },
+  "devDependencies": {
+    "mocha": "^7.1.1"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ccoenen/university-automation.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ccoenen/university-automation/issues"
+  },
+  "homepage": "https://github.com/ccoenen/university-automation#readme"
+}
