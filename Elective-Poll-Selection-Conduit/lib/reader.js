@@ -1,5 +1,9 @@
 const HTMLParser = require('node-html-parser');
 
+const Voter = require('./voter.js');
+
+const USERID_REGEX = /^\/avatar\/(.+)\/32$/;
+
 const VOTING_STATE = {
 	YES: 'yes',
 	MAYBE: 'maybe',
@@ -14,8 +18,16 @@ module.exports = {
 		const output = [];
 		htmlDomLike.querySelectorAll('.vote-table div').forEach((row) => {
 			if (row.classNames.includes('header')) { return false; }
-			const voter = {};
-			voter.name = row.querySelector('.user-name').text.trim();
+			const name = row.querySelector('.user-name').text.trim();
+			const voter = new Voter(name);
+
+			const img = row.querySelector('img');
+			if (img) {
+				const match = img.getAttribute('src').match(USERID_REGEX);
+				if (match) {
+					voter.userid = match[1];
+				}
+			}
 
 			const choices = row.querySelectorAll('.vote-table-item');
 			voter.choices = choices.map((c) => {
