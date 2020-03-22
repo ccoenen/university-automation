@@ -24,6 +24,7 @@ describe('Voter', function() {
 				new Choice('A', 'maybe'),
 				new Choice('B', 'no')
 			];
+			expected.forEach((c) => c.weight = 1);
 			voter.prepareOptionsByPriority();
 			assert.deepStrictEqual(voter.optionsByPriority, expected);
 		});

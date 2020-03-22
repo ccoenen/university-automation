@@ -15,9 +15,10 @@ const SORT_ORDER = {
 
 
 class Choice {
-	constructor(name = '', preference = '') {
+	constructor(name = '', preference = '', weight) {
 		this.name = name;
 		this.preference = preference;
+		this.weight = weight;
 	}
 
 	toString() {

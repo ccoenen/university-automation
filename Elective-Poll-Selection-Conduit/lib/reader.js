@@ -38,6 +38,7 @@ module.exports = {
 				return output;
 			});
 
+			voter.prepareOptionsByPriority();
 			output.push(voter);
 		});
 

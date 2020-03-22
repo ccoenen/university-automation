@@ -58,11 +58,105 @@ describe('reader', function() {
 
 
 		it('extracts the correct voters (students)', () => {
-			const expected = [
-				new Voter('Test-User-C', [new Choice('', 'yes'), new Choice('', 'maybe'), new Choice('', 'undefined'), new Choice('', 'yes'), new Choice('', 'undefined'), new Choice('', 'undefined'), new Choice('', 'undefined'), new Choice('', 'yes'), new Choice('', 'maybe'), new Choice('', 'undefined')]),
-				new Voter('Test-User-A', [new Choice('', 'no'), new Choice('', 'no'), new Choice('', 'no'), new Choice('', 'no'), new Choice('', 'no'), new Choice('', 'yes'), new Choice('', 'no'), new Choice('', 'no'), new Choice('', 'no'), new Choice('', 'no')]),
-				new Voter('example.one@example.com', [new Choice('', 'undefined'), new Choice('', 'yes'), new Choice('', 'undefined'), new Choice('', 'undefined'), new Choice('', 'maybe'), new Choice('', 'undefined'), new Choice('', 'yes'), new Choice('', 'undefined'), new Choice('', 'undefined'), new Choice('', 'undefined')]),
-				new Voter('example.allmoi@example.com', [new Choice('', 'yes'), new Choice('', 'yes'), new Choice('', 'yes'), new Choice('', 'yes'), new Choice('', 'yes'), new Choice('', 'yes'), new Choice('', 'yes'), new Choice('', 'yes'), new Choice('', 'yes'), new Choice('', 'yes')])
+			const expected = [];
+			expected[0] = new Voter('Test-User-C', [
+				new Choice('', 'yes', 1/3),
+				new Choice('', 'maybe', 1/2),
+				new Choice('', 'undefined', 1/5),
+				new Choice('', 'yes', 1/3),
+				new Choice('', 'undefined', 1/5),
+				new Choice('', 'undefined', 1/5),
+				new Choice('', 'undefined', 1/5),
+				new Choice('', 'yes', 1/3),
+				new Choice('', 'maybe', 1/2),
+				new Choice('', 'undefined', 1/5)
+			]);
+			expected[0].optionsByPriority = [
+				new Choice('', 'yes', 1/3),
+				new Choice('', 'yes', 1/3),
+				new Choice('', 'yes', 1/3),
+				new Choice('', 'maybe', 1/2),
+				new Choice('', 'maybe', 1/2),
+				new Choice('', 'undefined', 1/5),
+				new Choice('', 'undefined', 1/5),
+				new Choice('', 'undefined', 1/5),
+				new Choice('', 'undefined', 1/5),
+				new Choice('', 'undefined', 1/5)
+			];
+
+			expected[1] = new Voter('Test-User-A', [
+				new Choice('', 'no', 1/9),
+				new Choice('', 'no', 1/9),
+				new Choice('', 'no', 1/9),
+				new Choice('', 'no', 1/9),
+				new Choice('', 'no', 1/9),
+				new Choice('', 'yes', 1),
+				new Choice('', 'no', 1/9),
+				new Choice('', 'no', 1/9),
+				new Choice('', 'no', 1/9),
+				new Choice('', 'no', 1/9)
+			]);
+			expected[1].optionsByPriority = [
+				new Choice('', 'yes', 1),
+				new Choice('', 'no', 1/9),
+				new Choice('', 'no', 1/9),
+				new Choice('', 'no', 1/9),
+				new Choice('', 'no', 1/9),
+				new Choice('', 'no', 1/9),
+				new Choice('', 'no', 1/9),
+				new Choice('', 'no', 1/9),
+				new Choice('', 'no', 1/9),
+				new Choice('', 'no', 1/9)
+			];
+
+			expected[2] = new Voter('example.one@example.com', [
+				new Choice('', 'undefined', 1/7),
+				new Choice('', 'yes', 1/2),
+				new Choice('', 'undefined', 1/7),
+				new Choice('', 'undefined', 1/7),
+				new Choice('', 'maybe', 1),
+				new Choice('', 'undefined', 1/7),
+				new Choice('', 'yes', 1/2),
+				new Choice('', 'undefined', 1/7),
+				new Choice('', 'undefined', 1/7),
+				new Choice('', 'undefined', 1/7)
+			]);
+			expected[2].optionsByPriority = [
+				new Choice('', 'yes', 1/2),
+				new Choice('', 'yes', 1/2),
+				new Choice('', 'maybe', 1),
+				new Choice('', 'undefined', 1/7),
+				new Choice('', 'undefined', 1/7),
+				new Choice('', 'undefined', 1/7),
+				new Choice('', 'undefined', 1/7),
+				new Choice('', 'undefined', 1/7),
+				new Choice('', 'undefined', 1/7),
+				new Choice('', 'undefined', 1/7)
+			];
+
+			expected[3] = new Voter('example.allmoi@example.com', [
+				new Choice('', 'yes', 1/10),
+				new Choice('', 'yes', 1/10),
+				new Choice('', 'yes', 1/10),
+				new Choice('', 'yes', 1/10),
+				new Choice('', 'yes', 1/10),
+				new Choice('', 'yes', 1/10),
+				new Choice('', 'yes', 1/10),
+				new Choice('', 'yes', 1/10),
+				new Choice('', 'yes', 1/10),
+				new Choice('', 'yes', 1/10)
+			]);
+			expected[3].optionsByPriority = [
+				new Choice('', 'yes', 1/10),
+				new Choice('', 'yes', 1/10),
+				new Choice('', 'yes', 1/10),
+				new Choice('', 'yes', 1/10),
+				new Choice('', 'yes', 1/10),
+				new Choice('', 'yes', 1/10),
+				new Choice('', 'yes', 1/10),
+				new Choice('', 'yes', 1/10),
+				new Choice('', 'yes', 1/10),
+				new Choice('', 'yes', 1/10)
 			];
 
 			expected[1].userid = 'test.user.a';
@@ -76,17 +170,30 @@ describe('reader', function() {
 		it('assigns the correct option names to the choices', () => {
 			const parsedData = reader.parse(htmlString);
 			const expected = new Voter('Test-User-A', [
-				new Choice('Kurs A (Dozent A)', 'no'),
-				new Choice('Kurs B (Dozent B)', 'no'),
-				new Choice('Kurs C (Dozent C)', 'no'),
-				new Choice('Kurs D (Dozent D)', 'no'),
-				new Choice('Kurs E (Dozent E)', 'no'),
-				new Choice('Kurs F (Dozent F)', 'yes'),
-				new Choice('Kurs G (Dozent G)', 'no'),
-				new Choice('Kurs H (Dozent H)', 'no'),
-				new Choice('Kurs I (Dozent I)', 'no'),
-				new Choice('Kurs J (Dozent J)', 'no')
+				new Choice('Kurs A (Dozent A)', 'no', 1/9),
+				new Choice('Kurs B (Dozent B)', 'no', 1/9),
+				new Choice('Kurs C (Dozent C)', 'no', 1/9),
+				new Choice('Kurs D (Dozent D)', 'no', 1/9),
+				new Choice('Kurs E (Dozent E)', 'no', 1/9),
+				new Choice('Kurs F (Dozent F)', 'yes', 1),
+				new Choice('Kurs G (Dozent G)', 'no', 1/9),
+				new Choice('Kurs H (Dozent H)', 'no', 1/9),
+				new Choice('Kurs I (Dozent I)', 'no', 1/9),
+				new Choice('Kurs J (Dozent J)', 'no', 1/9)
 			]);
+			expected.optionsByPriority = [
+				new Choice('Kurs F (Dozent F)', 'yes', 1),
+				new Choice('Kurs A (Dozent A)', 'no', 1/9),
+				new Choice('Kurs B (Dozent B)', 'no', 1/9),
+				new Choice('Kurs C (Dozent C)', 'no', 1/9),
+				new Choice('Kurs D (Dozent D)', 'no', 1/9),
+				new Choice('Kurs E (Dozent E)', 'no', 1/9),
+				new Choice('Kurs G (Dozent G)', 'no', 1/9),
+				new Choice('Kurs H (Dozent H)', 'no', 1/9),
+				new Choice('Kurs I (Dozent I)', 'no', 1/9),
+				new Choice('Kurs J (Dozent J)', 'no', 1/9)
+			];
+
 			expected.userid = 'test.user.a';
 			reader.resolveOptionNames(parsedData);
 
