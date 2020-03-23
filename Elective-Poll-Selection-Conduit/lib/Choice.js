@@ -15,22 +15,28 @@ const SORT_ORDER = {
 
 
 class Choice {
-	constructor(name = '', preference = '', weight) {
-		this.name = name;
+	constructor(option, preference = '') {
+		this.option = option;
 		this.preference = preference;
-		this.weight = weight;
 	}
 
 	toString() {
-		return `[Choice ${this.name}: ${this.preference}]`;
+		return `[Choice ${this.option}: ${this.preference}]`;
 	}
 
 	static compare(a, b) {
-		if (a instanceof Choice && b instanceof Choice) {
-			return Math.max(-1, Math.min(SORT_ORDER[a.preference] - SORT_ORDER[b.preference], 1));
-		} else {
+		if (!(a instanceof Choice && b instanceof Choice)) {
 			throw new Error('one of the compared elements is not an instance of `Choice`');
 		}
+
+		// most preferred first
+		const firstCheck = Math.max(-1, Math.min(SORT_ORDER[a.preference] - SORT_ORDER[b.preference], 1));
+		if (firstCheck !== 0) {
+			return firstCheck;
+		}
+
+		// least popular first
+		return Math.max(-1, Math.min(a.option.popularity - b.option.popularity, 1));
 	}
 }
 

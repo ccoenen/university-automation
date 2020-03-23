@@ -1,5 +1,6 @@
 const HTMLParser = require('node-html-parser');
 
+const { Option } = require('./Option.js');
 const { Voter } = require('./Voter.js');
 const { Choice, PREFERENCE } = require('./Choice.js');
 
@@ -38,7 +39,6 @@ module.exports = {
 				return output;
 			});
 
-			voter.prepareOptionsByPriority();
 			output.push(voter);
 		});
 
@@ -48,7 +48,9 @@ module.exports = {
 
 
 	findOptions: function (htmlDomLike) {
-		const output = htmlDomLike.querySelectorAll('.vote-header .text-box').map((h) => h.text.trim());
+		const output = htmlDomLike.querySelectorAll('.vote-header .text-box').map((h) => {
+			return new Option(h.text.trim());
+		});
 		if (output.length < 1) { throw new Error('no options found in document'); }
 		return output;
 	},
@@ -67,7 +69,7 @@ module.exports = {
 	resolveOptionNames: function (data) {
 		data.voters.forEach((voter) => {
 			voter.choices.forEach((choice, index) => {
-				choice.name = data.options[index];
+				choice.option = data.options[index];
 			});
 		});
 	}

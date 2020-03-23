@@ -1,32 +1,18 @@
 const assert = require('assert');
 
 const { Choice } = require('../lib/Choice');
+const { Option } = require('../lib/Option');
 const { Voter } = require('../lib/Voter');
 
 
 describe('Voter', function() {
-	describe('#prepareOptionsByPriority', () => {
-		let voter;
-
-
-		beforeEach(() => {
-			voter = new Voter('test', [
-				new Choice('A', 'maybe'),
-				new Choice('B', 'no'),
-				new Choice('C', 'yes')
+	describe('#toString', () => {
+		it('outputs a readable thing', () => {
+			const v = new Voter('Bernd', [
+				new Choice(new Option('A'), 'yes'),
+				new Choice(new Option('B'), 'maybe')
 			]);
-		});
-
-
-		it('prepares the options sorted by priority', () => {
-			const expected = [
-				new Choice('C', 'yes'),
-				new Choice('A', 'maybe'),
-				new Choice('B', 'no')
-			];
-			expected.forEach((c) => c.weight = 1);
-			voter.prepareOptionsByPriority();
-			assert.deepStrictEqual(voter.optionsByPriority, expected);
+			assert.strictEqual(v.toString(), '[Voter Bernd () [Choice [Option A]: yes], [Choice [Option B]: maybe]]');
 		});
 	});
 });
