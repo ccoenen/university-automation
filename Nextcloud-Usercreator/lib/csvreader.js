@@ -4,7 +4,7 @@ const csv = require('fast-csv');
 const passwordGenerator = require('./passwordGenerator')('input-data/password.salt');
 
 
-function nameFromRow(row) {
+function nameFromRow(row, filename) {
 	/*jshint -W069 */
 	var name = '';
 
@@ -18,8 +18,7 @@ function nameFromRow(row) {
 		// single serving fields
 		name = row['Vorname'] + ' ' + (row['Nachname'] || row['Name']);
 	} else {
-		console.warn("No name, Name, Vorname, Nachname fields found in ", row);
-		return;
+		throw new Error(`No name, Name, Vorname, Nachname fields found in ${JSON.stringify(row)} (filename: ${filename})`);
 	}
 	return name.trim();
 }
@@ -44,7 +43,7 @@ module.exports = function read(filename) {
 			.on('data', (data) => {
 				var preparedObject = {
 					email: data.email,
-					name: nameFromRow(data),
+					name: nameFromRow(data, filename),
 				};
 
 				preparedObject.userid = data.userid || useridFromEmail(preparedObject.email) || useridFromName(preparedObject.name);
