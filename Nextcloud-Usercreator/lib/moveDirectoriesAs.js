@@ -11,13 +11,17 @@ function moveDirectoriesAs(sourceDirectory, sourceRegex, destinationDirectory, a
 				return;
 			}
 
+			// console.log(`- test ${sourceDirectory} for ${sourceRegex}`)
 			var matches = contents.map((item) => {
-				if (item.match(sourceRegex)) {
+				if (sourceRegex.test(item)) {
+					// console.log(`  + <${item}>`);
 					return (item);
+				} else {
+					// console.log(`  - <${item}>`);
 				}
 			}).filter(function (a) {return !!a;});
 
-			if (matches.length > 1) { // not actually a clean condition, but works for my use-case
+			if (matches.length > 0) {
 				dav.mkdir(destinationDirectory, () => {
 					moveNext();
 				});
@@ -28,13 +32,20 @@ function moveDirectoriesAs(sourceDirectory, sourceRegex, destinationDirectory, a
 
 			function moveNext() {
 				var item = matches.pop();
+				let mutatedDestinationDirectory
+
 				if (!item) {
 					fulfill(successfulMoves);
 					return;
 				}
+				if (item.match(sourceRegex)[1]) {
+					mutatedDestinationDirectory = destinationDirectory.replace("$1", item.match(sourceRegex)[1]);
+				} else {
+					mutatedDestinationDirectory = destinationDirectory;
+				}
 
-				console.log('  - renaming %s to %s', sourceDirectory + item, destinationDirectory + item);
-				dav.rename(sourceDirectory + item, destinationDirectory + item, (error) => {
+				console.log('  - renaming %s to %s', sourceDirectory + item, mutatedDestinationDirectory + item);
+				dav.rename(sourceDirectory + item, mutatedDestinationDirectory + item, (error) => {
 					if (error) {
 						reject(error);
 					} else {
@@ -46,4 +57,6 @@ function moveDirectoriesAs(sourceDirectory, sourceRegex, destinationDirectory, a
 		});
 	});
 }
-module.exports = moveDirectoriesAs;
+module.exports = {
+	moveDirectoriesAs
+};

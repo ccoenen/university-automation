@@ -61,7 +61,7 @@ if (program.createUsers) {
 }
 
 if (program.moveDirectories) {
-	const mover = require('./lib/mover');
+	const { mover } = require('./lib/mover');
 	chain = chain.then((users) => {
 		return mover(users, BASE_OPTIONS).then(() => users);
 	});
