@@ -44,8 +44,12 @@ function updateUser(user) {
 		promises.push(api.changeUserProperty(user.userid, 'email', user.email));
 	}
 	if (user.password && creator.options.resetPassword) {
-		console.log(`attempting to reset password for ${user.userid}`);
-		promises.push(api.changeUserProperty(user.userid, 'password', user.password));
+		if (user.userid !== creator.options.adminuser) {
+			console.log(`attempting to reset password for ${user.userid}`);
+			promises.push(api.changeUserProperty(user.userid, 'password', user.password));
+		} else {
+			console.log(`not changing password for privileged user ${user.userid}`);
+		}
 	}
 	if (user.name) {
 		promises.push(api.changeUserProperty(user.userid, 'display', user.name));
