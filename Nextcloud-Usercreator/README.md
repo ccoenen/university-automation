@@ -56,6 +56,6 @@ They may specify "userid", otherwise the userid is generated from the email fiel
 
 ## Usage
 
-`node index.js --rules <a javascript file> --list <a csv file> --list <another csv file> --create-users --overwrite-passwords --move-directories --send-mails`
+`node index.js --rules <a javascript file> --list <a csv file> --list <another csv file> --create-users --overwrite-passwords --create-shares --move-directories --send-mails`
 
 would be a full example.

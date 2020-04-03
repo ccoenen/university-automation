@@ -62,9 +62,8 @@ function updateUser(user) {
 }
 
 function createSingleUser(currentUser, index = 0, total = 0) {
-	console.log(`Processing ${index+1}/${total}: ${currentUser.userid} / ${currentUser.password}`);
+	console.log(`User ${index+1}/${total}: ${currentUser.userid}`);
 
-	currentUser.shares = currentUser.shares || {};
 	currentUser.groups = currentUser.groups || [];
 
 	// console.log(" - create");
@@ -76,25 +75,32 @@ function createSingleUser(currentUser, index = 0, total = 0) {
 	}).then(() => {
 		// console.log(" - groups: " + currentUser.groups.join(', '));
 		return api.setGroups(currentUser.userid, currentUser.groups).then(debuginfo);
-	}).then(() => {
-		let chain = Promise.resolve();
-		Object.keys(currentUser.shares).forEach((dirname) => {
-			// console.log(' - create dir %s', dirname);
-			chain = chain.then(() => {
-				return createDirectoryAs(dirname, [creator.options.webdav_path, currentUser.userid, currentUser.password]).catch((err) => {
-					if (err.status != 405) { // 405 is
-						console.error("createDirectoryAs failed: ", JSON.stringify(err), dirname);
-					} else {
-						console.log("Directory exists: ", dirname);
-					}
-				}).then(() => {
-					// console.log('   - share %s with %s', dirname, currentUser.shares[dirname].shareWith);
-					return api.share(dirname, currentUser.shares[dirname], { auth: currentUser.userid + ':' + currentUser.password }).then(debuginfo);
-				});
+	});
+}
+
+
+function createSingleUserShares(currentUser, index = 0, total = 0) {
+	console.log(`Shares ${index+1}/${total}: ${currentUser.userid}`);
+
+	currentUser.shares = currentUser.shares || {};
+
+	let chain = Promise.resolve();
+	Object.keys(currentUser.shares).forEach((dirname) => {
+		// console.log(' - create dir %s', dirname);
+		chain = chain.then(() => {
+			return createDirectoryAs(dirname, [creator.options.webdav_path, currentUser.userid, currentUser.password]).catch((err) => {
+				if (err.status != 405) { // 405 is
+					console.error("createDirectoryAs failed: ", JSON.stringify(err), dirname);
+				} else {
+					console.log("Directory exists: ", dirname);
+				}
+			}).then(() => {
+				// console.log('   - share %s with %s', dirname, currentUser.shares[dirname].shareWith);
+				return api.share(dirname, currentUser.shares[dirname], { auth: currentUser.userid + ':' + currentUser.password }).then(debuginfo);
 			});
 		});
-		return chain;
 	});
+	return chain;
 }
 
 
@@ -116,13 +122,19 @@ const creator = {
 		// console.log("- Attempting to create these groups:", groups);
 		return api.addGroups(groups);
 	},
-	createAll: (users) => {
+	createUsers: (users) => {
 		return creator
 			.createUserGroups(users)
 			.then(debuginfo)
 			.then(() => { return Promise.mapSeries(users, createSingleUser, {concurrency: 1}); })
 			.then(function () {
-				console.log('All Done. %d API requests', api.numberOfCalls());
+				console.log('Created Users');
+			});
+	},
+	createShares: (users) => {
+		return Promise.mapSeries(users, createSingleUserShares, {concurrency: 1})
+			.then(function () {
+				console.log('Created Shares');
 			});
 	}
 };

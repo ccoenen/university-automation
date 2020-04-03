@@ -1,7 +1,10 @@
 const path = require('path');
 
 const csvreader = require('./lib/csvreader');
+const creator = require('./lib/creator');
+
 const BASE_OPTIONS = require('./config/server');
+creator.init(BASE_OPTIONS);
 
 process.on("unhandledRejection", function(reason, promise) {
 	console.error("undhandled promise rejection: ", reason, promise);
@@ -21,6 +24,7 @@ program
 	.option('--print-directories', 'print all directories that will be created', false)
 	.option('--overwrite-passwords', 'reset passwords for existing users', false)
 	.option('--create-users', 'create new users if neccessary', false)
+	.option('--create-shares', 'create directories and share them', false)
 	.option('--move-directories', 'groups directories in subdirs by prefix', false)
 	.option('--send-mails', 'send welcome mails to users', false)
 	.option('--trigger-password-reset', 'have nextcloud send out a reset password mail', false)
@@ -52,12 +56,16 @@ if (program.printDirectories) {
 }
 
 if (program.createUsers) {
-	const creator = require('./lib/creator');
 	chain = chain.then((users) => {
-		creator.init(BASE_OPTIONS);
 		creator.options.resetPassword = program.overwritePasswords;
-		return creator.createAll(users).then(() => users);
+		return creator.createUsers(users).then(() => users);
 	})
+}
+
+if (program.createShares) {
+	chain = chain.then((users) => {
+		return creator.createShares(users).then(() => users);
+	});
 }
 
 if (program.moveDirectories) {
