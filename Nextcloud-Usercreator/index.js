@@ -28,6 +28,7 @@ program
 	.option('--move-directories', 'groups directories in subdirs by prefix', false)
 	.option('--send-mails', 'send welcome mails to users', false)
 	.option('--trigger-password-reset', 'have nextcloud send out a reset password mail', false)
+	.option('--only [userid]', 'need to run everything again but just for that one person? use this.', false)
 	.parse(process.argv);
 
 const processingPromise = require(path.resolve(program.rules));
@@ -37,6 +38,17 @@ const listPromises = program.list.map((list) => {
 });
 
 let chain = Promise.all(listPromises).then((lists) => processingPromise(lists, BASE_OPTIONS));
+
+if (program.only) {
+	chain = chain.then((users) => {
+		for (const u of users) {
+			if (u.userid === program.only) {
+				return [u];
+			}
+		}
+		return [];
+	});
+}
 
 if (program.printParsed) {
 	chain = chain.then((users) => {
