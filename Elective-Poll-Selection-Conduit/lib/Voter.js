@@ -4,6 +4,7 @@ class Voter {
 		this.userid = '';
 		this.choices = choices;
 		this.optionsByPriority = [];
+		this.assignedOptions = [];
 	}
 
 

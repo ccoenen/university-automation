@@ -2,6 +2,7 @@ class Option {
 	constructor(name = '') {
 		this.name = name;
 		this.popularity;
+		this.assignedVoters = [];
 	}
 
 	toString() {
