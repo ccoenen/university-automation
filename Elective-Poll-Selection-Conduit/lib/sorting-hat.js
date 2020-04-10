@@ -2,6 +2,7 @@ const crypto = require('crypto');
 
 const { PREFERENCE } = require('./Choice');
 
+const DEBUG = false;
 
 function assign(options, votersInput) {
 	let voters = votersInput.concat([]); // cloning the array
@@ -13,14 +14,14 @@ function assign(options, votersInput) {
 
 		let preferredChoice = voter.optionsByPriority.shift();
 		if (preferredChoice && assignable(preferredChoice, voter)) {
-			console.log(`  + assigning ${voter} to ${preferredChoice.option}`);
+			DEBUG && console.log(`  + assigning ${voter} to ${preferredChoice.option}`);
 			pairUp(preferredChoice.option, voter);
 			voters.push(voter); // adding them to the back
 		} else if (voter.optionsByPriority.length > 0) {
-			console.log(`  - cannot assign ${voter} to ${preferredChoice.option}`);
+			DEBUG && console.log(`  - cannot assign ${voter} to ${preferredChoice.option}`);
 			voters.unshift(voter); // add them to the front.
 		} else {
-			console.log(`  o no more choices for ${voter}`);
+			DEBUG && console.log(`  o no more choices for ${voter}`);
 		}
 
 		finished = checkConstraints(options, voters);
