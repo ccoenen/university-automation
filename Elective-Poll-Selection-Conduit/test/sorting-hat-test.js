@@ -36,7 +36,7 @@ describe('sorting-hat', () => {
 			const options = [ optionA, optionB ];
 			const voters = [ voter1, voter2 ];
 			calculator.countOptionPopularity(voters);
-			calculator.prepareOptionsByPriority(voters);
+			calculator.prepareChoicesByPriority(voters);
 
 			sortingHat.assign(options, voters);
 
@@ -55,7 +55,7 @@ describe('sorting-hat', () => {
 			const options = [ optionA, optionB ];
 			const voters = [ voter1, voter2 ];
 			calculator.countOptionPopularity(voters);
-			calculator.prepareOptionsByPriority(voters);
+			calculator.prepareChoicesByPriority(voters);
 
 			sortingHat.assign(options, voters);
 

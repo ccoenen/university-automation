@@ -12,12 +12,12 @@ function assign(options, votersInput) {
 	while (!finished) {
 		let voter = voters.shift(); // taking the first one
 
-		let preferredChoice = voter.optionsByPriority.shift();
+		let preferredChoice = voter.choicesByPriority.shift();
 		if (preferredChoice && assignable(preferredChoice, voter)) {
 			DEBUG && console.log(`  + assigning ${voter} to ${preferredChoice.option}`);
 			pairUp(preferredChoice.option, voter);
 			voters.push(voter); // adding them to the back
-		} else if (voter.optionsByPriority.length > 0) {
+		} else if (voter.choicesByPriority.length > 0) {
 			DEBUG && console.log(`  - cannot assign ${voter} to ${preferredChoice.option}`);
 			voters.unshift(voter); // add them to the front.
 		} else {
@@ -51,7 +51,7 @@ function assignable(choice, voter) {
 function checkConstraints(options, voters) {
 	let finished = true;
 	for (const voter of voters) {
-		if (voter.optionsByPriority.length > 0) {
+		if (voter.choicesByPriority.length > 0) {
 			finished = false;
 		}
 	}	

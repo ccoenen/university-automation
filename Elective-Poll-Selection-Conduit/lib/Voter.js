@@ -3,7 +3,7 @@ class Voter {
 		this.name = name;
 		this.userid = '';
 		this.choices = choices;
-		this.optionsByPriority = [];
+		this.choicesByPriority = [];
 		this.assignedOptions = [];
 	}
 

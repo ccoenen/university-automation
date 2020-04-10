@@ -40,7 +40,7 @@ describe('calculator', function() {
 	});
 
 
-	describe('#prepareOptionsByPriority', () => {
+	describe('#prepareChoicesByPriority', () => {
 		let options;
 		let voters;
 
@@ -72,7 +72,7 @@ describe('calculator', function() {
 
 		it('prepares the options sorted by priority', () => {
 			calculator.countOptionPopularity(voters);
-			calculator.prepareOptionsByPriority(voters);
+			calculator.prepareChoicesByPriority(voters);
 
 			const prioritizedLists = [
 				[
@@ -88,8 +88,8 @@ describe('calculator', function() {
 				]
 			];
 
-			assert.deepStrictEqual(voters[0].optionsByPriority, prioritizedLists[0]);
-			assert.deepStrictEqual(voters[1].optionsByPriority, prioritizedLists[1]);
+			assert.deepStrictEqual(voters[0].choicesByPriority, prioritizedLists[0]);
+			assert.deepStrictEqual(voters[1].choicesByPriority, prioritizedLists[1]);
 		});
 	});
 });

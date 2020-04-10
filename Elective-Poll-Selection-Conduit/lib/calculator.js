@@ -22,10 +22,10 @@ module.exports = {
 		}
 	},
 
-	prepareOptionsByPriority: function (voters) {
+	prepareChoicesByPriority: function (voters) {
 		for (const voter of voters) {
-			voter.optionsByPriority = voter.choices.slice(0); // clones the array
-			voter.optionsByPriority.sort(Choice.compare);
+			voter.choicesByPriority = voter.choices.slice(0); // clones the array
+			voter.choicesByPriority.sort(Choice.compare);
 		}
 	}
 };
