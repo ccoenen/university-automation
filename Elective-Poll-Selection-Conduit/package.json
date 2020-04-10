@@ -7,10 +7,12 @@
     "node-html-parser": "^1.2.13"
   },
   "devDependencies": {
-    "mocha": "^7.1.1"
+    "mocha": "^7.1.1",
+    "nyc": "^15.0.1"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "coverage": "nyc --reporter=html --reporter=text --report-dir ./coverage mocha"
   },
   "repository": {
     "type": "git",

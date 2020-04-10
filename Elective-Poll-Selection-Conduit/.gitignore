@@ -1,1 +1,5 @@
 /personal-data/*
+
+# code coverage from istanbul/nyc
+/.nyc_output
+/coverage
