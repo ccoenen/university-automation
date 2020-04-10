@@ -24,6 +24,23 @@ describe('sorting-hat', () => {
 			const result = sortingHat.predictableRandomizer([], 'test');
 			assert(result instanceof Array);
 		});
+
+		it('randomizes the order based on an input string', () => {
+			const voters = [
+				new Voter('Alice'),
+				new Voter('Bob'),
+				new Voter('Carol'),
+				new Voter('Dan')
+			];
+
+			const expected1 = [voters[0], voters[2], voters[3], voters[1]];
+			const result1 = sortingHat.predictableRandomizer(voters, 'test');
+			assert.deepStrictEqual(result1, expected1);
+
+			const expected2 = [voters[3], voters[2], voters[0], voters[1]];
+			const result2 = sortingHat.predictableRandomizer(voters, 'othertest');
+			assert.deepStrictEqual(result2, expected2);
+		});
 	});
 
 	describe('#assign', () => {

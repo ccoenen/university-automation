@@ -89,7 +89,7 @@ function pairUp(option, voter) {
 function predictableRandomizer(voters, seedvalue) {
 	const randomizedVoters = voters.concat([]); // easy way to duplicate the array
 	for (const voter of randomizedVoters) {
-		voter.hash = hash(voter.userid + seedvalue);
+		voter.hash = hash(voter.name + seedvalue);
 	}
 	randomizedVoters.sort((a, b) => a.hash.localeCompare(b.hash));
 	return randomizedVoters;	
