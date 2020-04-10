@@ -21,21 +21,21 @@ describe('reader', function() {
 	});
 
 
-	describe('#parse', () => {
+	describe('#parseHTML', () => {
 		it('has a test string in place', () => {
 			assert.notStrictEqual(htmlString, '');
 		});
 
 		it('does not fail for a working string', () => {
 			assert.doesNotThrow(() => {
-				reader.parse(htmlString);
+				reader.parseHTML(htmlString);
 			});
 		});
 
 
 		it('fails for an incompabtible string', () => {
 			assert.throws(() => {
-				reader.parse(bogusString);
+				reader.parseHTML(bogusString);
 			});
 		});
 
@@ -54,7 +54,7 @@ describe('reader', function() {
 				new Option('Kurs J (Dozent J)')
 			];
 
-			assert.deepStrictEqual(reader.parse(htmlString).options, expected);
+			assert.deepStrictEqual(reader.parseHTML(htmlString).options, expected);
 		});
 
 
@@ -111,14 +111,14 @@ describe('reader', function() {
 
 			expected[1].userid = 'test.user.a';
 
-			assert.deepStrictEqual(reader.parse(htmlString).voters, expected);
+			assert.deepStrictEqual(reader.parseHTML(htmlString).voters, expected);
 		});
 	});
 
 
 	describe('#resolveOptionNames', () => {
 		it('assigns the correct option names to the choices', () => {
-			const parsedData = reader.parse(htmlString);
+			const parsedData = reader.parseHTML(htmlString);
 			const expected = new Voter('Test-User-A', [
 				new Choice(new Option('Kurs A (Dozent A)'), 'no'),
 				new Choice(new Option('Kurs B (Dozent B)'), 'no'),

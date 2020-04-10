@@ -6,7 +6,7 @@ const sortingHat = require('./lib/sorting-hat');
 
 const filename = process.argv[2];
 console.log(`Reading file ${filename}`);
-const data = reader.parse(fs.readFileSync(filename, 'UTF-8'));
+const data = reader.parseHTML(fs.readFileSync(filename, 'UTF-8'));
 reader.resolveOptionNames(data);
 console.log(`${data.options.length} options found / ${data.voters.length} voters found`);
 

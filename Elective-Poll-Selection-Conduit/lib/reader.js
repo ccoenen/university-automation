@@ -56,7 +56,7 @@ module.exports = {
 	},
 
 
-	parse: function (htmlString) {
+	parseHTML: function (htmlString) {
 		const output = {};
 		const root = HTMLParser.parse(htmlString);
 		output.options = module.exports.findOptions(root);
