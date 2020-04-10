@@ -5,7 +5,13 @@ class Voter {
 		this.choices = choices;
 		this.choicesByPriority = [];
 		this.assignedOptions = [];
+		this.happiness = 0;
 		this.maximumAssignableOptions = Infinity;
+	}
+
+
+	getHappiness() {
+		return Math.round(this.happiness/this.maximumAssignableOptions*100);
 	}
 
 
