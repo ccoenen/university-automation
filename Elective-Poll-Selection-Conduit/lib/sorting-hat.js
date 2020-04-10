@@ -12,16 +12,17 @@ function assign(options, votersInput) {
 	while (!finished) {
 		let voter = voters.shift(); // taking the first one
 
+		DEBUG && console.log(`${voter.userid}, >>${voter.choicesByPriority}<<`);
 		let preferredChoice = voter.choicesByPriority.shift();
 		if (preferredChoice && assignable(preferredChoice, voter)) {
-			DEBUG && console.log(`  + assigning ${voter} to ${preferredChoice.option}`);
+			DEBUG && console.log(`  + assigning ${voter.userid} to ${preferredChoice.option}`);
 			pairUp(preferredChoice.option, voter);
 			voters.push(voter); // adding them to the back
 		} else if (voter.choicesByPriority.length > 0) {
-			DEBUG && console.log(`  - cannot assign ${voter} to ${preferredChoice.option}`);
+			DEBUG && console.log(`  - cannot assign ${voter.userid} to ${preferredChoice.option}`);
 			voters.unshift(voter); // add them to the front.
 		} else {
-			DEBUG && console.log(`  o no more choices for ${voter}`);
+			DEBUG && console.log(`  o no more choices for ${voter.userid}`);
 		}
 
 		finished = checkConstraints(options, voters);

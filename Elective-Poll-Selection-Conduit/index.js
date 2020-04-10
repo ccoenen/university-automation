@@ -11,6 +11,7 @@ reader.resolveOptionNames(data);
 console.log(`${data.options.length} options found / ${data.voters.length} voters found`);
 
 calculator.countOptionPopularity(data.voters);
+calculator.prepareChoicesByPriority(data.voters);
 
 // print sorted by descending popularity
 data.options.sort((a, b) => b.popularity-a.popularity);
@@ -27,5 +28,5 @@ console.log('\n\n# chosen choices');
 const randomizedList = sortingHat.predictableRandomizer(data.voters, '1');
 sortingHat.assign(data.options, randomizedList);
 randomizedList.forEach((v) => {
-	console.log(`- ${v.userid}: ${v.assignedOptions.map(o=>o.option.name).join(', ')}`);
+	console.log(`- ${v.userid}: ${v.assignedOptions.map(o=>o.name).join(', ')}`);
 });
