@@ -16,7 +16,7 @@ function assign(options, votersInput) {
 		let preferredChoice = voter.choicesByPriority.shift();
 		if (preferredChoice && assignable(preferredChoice, voter)) {
 			DEBUG && console.log(`  + assigning ${voter.userid} to ${preferredChoice.option}`);
-			pairUp(preferredChoice.option, voter);
+			pairUp(preferredChoice, voter);
 			voters.push(voter); // adding them to the back
 		} else if (voter.choicesByPriority.length > 0) {
 			DEBUG && console.log(`  - cannot assign ${voter.userid} to ${preferredChoice.option}`);
@@ -80,9 +80,16 @@ function hash(string) {
 }
 
 
-function pairUp(option, voter) {
-	option.assignedVoters.push(voter);
-	voter.assignedOptions.push(option);
+function pairUp(choice, voter) {
+	choice.option.assignedVoters.push(voter);
+	voter.assignedOptions.push(choice.option);
+	if (choice.preference === PREFERENCE.YES) {
+		voter.happiness += 1;
+	} else if (choice.preference === PREFERENCE.MAYBE) {
+		voter.happiness += 0.33;
+	} else {
+		voter.happiness -= 1;
+	}
 }
 
 
@@ -99,5 +106,6 @@ function predictableRandomizer(voters, seedvalue) {
 module.exports = {
 	assign,
 	hash,
+	_pairUp: pairUp,
 	predictableRandomizer
 };

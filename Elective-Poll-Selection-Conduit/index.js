@@ -7,6 +7,7 @@ const sortingHat = require('./lib/sorting-hat');
 const filename = process.argv[2];
 console.log(`Reading file ${filename}`);
 const data = reader.parseHTML(fs.readFileSync(filename, 'UTF-8'));
+reader.applyVoterMaximumPerOption(data.options, require('./votersPerCourse'));
 reader.resolveOptionNames(data);
 console.log(`${data.options.length} options found / ${data.voters.length} voters found`);
 
@@ -28,5 +29,10 @@ console.log('\n\n# chosen choices');
 const randomizedList = sortingHat.predictableRandomizer(data.voters, '1');
 sortingHat.assign(data.options, randomizedList);
 randomizedList.forEach((v) => {
-	console.log(`- ${v.userid}: ${v.assignedOptions.map(o=>o.name).join(', ')}`);
+	console.log(`- ${v.userid}: ${v.assignedOptions.map(o=>o.name).join(', ')} happiness: ${Math.round(v.happiness/v.maximumAssignableOptions*100)}%`);
+});
+
+console.log('\n\n# courses');
+data.options.forEach((o) => {
+	console.log(`${o.name}: ${o.assignedVoters.length} people`);
 });

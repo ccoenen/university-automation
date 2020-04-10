@@ -7,6 +7,19 @@ const { Choice, PREFERENCE } = require('./Choice.js');
 const USERID_REGEX = /^\/avatar\/(.+)\/32$/;
 
 module.exports = {
+	applyVoterMaximumPerOption: function (options, maximumNumbers) {
+		for (const option of options) {
+			const max = maximumNumbers[option.name];
+			if (max < 1) {
+				console.warn(`no maximum defined for ${option.name}`);
+			} else {
+				console.log(`assigning a maximum of ${max} voters to ${option.name}`);
+				option.maximumAssignableVoters = max;
+			}
+		}
+	},
+
+
 	findVoters: function (htmlDomLike) {
 		const output = [];
 		htmlDomLike.querySelectorAll('.vote-table div').forEach((row) => {

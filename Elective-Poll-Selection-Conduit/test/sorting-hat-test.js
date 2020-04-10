@@ -19,6 +19,22 @@ describe('sorting-hat', () => {
 		});
 	});
 
+
+	describe('#pairUp', () => {
+		it('counts up happiness', () => {
+			const optionA = new Option('test-A');
+			const optionB = new Option('test-B');
+			const voter = new Voter('Bernd', [
+				new Choice(optionA, 'maybe'),
+				new Choice(optionB, 'yes')
+			]);
+			sortingHat._pairUp(voter.choices[0], voter);
+			sortingHat._pairUp(voter.choices[1], voter);
+
+			assert.strictEqual(voter.happiness, 1.33);
+		});
+	});
+
 	describe('#predictableRandomizer', () => {
 		it('returns some list', () => {
 			const result = sortingHat.predictableRandomizer([], 'test');
