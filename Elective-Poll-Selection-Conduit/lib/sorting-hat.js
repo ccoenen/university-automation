@@ -31,20 +31,30 @@ function assign(options, votersInput) {
 
 
 function assignable(choice, voter) {
-	if (!choice || !voter) {
-		console.error(`${choice} /// ${voter}`);
+	if (!choice) {
+		throw new Error('no choice provided');
 	}
+	if (!voter) {
+		throw new Error('no voter provided');
+	}
+
 	// is this actually a YES or MAYBE?
 	if (choice.preference !== PREFERENCE.YES && choice.preference !== PREFERENCE.MAYBE) {
 		return false; // not chosen, not assignable.
 	}
 
 	// is this option full?
-	// has this voter reached their limit for assigned options?
-	// TODO make this per user configurable
-	if (voter.assignedOptions.length >= 2) {
+	const option = choice.option;
+	if (option.assignedVoters.length >= option.maximumAssignableVoters) {
 		return false;
 	}
+
+	// has this voter reached their limit for assigned options?
+	if (voter.assignedOptions.length >= voter.maximumAssignableOptions) {
+		return false;
+	}
+
+	// nothing stopping us from assigning this. Continue.
 	return true;
 }
 

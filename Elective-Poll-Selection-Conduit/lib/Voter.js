@@ -5,6 +5,7 @@ class Voter {
 		this.choices = choices;
 		this.choicesByPriority = [];
 		this.assignedOptions = [];
+		this.maximumAssignableOptions = Infinity;
 	}
 
 

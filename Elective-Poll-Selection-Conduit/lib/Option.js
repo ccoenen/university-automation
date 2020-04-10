@@ -3,6 +3,7 @@ class Option {
 		this.name = name;
 		this.popularity;
 		this.assignedVoters = [];
+		this.maximumAssignableVoters = Infinity;
 	}
 
 	toString() {
