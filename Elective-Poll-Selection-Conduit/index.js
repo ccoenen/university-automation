@@ -10,16 +10,20 @@ console.log(`Reading file ${filename}`);
 const data = reader.parseHTML(fs.readFileSync(filename, 'UTF-8'));
 console.log(`${data.options.length} options found / ${data.voters.length} voters found`);
 
+console.log('\n\n# Userid report');
+reader.setMissingUserIds(data.voters, require('./missingUserIds'));
+data.voters.forEach(v => { v.maximumAssignableOptions = 2; });
+reader.applyOptionMaximumPerVoter(data.voters, require('./optionsPerVoter'));
 reader.applyVoterMaximumPerOption(data.options, require('./votersPerOption'));
 reader.resolveOptionNames(data);
 
 calculator.countOptionPopularity(data.voters);
 calculator.prepareChoicesByPriority(data.voters);
 
-console.log('\n\n# Popularity');
+console.log('\n\n# Weighted Popularity');
 data.options.sort((a, b) => b.popularity - a.popularity);
 data.options.forEach((o) => {
-	console.log(`* ${o.name} (${o.popularity}/${o.maximumAssignableVoters})`);
+	console.log(`* ${o.name} (${o.popularity}/${o.maximumAssignableVoters} - ${(o.popularity/o.maximumAssignableVoters).toFixed(1)}x)`);
 });
 
 /*

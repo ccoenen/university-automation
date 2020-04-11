@@ -13,8 +13,17 @@ module.exports = {
 			if (max < 1) {
 				console.warn(`no maximum defined for ${option.name}`);
 			} else {
-				console.log(`assigning a maximum of ${max} voters to ${option.name}`);
 				option.maximumAssignableVoters = max;
+			}
+		}
+	},
+
+
+	applyOptionMaximumPerVoter: function (voters, maximumNumbers) {
+		for (const voter of voters) {
+			const max = maximumNumbers[voter.userid];
+			if (max) {
+				voter.maximumAssignableOptions = max;
 			}
 		}
 	},
@@ -85,5 +94,17 @@ module.exports = {
 				choice.option = data.options[index];
 			});
 		});
+	},
+
+
+	setMissingUserIds: function (voters, idMap) {
+		for (const voter of voters) {
+			if (voter.userid) continue;
+			if (idMap[voter.name]) {
+				voter.userid = idMap[voter.name];
+			} else {
+				console.error(`* no userid found for '${voter.name}': ''`);
+			}
+		}
 	}
 };
