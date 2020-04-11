@@ -10,6 +10,10 @@ console.log(`Reading file ${filename}`);
 const data = reader.parseHTML(fs.readFileSync(filename, 'UTF-8'));
 console.log(`${data.options.length} options found / ${data.voters.length} voters found`);
 
+console.log('\n\n# Skiplist');
+const skiplist = require('./skiplist');
+data.voters = data.voters.filter(element => !skiplist.includes(element.name));
+
 console.log('\n\n# Userid report');
 reader.setMissingUserIds(data.voters, require('./missingUserIds'));
 data.voters.forEach(v => { v.maximumAssignableOptions = 2; });
@@ -37,6 +41,7 @@ data.voters.forEach((v) => {
 console.log('\n\n# Assigned choices');
 const randomizedList = sortingHat.predictableRandomizer(data.voters, '1');
 sortingHat.assign(data.options, randomizedList);
+randomizedList.sort((a, b) => a.userid.localeCompare(b.userid));
 randomizedList.forEach((v) => {
 	console.log(`- ${v.userid}: ${v.assignedOptions.map(o=>o.name).join(', ')} happiness: ${v.getHappiness()}%`);
 });
