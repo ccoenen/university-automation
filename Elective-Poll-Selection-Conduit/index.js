@@ -39,7 +39,7 @@ data.voters.forEach((v) => {
 */
 
 console.log('\n\n# Assigned choices');
-const randomizedList = sortingHat.predictableRandomizer(data.voters, '1');
+const randomizedList = sortingHat.predictableRandomizer(data.voters, process.argv[3] || '');
 sortingHat.assign(data.options, randomizedList);
 randomizedList.sort((a, b) => a.userid.localeCompare(b.userid));
 randomizedList.forEach((v) => {
@@ -55,3 +55,10 @@ console.log('\n\n# Happiness Histogram');
 for (let [label, value] of Object.entries(happyHistogram.histogram(data.voters))) {
 	console.log(`* ${label}: ${value} \t${new Array(value + 1).join('*')}`);
 }
+console.log(`total demand for ${data.voters.reduce((a, v) => a + v.maximumAssignableOptions, 0)} options`);
+console.log(`${data.voters.reduce((a, v) => a + v.assignedOptions.length, 0)} options assigned`);
+console.log(`${data.voters.filter(v => v.assignedOptions.length < v.maximumAssignableOptions).length} voters did not get their maximum number of options`);
+console.log(`${data.options.reduce((a, o) => a + o.maximumAssignableVoters - o.assignedVoters.length, 0)} assignable places left`);
+
+console.log('\n\n# Overall Happiness');
+console.log(`${(data.voters.reduce((a, voter) => a + voter.getHappiness(), 0) / data.voters.length).toFixed(2)}%`);
