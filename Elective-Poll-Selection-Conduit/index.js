@@ -51,6 +51,13 @@ data.options.forEach((o) => {
 	console.log(`${o.name}: ${o.assignedVoters.length} people (${Math.round(100*o.assignedVoters.length/o.maximumAssignableVoters)}%)`);
 });
 
+console.log('\n\n# Course Lists');
+data.options.forEach((o) => {
+	console.log(`\n## ${o.name}`);
+	o.assignedVoters.forEach((v) => console.log(`${v.name}, ${v.userid}`));
+});
+
+
 console.log('\n\n# Happiness Histogram');
 for (let [label, value] of Object.entries(happyHistogram.histogram(data.voters))) {
 	console.log(`* ${label}: ${value} \t${new Array(value + 1).join('*')}`);
