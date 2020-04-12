@@ -25,7 +25,7 @@ function assign(options, votersInput) {
 			DEBUG && console.log(`  o no more choices for ${voter.userid}`);
 		}
 
-		finished = checkConstraints(options, voters);
+		finished = checkConstraints(options, votersInput);
 	}
 }
 
@@ -86,7 +86,7 @@ function pairUp(choice, voter) {
 	if (choice.preference === PREFERENCE.YES) {
 		voter.happiness += 1;
 	} else if (choice.preference === PREFERENCE.MAYBE) {
-		voter.happiness += 0.33;
+		voter.happiness += 0.96;
 	} else {
 		voter.happiness -= 1;
 	}
