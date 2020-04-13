@@ -1,4 +1,4 @@
-module.exports = function (lists) {
+function usersAndShares(lists) {
 	var users = [];
 
 	lists[0].forEach((item) => {
@@ -7,4 +7,8 @@ module.exports = function (lists) {
 	});
 
 	return users;
+}
+
+module.exports = {
+	usersAndShares
 };

@@ -1,4 +1,4 @@
-module.exports = function (lists, config) {
+function usersAndShares(lists, config) {
 	var users = [];
 	let veranstaltungen = {};
 
@@ -79,4 +79,8 @@ module.exports = function (lists, config) {
 	});
 
 	return users;
+}
+
+module.exports = {
+	usersAndShares
 };

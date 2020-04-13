@@ -31,13 +31,13 @@ program
 	.option('--only [userid]', 'need to run everything again but just for that one person? use this.', false)
 	.parse(process.argv);
 
-const processingPromise = require(path.resolve(program.rules));
+const rules = require(path.resolve(program.rules));
 
 const listPromises = program.list.map((list) => {
 	return csvreader(list);
 });
 
-let chain = Promise.all(listPromises).then((lists) => processingPromise(lists, BASE_OPTIONS));
+let chain = Promise.all(listPromises).then((lists) => rules.usersAndShares(lists, BASE_OPTIONS));
 
 if (program.only) {
 	chain = chain.then((users) => {

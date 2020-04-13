@@ -1,4 +1,4 @@
-module.exports = function (lists) {
+function usersAndShares(lists) {
 	var users = [];
 
 	const groupname = process.env.GROUPNAME; // "Mitarbeiter";
@@ -15,4 +15,8 @@ module.exports = function (lists) {
 	});
 
 	return users;
+}
+
+module.exports = {
+	usersAndShares
 };

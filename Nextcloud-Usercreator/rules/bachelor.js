@@ -1,4 +1,4 @@
-module.exports = function (lists, config) {
+function usersAndShares(lists, config) {
 	var users = [];
 
 	const timecode = process.env.TIMECODE; // "2019-SS";
@@ -47,4 +47,8 @@ module.exports = function (lists, config) {
 	});
 
 	return users;
+}
+
+module.exports = {
+	usersAndShares
 };
