@@ -1,7 +1,8 @@
+const timecode = process.env.TIMECODE; // "2019-SS";
+
 function usersAndShares(lists, config) {
 	var users = [];
 
-	const timecode = process.env.TIMECODE; // "2019-SS";
 	if (!timecode) {
 		console.error("please set TIMECODE env var!");
 		process.exit(1);
@@ -49,6 +50,14 @@ function usersAndShares(lists, config) {
 	return users;
 }
 
+const BACHELOR_REGEX = new RegExp(`^[PR]7 (Bachelor|Research) Abgabe`);
+const GENERAL_INFO_REGEX = new RegExp(`^P7 Administratives$`);
+const moveInstructions = [
+	{ pattern: BACHELOR_REGEX, target: `${timecode}-P7/` },
+	{ pattern: GENERAL_INFO_REGEX, target: `${timecode}-P7/` }
+];
+
 module.exports = {
-	usersAndShares
+	usersAndShares,
+	moveInstructions
 };

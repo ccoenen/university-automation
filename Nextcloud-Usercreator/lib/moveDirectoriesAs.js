@@ -22,9 +22,7 @@ function moveDirectoriesAs(sourceDirectory, sourceRegex, destinationDirectory, a
 			}).filter(function (a) {return !!a;});
 
 			if (matches.length > 0) {
-				dav.mkdir(destinationDirectory, () => {
-					moveNext();
-				});
+				moveNext();
 			} else {
 				fulfill(successfulMoves);
 			}
@@ -45,13 +43,15 @@ function moveDirectoriesAs(sourceDirectory, sourceRegex, destinationDirectory, a
 				}
 
 				console.log('  - renaming %s to %s', sourceDirectory + item, mutatedDestinationDirectory + item);
-				dav.rename(sourceDirectory + item, mutatedDestinationDirectory + item, (error) => {
-					if (error) {
-						reject(error);
-					} else {
-						successfulMoves.push(item);
-						moveNext();
-					}
+				dav.mkdir(mutatedDestinationDirectory, () => {
+					dav.rename(sourceDirectory + item, mutatedDestinationDirectory + item, (error) => {
+						if (error) {
+							reject(error);
+						} else {
+							successfulMoves.push(item);
+							moveNext();
+						}
+					});
 				});
 			}
 		});

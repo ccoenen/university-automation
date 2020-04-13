@@ -1,9 +1,11 @@
+const timecode = process.env.TIMECODE; // "2019-SS";
+const course = process.env.COURSE; // "P2";
+const coursedigit = course[1];
+
 function usersAndShares(lists, config) {
 	var users = [];
 	let veranstaltungen = {};
 
-	const timecode = process.env.TIMECODE; // "2019-SS";
-	const course = process.env.COURSE; // "P2";
 	if (!timecode || !course) {
 		console.error("please set TIMECODE and COURSE env vars!");
 		process.exit(1);
@@ -81,6 +83,26 @@ function usersAndShares(lists, config) {
 	return users;
 }
 
+
+const STUDENT_UPLOAD_REGEX = new RegExp(`Abgabe (\\D{1,3}${coursedigit}$)`);
+const TEAM_UPLOAD_REGEX = new RegExp(`^(${course}) Team \\d{1,3} Abgabe$`);
+const TEACHER_UPLOAD_REGEX = new RegExp(`^\\D{1,3}${coursedigit} Unterlagen`);
+const GENERAL_INFO_REGEX = new RegExp(`^\\D{1,3}${coursedigit} Administratives`);
+
+const moveInstructions = [
+	// format: search pattern, target directory
+
+	// teachers: base level will have all the individual upload dirs from students
+	{ pattern: STUDENT_UPLOAD_REGEX, target: `${timecode}-${course}/$1 Abgaben/` },
+	{ pattern: TEAM_UPLOAD_REGEX, target: `${timecode}-${course}/$1 Gruppenabgaben/` },
+
+	// students: base level will have all the teachers' slides directories
+	{ pattern: TEACHER_UPLOAD_REGEX, target: `${timecode}-${course}/` },
+	{ pattern: GENERAL_INFO_REGEX, target: `${timecode}-${course}/` }
+];
+
+
 module.exports = {
-	usersAndShares
+	usersAndShares,
+	moveInstructions
 };

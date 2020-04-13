@@ -80,10 +80,10 @@ if (program.createShares) {
 	});
 }
 
-if (program.moveDirectories) {
+if (program.moveDirectories && rules.moveInstructions) {
 	const { mover } = require('./lib/mover');
 	chain = chain.then((users) => {
-		return mover(users, BASE_OPTIONS).then(() => users);
+		return mover(users, rules.moveInstructions, BASE_OPTIONS).then(() => users);
 	});
 }
 

@@ -1,7 +1,8 @@
+const groupname = process.env.GROUPNAME; // "Mitarbeiter";
+
 function usersAndShares(lists) {
 	var users = [];
 
-	const groupname = process.env.GROUPNAME; // "Mitarbeiter";
 	if (!groupname) {
 		console.error("please set GROUPNAME env var!");
 		process.exit(1);

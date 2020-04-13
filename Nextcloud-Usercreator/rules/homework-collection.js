@@ -1,9 +1,10 @@
-function usersAndShares(lists, config) {
-	var users = [];
+const TIMECODE = process.env.TIMECODE; // "2019-SS";
+const COURSE = process.env.COURSE; // "FP2";
+const BASENAME1 = `/${TIMECODE}-${COURSE}/`;
+const BASENAME2 = `${BASENAME1}${COURSE} Forschungsarbeiten/`;
 
-	const TIMECODE = process.env.TIMECODE; // "2019-SS";
-	const COURSE = process.env.COURSE; // "P2";
-	const BASENAME = `/${TIMECODE}-${COURSE}/${COURSE} Forschungsarbeiten/`;
+function usersAndShares(lists, config) {
+	const users = [];
 
 	if (!TIMECODE || !COURSE) {
 		console.error("please set TIMECODE and COURSE env vars!");
@@ -18,18 +19,22 @@ function usersAndShares(lists, config) {
 	};
 
 	// @see https://docs.nextcloud.com/server/15/developer_manual/core/ocs-share-api.html#create-a-new-share
-	admin.shares[BASENAME] = []; // this will just create a directory.
+	admin.shares[BASENAME1] = []; // this will just create a directory.
+	admin.shares[BASENAME2] = []; // this will just create a directory.
+
+	users.push(admin);
 
 	lists[0].forEach((item) => {
 		// all of these belong to admin, this is intentional
-		admin.shares[`${BASENAME}${COURSE} Forschungsarbeit ${item.name}`] = [{
+		admin.shares[`${BASENAME2}${COURSE} Forschungsarbeit ${item.name}`] = [{
 			shareType: 0,
 			shareWith: item.userid,
 			permissions: 15
 		}];
+
+		users.push(item); // we want all the users in there for the subsequent move
 	});
 
-	users.push(admin);
 	return users;
 }
 
