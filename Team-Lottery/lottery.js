@@ -254,8 +254,9 @@ function rejectMemberReason(candidate, group) {
 		const existingMember = group.members[m];
 		for (let t in candidate.tags) {
 			const candidateTag = candidate.tags[t];
-			if (existingMember.tags.includes(candidateTag)) {
-				reasons.push(existingMember.domElement.querySelectorAll('span.tag')[t]);
+			const existingTagIndex = existingMember.tags.indexOf(candidateTag);
+			if (existingTagIndex !== -1) {
+				reasons.push(existingMember.domElement.querySelectorAll('span.tag')[existingTagIndex]);
 			}
 		}
 	}
