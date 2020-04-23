@@ -5,16 +5,16 @@ const mover = async function (users, moveInstructions, config) {
 		const user = users[i];
 		console.log("(%d/%d) moving %s ...", (i+1), users.length, user.userid);
 
+		let successfulMoves = 0;
 		for (const instruction of moveInstructions) {
-			let successfulMoves = 0;
 			try {
-				const results = await moveDirectoriesAs('/', instruction.pattern, instruction.target, [config.webdav_path, users.userid, users.password]);
+				const results = await moveDirectoriesAs('/', instruction.pattern, instruction.target, [config.webdav_path, user.userid, user.password]);
 				successfulMoves += results.length;
 			} catch (err) {
 				console.error("ERROR moving dirs for %s: %s", user.userid, err);
 			}
-			console.log("  ... moved %d dirs for %s", successfulMoves, user.userid);
 		}
+		console.log("  ... moved %d dirs for %s", successfulMoves, user.userid);
 	}
 };
 

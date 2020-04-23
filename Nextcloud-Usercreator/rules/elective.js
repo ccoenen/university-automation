@@ -15,7 +15,7 @@ if (title.indexOf('/') !== -1) {
 function usersAndShares(lists /*, config */) {
 	var users = [];
 
-	lists[0].forEach((item) => {
+	lists[0].forEach((item, index) => {
 		item.groups = [
 			'Dozierende-Electives',
 			GROUPNAME
@@ -23,10 +23,15 @@ function usersAndShares(lists /*, config */) {
 		item.quota = '10GB';
 		item.shares = {};
 
-		// /2020-SS-Electives/Physical Interaction Unterlagen
-		item.shares[`/${timecode}-Electives/${title} Unterlagen`] = [
-			{shareType: 1, shareWith: GROUPNAME, permissions: 1}
-		];
+		item.shares[`/${timecode}-Electives`] = [];
+
+		// first one creates the share and shares it with everyone else in the teaching staff
+		if (index === 0) {
+			// /2020-SS-Electives/Physical Interaction Unterlagen
+			item.shares[`/${timecode}-Electives/${title} Unterlagen`] = [
+				{shareType: 1, shareWith: GROUPNAME, permissions: 31}
+			].concat(lists[0].map((i) => {return {shareType: 0, shareWith: i.userid, permissions: 1};}));
+		}
 		// /2020-SS-Electives/Physical Interaction Abgaben
 		item.shares[`/${timecode}-Electives/${title} Abgaben`] = [];
 
@@ -38,9 +43,9 @@ function usersAndShares(lists /*, config */) {
 		item.shares = {};
 		item.shares[`/${timecode}-Electives`] = [];
 		// /2020-SS-Electives/Bernd Brot Abgabe Physical Interaction
-		item.shares[`/${timecode}-Electives/${item.name} Abgabe ${title}`] = [
-			{shareType: 0, shareWith: lists[0].userid, permissions: 1}
-		];
+		item.shares[`/${timecode}-Electives/${item.name} Abgabe ${title}`] = lists[0].map(i => {
+			return {shareType: 0, shareWith: i.userid, permissions: 1}
+		});
 
 		users.push(item);
 	});
@@ -48,7 +53,7 @@ function usersAndShares(lists /*, config */) {
 	return users;
 }
 
-const STUDENT_UPLOAD_REGEX = new RegExp(` Abgabe ${title}$)`);
+const STUDENT_UPLOAD_REGEX = new RegExp(` Abgabe ${title}$`);
 const TEACHER_UPLOAD_REGEX = new RegExp(`^${title} Unterlagen$`);
 
 const moveInstructions = [
