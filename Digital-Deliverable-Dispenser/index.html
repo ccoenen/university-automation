@@ -8,18 +8,26 @@
 	</head>
 	<body>
 		<form>
-			<select id="course" value="P2">
-				<option>P2</option>
-				<option>P3</option>
-				<option>P4</option>
-				<option>P6</option>
-				<option>P7</option>
-			</select>
-			<input id="yymmdd" name="yymmdd" placeholder="YYMMDD">
-			<input id="author" name="author" placeholder="Team-0">
-			<input id="title" name="title" placeholder="Die dicken Brummer">
-			<input id="term" name="term" placeholder="YYYY-term">
-			<button id="dispense">dispense</button>
+			<fieldset>
+				<legend>Semester-Info</legend>
+				<label for="course">Kurs:</label> <select id="course" value="P2">
+					<option>P2</option>
+					<option>P3</option>
+					<option>P4</option>
+					<option>P6</option>
+					<option>P7</option>
+				</select><br>
+				<label for="term">Semester:</label> <input id="term" name="term" placeholder="YYYY-term"><br>
+				<label for="coaches">Coaches:</label> <input id="coaches" name="coaches" placeholder="Coach 1, Coach 2">
+			</fieldset>
+			<fieldset>
+				<legend>Team-Info</legend>
+				<label for="team-members">Team-Mitglieder:</label> <input id="team-members" name="team-members" placeholder="Member 1, Member 2, Member 3"><br>
+				<label for="team-number">Team:</label> Team-<input id="team-number" name="team-number" placeholder="0" type="number"><br>
+				<label for="team-name">Team-Name:</label> <input id="team-name" name="team-name" placeholder="kein Teamname"> (falls vorhanden)<br>
+				<label for="product-name">Produkt-Name:</label> <input id="product-name" name="product-name" placeholder="kein Produktname"> (falls vorhanden)<br>
+			</fieldset>
+			<button id="dispense">download empty zip</button>
 		</form>
 
 		<ul id="preview"></ul>
@@ -29,6 +37,7 @@
 		<script src="vendor/FileSaver-2.0.2.js"></script>
 		<script src="vendor/moment-2.24.0.js"></script>
 		<script src="structure.js"></script>
+		<script src="structure-p2.js"></script>
 		<script src="dispenser.js"></script>
 		<script src="ui.js"></script>
 	</body>
