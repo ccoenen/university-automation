@@ -20,11 +20,8 @@
 		name: '<%= course %>_<%= term %>_Endabgabe_<%= author %>',
 		contains: [
 			{ name: '<%= course %>_<%= term %>_Doku_<%= author %>', contains: [
-				{ name: '<%= course %>_<%= term %>_Forschungsarbeiten_<%= author %>' },
 				{ name: '<%= course %>_<%= term %>_Gesamtdoku_<%= author %>' },
-				{ name: '<%= course %>_<%= term %>_Interaktives-Exposé_<%= author %>' },
-				{ name: '<%= course %>_<%= term %>_Konzept_<%= author %>' },
-				{ name: '<%= course %>_<%= term %>_Synthese_<%= author %>' }
+				{ name: '<%= course %>_<%= term %>_Konzept_<%= author %>' }
 			]},
 			{ name: '<%= course %>_<%= term %>_Präsentationen_<%= author %>', contains: [
 				{ name: '<%= course %>_<%= term %>_Abschlusspräsentation_<%= author %>' },
@@ -49,9 +46,5 @@
 		]
 	};
 
-	window.structures = window.structures || {};
-	window.structures.P3 = structure;
-	window.structures.P4 = structure;
-	window.structures.P6 = structure;
-	window.structures.P = structure;
+	window.baseStructure = structure;
 }());

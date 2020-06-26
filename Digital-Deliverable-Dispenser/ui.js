@@ -4,6 +4,32 @@
 
 	let currentStructure = {};
 
+	function mergeStructures(a, b) {
+		if (!b) { return a; }
+		const output = JSON.parse(JSON.stringify(a)); // easy deep clone
+		const merger = JSON.parse(JSON.stringify(b)); // easy deep clone
+
+		if (output.contains && merger.contains && output.type !== 'file' && merger.type !== 'file') {
+			merger.contains.forEach(mergeElement => {
+				const outputElement = output.contains.find(outputElement => outputElement.name === mergeElement.name);
+				if (outputElement) {
+					const oeIndex = output.contains.indexOf(outputElement);
+					output.contains.splice(oeIndex, 1);
+					output.contains.push(mergeStructures(outputElement, mergeElement));
+				} else {
+					output.contains.push(mergeElement);
+				}
+			});
+			output.contains.sort((a, b) => a.name.localeCompare(b.name));
+		}
+
+		return output;
+	}
+
+	window.structures.P2 = mergeStructures(baseStructure, window.structures.P2);
+	window.structures.P4 = mergeStructures(baseStructure, window.structures.P4);
+	window.structures.P6 = mergeStructures(baseStructure, window.structures.P6);
+
 	function populateDefaults() {
 		const urlParams = new URLSearchParams(window.location.search);
 		if (urlParams.has('course')) {
