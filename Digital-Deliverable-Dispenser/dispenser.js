@@ -39,7 +39,7 @@
 
 	function entryToDom(entry) {
 		const element = document.createElement('li');
-		element.appendChild(document.createTextNode(entry.name));
+		element.appendChild(document.createTextNode(`${entry.name}${entry.optional ? ' (optional)' : ''}`));
 		element.classList.add(entry.type || 'directory');
 
 		if (entry.type !== 'file' && entry.contains) {
