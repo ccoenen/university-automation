@@ -11,6 +11,7 @@
 			{ name: '<%= course %>_<%= term %>_Doku_<%= author %>', contains: [
 				{ name: '<%= course %>_<%= term %>_Forschungsarbeiten_<%= author %>' },
 				{ name: '<%= course %>_<%= term %>_Interaktives-Exposé_<%= author %>' },
+				{ name: '<%= course %>_<%= term %>_Management_<%= author %>' },
 				{ name: '<%= course %>_<%= term %>_Synthese_<%= author %>' }
 			]},
 			{ name: '<%= course %>_<%= term %>_Produkt_<%= author %>', contains: [
