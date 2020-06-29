@@ -1,42 +1,85 @@
-/* globals moment, structure, dispense, structureToDom */
+/* globals moment, structures, dispense, structureToDom */
 (function () {
 	'use strict';
 
-	// set today as date
-	const now = moment();
-	document.getElementById('yymmdd').placeholder = now.format('YYMMDD');
-	const ssws = [4,5,6,7,8,9].includes(now.month()) ? 'SS' : 'WS';
-	let year = now.year();
-	if (ssws === 'WS' && now.month() < 6) { year--; } // things turned in in march 2020 belong to winter 2019/2020.
-	document.getElementById('term').placeholder = `${year}-${ssws}`;
+	let currentStructure = {};
 
-	// update all on load of page
-	updatePreview(structure);
+	function mergeStructures(a, b) {
+		if (!b) { return a; }
+		const output = JSON.parse(JSON.stringify(a)); // easy deep clone
+		const merger = JSON.parse(JSON.stringify(b)); // easy deep clone
+
+		if (output.contains && merger.contains && output.type !== 'file' && merger.type !== 'file') {
+			merger.contains.forEach(mergeElement => {
+				const outputElement = output.contains.find(outputElement => outputElement.name === mergeElement.name);
+				if (outputElement) {
+					const oeIndex = output.contains.indexOf(outputElement);
+					output.contains.splice(oeIndex, 1);
+					output.contains.push(mergeStructures(outputElement, mergeElement));
+				} else {
+					output.contains.push(mergeElement);
+				}
+			});
+			output.contains.sort((a, b) => a.name.localeCompare(b.name));
+		}
+
+		return output;
+	}
+
+	window.structures.P2 = mergeStructures(baseStructure, window.structures.P2);
+	window.structures.P4 = mergeStructures(baseStructure, window.structures.P4);
+	window.structures.P6 = mergeStructures(baseStructure, window.structures.P6);
+
+	function populateDefaults() {
+		const urlParams = new URLSearchParams(window.location.search);
+		if (urlParams.has('course')) {
+			document.getElementById('course').value = urlParams.get('course');
+		}
+		const now = moment();
+		const ssws = [4,5,6,7,8,9].includes(now.month()) ? 'SS' : 'WS';
+		let year = now.year();
+		if (ssws === 'WS' && now.month() < 6) { year--; } // things turned in up to april 2020 probably belong to winter 2019/2020.
+		document.getElementById('term').placeholder = `${year}-${ssws}`;
+	}
 
 	function propertiesFromDom() {
 		return {
+			filetype: 'project.json 2020',
+			generatedOn: (new Date()).toISOString(),
+
 			course: document.getElementById('course').value || document.getElementById('course').placeholder,
-			yymmdd: document.getElementById('yymmdd').value || document.getElementById('yymmdd').placeholder,
-			title: document.getElementById('title').value || document.getElementById('title').placeholder,
-			author: document.getElementById('author').value || document.getElementById('author').placeholder,
 			term: document.getElementById('term').value || document.getElementById('term').placeholder,
+			coaches: document.getElementById('coaches').value || 'unknown', // no placeholder here.
+
+			teamMembers: document.getElementById('team-members').value || 'unknown', // no placeholder here.
+			author: 'Team-' + (document.getElementById('team-number').value || 0),
+			teamName: document.getElementById('team-name').value || '',
+			productName: document.getElementById('product-name').value || '',
 		};
 	}
 
-	const form = document.querySelector('form');
-	form.addEventListener('submit', (e) => {
-		e.preventDefault();
-		dispense(structure, propertiesFromDom());
-	});
-	form.addEventListener('keyup', updatePreview);
-	form.addEventListener('change', updatePreview);
+	function activateEventsListeners() {
+		const form = document.querySelector('form');
+		form.addEventListener('keyup', updatePreview);
+		form.addEventListener('change', updatePreview);
+		form.addEventListener('submit', (e) => {
+			e.preventDefault();
+			dispense(currentStructure, propertiesFromDom());
+		});
+	}
 
 	function updatePreview() {
 		const container = document.getElementById('preview');
 		while (container.firstChild) {
 			container.removeChild(container.firstChild);
 		}
-		container.appendChild(structureToDom(structure, propertiesFromDom()));
+		const properties = propertiesFromDom();
+		currentStructure = structures[properties.course];
+		container.appendChild(structureToDom(currentStructure, properties));
 	}
 
+	// update all on load of page
+	populateDefaults();
+	activateEventsListeners();
+	updatePreview();
 }());

@@ -13,6 +13,9 @@
 			if (key === 'name') {
 				// render name
 				return _.template(val)(properties).replace(/ /g, '-');
+			} else if (structure.name === 'project.json' && key === 'contains' && val === 'magic: properties' && structure.type === 'file') {
+				// render project metadata
+				return JSON.stringify(properties, null, '\t')+'\n';
 			} else if (key === 'contains' && structure.type === 'file') {
 				// render file contents
 				return _.template(val)(properties);
@@ -36,7 +39,7 @@
 
 	function entryToDom(entry) {
 		const element = document.createElement('li');
-		element.appendChild(document.createTextNode(entry.name));
+		element.appendChild(document.createTextNode(`${entry.name}${entry.optional ? ' (optional)' : ''}`));
 		element.classList.add(entry.type || 'directory');
 
 		if (entry.type !== 'file' && entry.contains) {

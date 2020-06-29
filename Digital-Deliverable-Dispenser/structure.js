@@ -17,37 +17,34 @@
 	 */
 
 	const structure = {
-		name: '<%= course %>_<%= yymmdd %>_Endabgabe_<%= author %>',
+		name: '<%= course %>_<%= term %>_Endabgabe_<%= author %>',
 		contains: [
-			{ name: '<%= course %>_<%= yymmdd %>_Doku_<%= author %>', contains: [
-				{ name: '<%= course %>_<%= yymmdd %>_Forschungsarbeiten_<%= author %>' },
-				{ name: '<%= course %>_<%= yymmdd %>_Gesamtdoku_<%= author %>' },
-				{ name: '<%= course %>_<%= yymmdd %>_iDoku_<%= author %>' },
-				{ name: '<%= course %>_<%= yymmdd %>_Konzept_<%= author %>' },
-				{ name: '<%= course %>_<%= yymmdd %>_Synthese_<%= author %>' }
+			{ name: '<%= course %>_<%= term %>_Doku_<%= author %>', contains: [
+				{ name: '<%= course %>_<%= term %>_Gesamtdoku_<%= author %>' },
+				{ name: '<%= course %>_<%= term %>_Konzept_<%= author %>' }
 			]},
-			{ name: '<%= course %>_<%= yymmdd %>_Präsentationen_<%= author %>', contains: [
-				{ name: '<%= course %>_<%= yymmdd %>_Abschlusspräsentation_<%= author %>' },
-				{ name: '<%= course %>_<%= yymmdd %>_Konzeptpräsentation_<%= author %>' }
+			{ name: '<%= course %>_<%= term %>_Präsentationen_<%= author %>', contains: [
+				{ name: '<%= course %>_<%= term %>_Abschlusspräsentation_<%= author %>' },
+				{ name: '<%= course %>_<%= term %>_Konzeptpräsentation_<%= author %>' }
 			]},
-			{ name: '<%= course %>_<%= yymmdd %>_Produkt_<%= author %>', contains: [
-				{ name: '<%= course %>_<%= yymmdd %>_Repository_<%= author %>' },
-				{ name: '<%= course %>_<%= yymmdd %>_Betriebsanleitung_<%= author %>.pdf', type: 'file' },
-				{ name: '<%= course %>_<%= yymmdd %>_Inventarliste_<%= author %>.pdf', type: 'file' },
-				{ name: '<%= course %>_<%= yymmdd %>_Repository-Link_<%= author %>.txt', type: 'file' }
+			{ name: '<%= course %>_<%= term %>_Produkt_<%= author %>', contains: [
+				{ name: '<%= course %>_<%= term %>_Repository_<%= author %>' },
+				{ name: '<%= course %>_<%= term %>_Betriebsanleitung_<%= author %>.pdf', type: 'file' },
+				{ name: '<%= course %>_<%= term %>_Inventarliste_<%= author %>.pdf', type: 'file' },
+				{ name: '<%= course %>_<%= term %>_Repository-Link_<%= author %>.txt', type: 'file' }
 			]},
-			{ name: '<%= course %>_<%= yymmdd %>_Projektprofil_<%= author %>', contains: [
-				{ name: '<%= course %>_<%= yymmdd %>_Produktbilder_<%= author %>' },
-				{ name: '<%= course %>_<%= yymmdd %>_DOR_<%= author %>.pdf', type: 'file' },
-				{ name: '<%= course %>_<%= yymmdd %>_NVS_<%= author %>.pdf', type: 'file' },
+			{ name: '<%= course %>_<%= term %>_Projektprofil_<%= author %>', contains: [
+				{ name: '<%= course %>_<%= term %>_Produktbilder_<%= author %>' },
+				{ name: '<%= course %>_<%= term %>_DOR_<%= author %>.pdf', type: 'file' },
+				{ name: '<%= course %>_<%= term %>_NVS_<%= author %>.pdf', type: 'file' },
 			]},
-			{ name: '<%= course %>_<%= yymmdd %>_Video_<%= author %>', contains: [
-				{ name: '<%= course %>_<%= yymmdd %>_Produktvideo_<%= author %>.mp4', type: 'file' },
-				{ name: '<%= course %>_<%= yymmdd %>_Produktvideo-Link_<%= author %>.txt', type: 'file' },
+			{ name: '<%= course %>_<%= term %>_Video_<%= author %>', contains: [
+				{ name: '<%= course %>_<%= term %>_Produktvideo_<%= author %>.mp4', type: 'file' },
+				{ name: '<%= course %>_<%= term %>_Produktvideo-Link_<%= author %>.txt', type: 'file' },
 			]},
-			{ name: 'project.json', type: 'file', contains: JSON.stringify({name: '<%= author %>'}, null, '\t')+'\n' }
+			{ name: 'project.json', type: 'file', contains: 'magic: properties' }
 		]
 	};
 
-	window.structure = structure;
+	window.baseStructure = structure;
 }());
