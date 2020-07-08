@@ -7,6 +7,7 @@
 		<link rel="stylesheet" href="style.css">
 	</head>
 	<body>
+		<h1>Deliverable Dispenser</h1>
 		<form>
 			<fieldset>
 				<legend>Semester-Info</legend>
@@ -31,6 +32,26 @@
 		</form>
 
 		<ul id="preview"></ul>
+
+		<section id="howto">
+			<h1>Howto</h1>
+			<p>This is designed to ensure the deliverables will not be changed without anyone noticing.</p>
+			<p>Steps to perform:</p>
+			<ul>
+				<li>(optional but highly recommended) generate your folder structure on this site by filliing in your details and clicking "download empty zip".</li>
+				<li>Add your own files to</li>
+				<li>Create a single zip file. When in doubt (or when problems occur), try <a href="https://www.7-zip.org/">7-zip</a> instead. In any case, regular <code>zip</code> is your target format.</li>
+				<li>Create a <code>SHA-256</code> checksum for the resulting zip file. This can be done in a number of different ways:
+					<ul>
+						<li>On Mac OSX and Linux, you can run <code>sha256sum &lt;filename&gt;</code>. The result will be your checksum.</li>
+						<li>On Windows, the same can be done with <code>certUtil -hashfile "&lt;filename&gt;" SHA256</code>.</li>
+						<li>Alternatively, Nextcloud's file context menu has a "checksum" tab where you can select "SHA256" from the dropdown menu</li>
+					</ul>
+				</li>
+				<li>E-Mail this Hash to your coaches.</li>
+				<li>Upload your file to Nextcloud</li>
+			</ul>
+		</section>
 
 		<script src="vendor/underscore-1.9.2.js"></script>
 		<script src="vendor/jszip-3.2.2-3.js"></script>

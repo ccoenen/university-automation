@@ -25,3 +25,13 @@ li.file::before {
 li.directory::before {
 	content: '📂'
 }
+
+code {
+	font-family: Consolas, "Bitstream Vera Sans Mono", monospace;
+	background-color: rgb(230, 255, 230);
+	padding: 0 3px;
+}
+
+#howto li {
+	padding-bottom: 0.4em;
+}
