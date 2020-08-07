@@ -12,7 +12,12 @@
 		if (output.contains && merger.contains && output.type !== 'file' && merger.type !== 'file') {
 			merger.contains.forEach(mergeElement => {
 				const outputElement = output.contains.find(outputElement => outputElement.name === mergeElement.name);
-				if (outputElement) {
+
+				if (outputElement && mergeElement.action === 'delete') {
+					console.warn(`deletes ${mergeElement.name} from merged structure`);
+					const oeIndex = output.contains.indexOf(outputElement);
+					output.contains.splice(oeIndex, 1);
+				} else if (outputElement) {
 					const oeIndex = output.contains.indexOf(outputElement);
 					output.contains.splice(oeIndex, 1);
 					output.contains.push(mergeStructures(outputElement, mergeElement));

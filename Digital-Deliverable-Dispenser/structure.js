@@ -21,7 +21,9 @@
 		contains: [
 			{ name: '<%= course %>_<%= term %>_Doku_<%= author %>', contains: [
 				{ name: '<%= course %>_<%= term %>_Gesamtdoku_<%= author %>' },
-				{ name: '<%= course %>_<%= term %>_Konzept_<%= author %>' }
+				{ name: '<%= course %>_<%= term %>_Konzept_<%= author %>' },
+				{ name: '<%= course %>_<%= term %>_Forschungsarbeiten_<%= author %>' },
+				{ name: '<%= course %>_<%= term %>_Interaktives-Exposé_<%= author %>' }
 			]},
 			{ name: '<%= course %>_<%= term %>_Präsentationen_<%= author %>', contains: [
 				{ name: '<%= course %>_<%= term %>_Abschlusspräsentation_<%= author %>' },
@@ -31,7 +33,8 @@
 				{ name: '<%= course %>_<%= term %>_Repository_<%= author %>' },
 				{ name: '<%= course %>_<%= term %>_Betriebsanleitung_<%= author %>.pdf', type: 'file' },
 				{ name: '<%= course %>_<%= term %>_Inventarliste_<%= author %>.pdf', type: 'file' },
-				{ name: '<%= course %>_<%= term %>_Repository-Link_<%= author %>.txt', type: 'file' }
+				{ name: '<%= course %>_<%= term %>_Repository-Link_<%= author %>.txt', type: 'file' },
+				{ name: '<%= course %>_<%= term %>_Proof-of-Concept_<%= author %>' },
 			]},
 			{ name: '<%= course %>_<%= term %>_Projektprofil_<%= author %>', contains: [
 				{ name: '<%= course %>_<%= term %>_Produktbilder_<%= author %>' },
