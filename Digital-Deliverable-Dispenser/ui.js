@@ -29,6 +29,7 @@
 	window.structures.P2 = mergeStructures(baseStructure, window.structures.P2);
 	window.structures.P4 = mergeStructures(baseStructure, window.structures.P4);
 	window.structures.P6 = mergeStructures(baseStructure, window.structures.P6);
+	// window.structures.P7 = mergeStructures(baseStructure, window.structures.P7); // P7 does not get merged!
 
 	function populateDefaults() {
 		URLtoForm();
