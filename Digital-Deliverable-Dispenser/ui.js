@@ -88,7 +88,7 @@
 
 	function updateURL() {
 		const currentProperties = propertiesFromDom();
-		if (history.state.course !== currentProperties.course) {
+		if (!history.state || history.state.course !== currentProperties.course) {
 			history.pushState({}, '', '?course=' + currentProperties.course);
 		}
 	}
