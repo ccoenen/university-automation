@@ -31,10 +31,7 @@
 	window.structures.P6 = mergeStructures(baseStructure, window.structures.P6);
 
 	function populateDefaults() {
-		const urlParams = new URLSearchParams(window.location.search);
-		if (urlParams.has('course')) {
-			document.getElementById('course').value = urlParams.get('course');
-		}
+		URLtoForm();
 		const now = moment();
 		const ssws = [4,5,6,7,8,9].includes(now.month()) ? 'SS' : 'WS';
 		let year = now.year();
@@ -62,9 +59,14 @@
 		const form = document.querySelector('form');
 		form.addEventListener('keyup', updatePreview);
 		form.addEventListener('change', updatePreview);
+		document.getElementById('course').addEventListener('change', updateURL);
 		form.addEventListener('submit', (e) => {
 			e.preventDefault();
 			dispense(currentStructure, propertiesFromDom());
+		});
+		window.addEventListener('popstate', (e) => {
+			URLtoForm();
+			updatePreview();
 		});
 	}
 
@@ -76,6 +78,20 @@
 		const properties = propertiesFromDom();
 		currentStructure = structures[properties.course];
 		container.appendChild(structureToDom(currentStructure, properties));
+	}
+
+	function updateURL() {
+		const currentProperties = propertiesFromDom();
+		if (history.state.course !== currentProperties.course) {
+			history.pushState({}, '', '?course=' + currentProperties.course);
+		}
+	}
+
+	function URLtoForm() {
+		const urlParams = new URLSearchParams(window.location.search);
+		if (urlParams.has('course')) {
+			document.getElementById('course').value = urlParams.get('course');
+		}
 	}
 
 	// update all on load of page
