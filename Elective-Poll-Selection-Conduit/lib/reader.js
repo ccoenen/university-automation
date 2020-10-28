@@ -31,9 +31,8 @@ module.exports = {
 
 	findVoters: function (htmlDomLike) {
 		const output = [];
-		htmlDomLike.querySelectorAll('.vote-table div').forEach((row) => {
-			if (row.classNames.includes('header')) { return false; }
-			const name = row.querySelector('.user-name').text.trim();
+		htmlDomLike.querySelectorAll('.vote-table div.user-item').forEach((row, index) => {
+			const name = row.querySelector('.user-item__name').text.trim();
 			const voter = new Voter(name);
 
 			const img = row.querySelector('img');
@@ -44,7 +43,7 @@ module.exports = {
 				}
 			}
 
-			const choices = row.querySelectorAll('.vote-table-item');
+			const choices = htmlDomLike.querySelectorAll('.vote-table__vote-row')[index].querySelectorAll('.vote-table-vote-item');
 			voter.choices = choices.map((c) => {
 				const output = new Choice();
 
@@ -70,7 +69,7 @@ module.exports = {
 
 
 	findOptions: function (htmlDomLike) {
-		const output = htmlDomLike.querySelectorAll('.vote-header .text-box').map((h) => {
+		const output = htmlDomLike.querySelectorAll('.vote-table__header .option-item__option--text').map((h) => {
 			return new Option(h.text.trim());
 		});
 		if (output.length < 1) { throw new Error('no options found in document'); }

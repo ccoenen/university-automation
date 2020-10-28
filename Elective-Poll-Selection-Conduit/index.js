@@ -15,9 +15,17 @@ function setup(filename, print = false) {
 	print && console.log('\n\n# Skiplist');
 	const skiplist = require('./skiplist');
 	data.voters = data.voters.filter(element => !skiplist.includes(element.name));
-	
+
 	print && console.log('\n\n# Userid report');
 	reader.setMissingUserIds(data.voters, require('./missingUserIds'));
+
+	print && console.log('\n\n# Raw Votes');
+	console.log(`"name","id","${data.options.map(o=>o.name).join('","')}"`);
+	data.voters.forEach(v => {
+		// const options = data.options.map(o => v.choices.find(o));
+		console.log(`"${v.name}","${v.userid}","${v.choices.map(c => c.preference).join('","')}"`);
+	});
+
 	data.voters.forEach(v => { v.maximumAssignableOptions = 2; });
 	reader.applyOptionMaximumPerVoter(data.voters, require('./optionsPerVoter'));
 	reader.applyVoterMaximumPerOption(data.options, require('./votersPerOption'));
