@@ -31,6 +31,7 @@ function useridFromEmail(email) {
 }
 
 function useridFromName(name) {
+	console.warn(`WARNING: no mail address or userid specified, defaulting to username generated from given name "${name}"`);
 	return name.toLowerCase().replace(/ /g, '.').replace(/ä/g, 'ae').replace(/ü/g, 'ue').replace(/ö/g, 'oe').replace(/ß/g, 'ss');
 }
 
@@ -42,7 +43,7 @@ module.exports = function read(filename) {
 		var csvStream = csv({headers: true, trim: true, comment: '#'})
 			.on('data', (data) => {
 				var preparedObject = {
-					email: data.email,
+					email: data.email || data['E-Mail'],
 					name: nameFromRow(data, filename),
 				};
 
