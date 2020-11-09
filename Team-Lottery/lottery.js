@@ -15,6 +15,9 @@ let rejectionCounter = 0;
 $('#groupNumber').addEventListener('change', groupChange);
 $('#groupNumber').addEventListener('pointerup', groupChange);
 $('#groupNumber').addEventListener('keyup', groupChange);
+$('#groupBasename').addEventListener('change', groupChange)
+$('#groupBasename').addEventListener('keyup', groupChange)
+$('#groupBasename').addEventListener('pointerup', groupChange)
 $('#names').addEventListener('change', candidateChange);
 $('#names').addEventListener('keyup', candidateChange);
 $('#randomness').addEventListener('change', candidateChange);
@@ -94,6 +97,7 @@ document.addEventListener('cut', (e) => {
 
 function groupChange() {
 	const groupNumber = parseInt($('#groupNumber').value, 10);
+	const groupBasename = $('#groupBasename').value;
 	const playground = $('#playground');
 	while (playground.children.length > 0) {
 		playground.removeChild(playground.children[0]);
@@ -101,7 +105,7 @@ function groupChange() {
 	groups.splice(0,groups.length); // empty the array as well.
 
 	for (let i = 0; i < groupNumber; i++) {
-		const g = new Group(i);
+		const g = new Group(i, groupBasename);
 
 		dropify(g.domElement, (event, draggable) => {
 			const item = draggable.original.lotteryItem;

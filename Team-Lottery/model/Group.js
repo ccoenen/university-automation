@@ -1,5 +1,5 @@
 export default class Group {
-	constructor(id) {
+	constructor(id, title) {
 		this.id = id;
 		this.members = [];
 
@@ -8,7 +8,7 @@ export default class Group {
 
 		this.domElement.id = 'group-' + this.id;
 		this.domElement.classList.add('group');
-		this.domElement.innerHTML = `<h2><span contentEditable="true">Team-${this.id + 1}</span></h2><ul></ul>`;
+		this.domElement.innerHTML = `<h2><span contentEditable="true">${title}-${this.id + 1}</span></h2><ul></ul>`;
 	}
 
 	add(item) {
