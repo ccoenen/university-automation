@@ -16,7 +16,7 @@
   "dependencies": {
     "bluebird": "^3.5.2",
     "commander": "^2.18.0",
-    "fast-csv": "^2.4.1",
+    "fast-csv": "^4.3.6",
     "hogan": "^1.0.2",
     "nodemailer": "^2.7.2",
     "webdav-fs": "1.11.0",
