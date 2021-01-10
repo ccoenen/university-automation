@@ -34,13 +34,13 @@ module.exports = {
 	
 	writeSupervisionFiles: function (papers) {
 		papers.forEach((p) => {
-			removeTitlePage(p, path.resolve(p.supervisor, `Anonym/P3_191108_${p.randomIdentifier}_Paper.pdf`));
+			removeTitlePage(p, path.resolve(p.supervisor, `Anonym/${p.randomIdentifier}_Paper.pdf`));
 		});
 		papers.forEach((p) => {
-			p.collectReviews(path.resolve(p.supervisor, `Namentlich/P3_191108_${p.title}_${p.author}_Reviews.txt`));
+			p.collectReviews(path.resolve(p.supervisor, `Namentlich/${p.author}_Reviews.txt`));
 		});
 		papers.forEach((p) => {
-			fsp.copyFile(p.filename, path.resolve(p.supervisor, `Namentlich/P3_191108_${p.title}_${p.author}_Paper.pdf`));
+			fsp.copyFile(p.filename, path.resolve(p.supervisor, `Namentlich/${p.author}_Paper.pdf`));
 		});
 		return papers;
 	}

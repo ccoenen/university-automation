@@ -53,7 +53,9 @@ case 'collect-reviews':
 		.then(prettyPrintPapers)
 		.then((papers) => {
 			papers.forEach((p) => {
-				p.collectReviews(path.resolve(p.authorDirectory, `P3_191103_Paper reviews for ${p.author}.txt`));
+				const collectionFilename = path.resolve(p.authorDirectory, `Paper reviews for ${p.author}.txt`);
+				p.collectReviews(collectionFilename);
+				console.log(`${p.author},"${collectionFilename}"`); // this output can be used for MailMerge!
 			});
 			return papers;
 		})
@@ -77,7 +79,6 @@ use these commands:
 	- collect-reviews: collects the reviews above back into the authors directories
 	- prepare-supervision: writes anonymized files into reviewer's directories
 	- collect-supervision: writes anonymized files into reviewer's directories
-	- collect: combines feedback files into one in the author's directory
 
 example:
 	node . discover
