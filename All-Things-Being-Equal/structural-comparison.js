@@ -1,11 +1,12 @@
 var jsdiff = require('diff');
+// const diff = require('fast-diff');
 
 module.exports = function compare(infoA, infoB) {
   "use strict";
 
   // clone deep, diff.
   var literalDifferences = jsdiff.diffArrays(infoA.literalTokens, infoB.literalTokens);
-    var literalLinesCount = literalDifferences.reduce((sum, hunk) => {
+  var literalLinesCount = literalDifferences.reduce((sum, hunk) => {
     return sum + ((hunk.added || hunk.removed) ? hunk.value.length : 0);
   }, 0);
 
