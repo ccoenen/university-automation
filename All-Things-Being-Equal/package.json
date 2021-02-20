@@ -14,8 +14,7 @@
   "author": "Claudius Coenen",
   "license": "MIT",
   "dependencies": {
-    "deep-diff": "^0.3.8",
-    "diff": "^4.0.1",
+    "diff": "^5.0.0",
     "esprima": "^2.7.3",
     "glob": "^6.0.4"
   }

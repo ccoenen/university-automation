@@ -1,25 +1,34 @@
 /*eslint no-console: 0 */
-var glob = require('glob');
-var path = require('path');
-var compare = require('./structural-comparison');
+const statSync = require('fs').statSync;
+const path = require('path');
 
-var workdir = "somewhere-change-this/**/*.js";
+const glob = require('glob');
+
+const compare = require('./structural-comparison');
+const fileInfo = require('./fileinfo');
+
+// var workdir = 'C:/tmp-scratchpad/**/*.js';
 var nameRegex = /Abgaben\/(\D+)_\d/; // first match group is the identifying name.
 var excludePatterns = [
 	/jquery[-.]/i,
 	/example-/i,
-	/min\.js$/i,
+	/min.*\.js$/i,
+	/p5\.?setup\.js$/i,
+	/p5\.sound\.js$/i,
 	/bootstrap/i,
 	/node_modules/i,
 ];
 
 var js = glob.sync(workdir);
 js = js.filter(function (name) {
-	var include = true;
+	if (statSync(name).isDirectory()) {
+		return false;
+	}
+
+	let include = true;
 	excludePatterns.forEach((pattern) => {
 		include = include && (!name.match(pattern)); // turns include to false, if any of the patterns match.
 	});
-	if (!include) console.warn('Skipping %s', name);
 	return include;
 });
 
@@ -32,6 +41,7 @@ js.sort(function (a, b) {
 });
 js.sort();
 
+const jsFileInfos = js.map(name => fileInfo(name, nameRegex));
 var jsFileNumber = js.length;
 
 console.log(`<html>
@@ -48,49 +58,37 @@ console.log(`<html>
 		<table>
 			<tr>`);
 
-js.forEach(function (file) {
-	var info = fileInfo(file);
-	console.log('<th>%s / %s</th>', info.student, info.basename);
+jsFileInfos.forEach(function (info) {
+	console.log('<th>%s / %s</th>', info.author, info.basename);
 });
 console.log('<th>Notices</th>');
 console.log('</tr>');
 
+jsFileInfos.forEach(function (infoA, index) {
+	console.error(infoA.fullPath);
 
-js.forEach(function (fileA, index) {
-	console.error(fileA);
-	var infoA = fileInfo(fileA);
 	console.log('<tr>');
 	// if (index) console.log('<td colspan=\'%d\'></td>', index);
 	let notices = -1;
 	for (var i = 0; i < jsFileNumber; i++) {
-		var fileB = js[i];
-		var infoB = fileInfo(fileB);
-		var diff = compare(fileA, fileB);
+		var infoB = jsFileInfos[i];
+		var diff = compare(infoA, infoB);
 		var color = 'inherit';
-		if (diff.structuralDifferencesCount < 25) {color = '#ffddcc';}
-		if (diff.literalDifferencesCount < 100) {color = '#ff7f00';}
-		if (diff.structuralDifferencesCount < 10) {color = '#ffcccc';}
-		if (diff.literalDifferencesCount < 20) {color = '#ff0000';}
+		if (diff.structuralDifferencesCount < 10) {color = '#ffddcc';}
+		if (diff.literalDifferencesCount < 25) {color = '#ff7f00';}
+		if (diff.structuralDifferencesCount < 5) {color = '#ffcccc';}
+		if (diff.literalDifferencesCount < 10) {color = '#ff0000';}
 		if (i === index) {color = '#cccccc';}
 		if (color != 'inherit') {
 			notices++;
 		}
 
-		console.log('<td style=\'background-color: %s\' title=\'Comparing %s from %s\nwith %s from %s:\nS: %d / L: %d\nTokens in A: %d / B: %d\'>', color, infoA.basename, infoA.student, infoB.basename, infoB.student, diff.structuralDifferencesCount, diff.literalDifferencesCount, diff.tokensAl.length, diff.tokensBl.length);
+		console.log(`<td style='background-color: ${color}' title='Comparing ${infoA.basename} from ${infoA.author}\nwith ${infoB.basename} from ${infoB.author}:\nS: ${diff.structuralDifferencesCount} / L: ${diff.literalDifferencesCount}\nTokens in A: ${infoA.literalTokens.length} / B: ${infoB.literalTokens.length}'>`);
 		console.log('S: %d<br>L: %d', diff.structuralDifferencesCount, diff.literalDifferencesCount);
 		console.log('</td>');
 	}
 	console.log(`<td style="background-color: ${notices > 0 ? 'yellow' : 'inherit'}">${notices}</td>`);
-	console.log('<td>%s / %s</td>', infoA.student, infoA.basename);
+	console.log('<td>%s / %s</td>', infoA.author, infoA.basename);
 	console.log('</tr>');
 });
 console.log('</table></body></html>');
-
-function fileInfo(name) {
-	var basename = path.basename(name);
-	var student = name.match(nameRegex);
-	return {
-		student: student ? student[1] : 'unknown',
-		basename: basename
-	};
-}
