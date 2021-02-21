@@ -50,8 +50,8 @@ console.log(`<html>
 		<style>
 			table span { display:none; }
 			th { writing-mode:vertical-lr; white-space:nowrap; }
-			td { white-space:nowrap; }
-			tr:hover td { border-width: 1px 0; border-color: black; border-style: solid; }
+			td { border-width: 1px 0; border-color: transparent; border-style: solid; white-space:nowrap; }
+			tr:hover td { border-color: black; }
 		</style>
 	</head>
 	<body>
@@ -68,9 +68,9 @@ jsFileInfos.forEach(function (infoA, index) {
 	console.error(infoA.fullPath);
 
 	console.log('<tr>');
-	// if (index) console.log('<td colspan=\'%d\'></td>', index);
+	if (index) console.log('<td colspan=\'%d\'></td>', index);
 	let notices = -1;
-	for (var i = 0; i < jsFileNumber; i++) {
+	for (var i = index; i < jsFileNumber; i++) {
 		var infoB = jsFileInfos[i];
 		var diff = compare(infoA, infoB);
 		var color = 'inherit';
