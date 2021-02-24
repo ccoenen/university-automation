@@ -43,7 +43,7 @@
 				<li>Create a single zip file. When in doubt (or when problems occur), try <a href="https://www.7-zip.org/">7-zip</a> instead. In any case, regular <code>zip</code> is your target format.</li>
 				<li>Create a <code>SHA-256</code> checksum for the resulting zip file. This can be done in a number of different ways:
 					<ul>
-						<li>On Mac OSX and Linux, you can run <code>sha256sum &lt;filename&gt;</code>. The result will be your checksum.</li>
+						<li>On Mac OSX and Linux, you can run <code>shasum -a 256 &lt;filepath&gt;</code>. The result will be your checksum.</li>
 						<li>On Windows, the same can be done with <code>certUtil -hashfile "&lt;filename&gt;" SHA256</code>.</li>
 						<li>Alternatively, Nextcloud's file context menu has a "checksum" tab where you can select "SHA256" from the dropdown menu</li>
 					</ul>
