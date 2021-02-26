@@ -21,9 +21,22 @@ module.exports = {
 	adminpwd: 'admin-password',
 	adminemail: 'example@example.com',
 
+	// ssh access to the machine
+	sshUser: 'brooks',
+
+	// docker-container's mysql-password (for db prepare and db rollback)
+	mysqlUser: 'nextcloud',
+	mysqlPw: 'mysqlnextcloudpwd',
 
 	// for sending email
-	smtp_auth: 'smtps://user:password@mail.example.com',
+	smtp_auth: {
+		host: 'sb1.example.com',
+		port: 587,
+		auth: {
+			user: 'brooks',
+			pass: '123456'
+		}
+	},
 	mail_template_file: './password-mail.mustache',
 	mail_subject: 'Automated Password Mail',
 	mail_from: 'nextcloud-admin@example.com',
