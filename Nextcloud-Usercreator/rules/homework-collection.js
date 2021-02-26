@@ -1,3 +1,5 @@
+const NC_PERMISSIONS = require('../lib/nextcloud-api-permissions');
+
 const TIMECODE = process.env.TIMECODE; // "2019-SS";
 const COURSE = process.env.COURSE; // "FP2";
 const BASENAME1 = `/${TIMECODE}-${COURSE}/`;
@@ -29,7 +31,7 @@ function usersAndShares(lists, config) {
 		admin.shares[`${BASENAME2}${COURSE} Forschungsarbeit ${item.name}`] = [{
 			shareType: 0,
 			shareWith: item.userid,
-			permissions: 15
+			permissions: NC_PERMISSIONS.ALL
 		}];
 
 		users.push(item); // we want all the users in there for the subsequent move

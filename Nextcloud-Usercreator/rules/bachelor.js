@@ -1,3 +1,5 @@
+const NC_PERMISSIONS = require('../lib/nextcloud-api-permissions');
+
 const timecode = process.env.TIMECODE; // "2019-SS";
 
 function usersAndShares(lists, config) {
@@ -23,8 +25,8 @@ function usersAndShares(lists, config) {
 	// @see https://docs.nextcloud.com/server/15/developer_manual/core/ocs-share-api.html#create-a-new-share
 	admin.shares[`/${timecode}-P7`] = []; // this will just create a directory.
 	admin.shares[`/${timecode}-P7/P7 Administratives`] = [
-		{shareType: 1, shareWith: 'Studierende-P7', permissions: 1},
-		{shareType: 1, shareWith: 'Dozierende-P7', permissions: 31}
+		{shareType: 1, shareWith: 'Studierende-P7', permissions: NC_PERMISSIONS.READ},
+		{shareType: 1, shareWith: 'Dozierende-P7', permissions: NC_PERMISSIONS.ALL}
 	];
 
 	lists[0].forEach((item) => {
@@ -39,10 +41,10 @@ function usersAndShares(lists, config) {
 		item.shares = {};
 		item.shares[`/${timecode}-P7`] = []; // this will just create a directory.
 		item.shares[`/${timecode}-P7/P7 Bachelor Abgabe ${item.name}`] = [
-			{shareType: 1, shareWith: 'Dozierende-P7', permissions: 1}
+			{shareType: 1, shareWith: 'Dozierende-P7', permissions: NC_PERMISSIONS.READ_AND_SHARE}
 		];
 		item.shares[`/${timecode}-P7/R7 Research Abgabe ${item.name}`] = [
-			{shareType: 1, shareWith: 'Dozierende-P7', permissions: 1}
+			{shareType: 1, shareWith: 'Dozierende-P7', permissions: NC_PERMISSIONS.READ_AND_SHARE}
 		];
 		users.push(item);
 	});

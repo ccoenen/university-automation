@@ -1,3 +1,5 @@
+const NC_PERMISSIONS = require('../lib/nextcloud-api-permissions');
+
 const timecode = process.env.TIMECODE; // "2019-SS";
 const title = process.env.ELECTIVETITLE; // "Physical Interaction";
 const GROUPNAME = `${title}`;
@@ -26,8 +28,8 @@ function usersAndShares(lists /*, config */) {
 		if (index === 0) {
 			// /2020-SS-DTM2 Unterlagen
 			item.shares[`/${timecode}-${title} Unterlagen`] = [
-				{shareType: 1, shareWith: GROUPNAME, permissions: 1}
-			].concat(lists[0].map((i) => {return {shareType: 0, shareWith: i.userid, permissions: 1};}));
+				{shareType: 1, shareWith: GROUPNAME, permissions: NC_PERMISSIONS.READ}
+			].concat(lists[0].map((i) => {return {shareType: 0, shareWith: i.userid, permissions: NC_PERMISSIONS.READ};}));
 		}
 		// /2020-SS-DTM2 Abgaben
 		item.shares[`/${timecode}-${title} Abgaben`] = [];
@@ -40,7 +42,7 @@ function usersAndShares(lists /*, config */) {
 		item.shares = {};
 		// /2020-SS-DTM2 Bernd Brot Abgabe
 		item.shares[`/${timecode}-${title} ${item.name} Abgabe`] = lists[0].map(i => {
-			return {shareType: 0, shareWith: i.userid, permissions: 1}
+			return {shareType: 0, shareWith: i.userid, permissions: NC_PERMISSIONS.READ}
 		});
 
 		users.push(item);

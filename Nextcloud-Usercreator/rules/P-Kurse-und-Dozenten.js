@@ -1,3 +1,5 @@
+const NC_PERMISSIONS = require('../lib/nextcloud-api-permissions');
+
 const timecode = process.env.TIMECODE; // "2019-SS";
 const course = process.env.COURSE; // "P2";
 const coursedigit = course[1];
@@ -26,18 +28,18 @@ function usersAndShares(lists, config) {
 	// @see https://docs.nextcloud.com/server/15/developer_manual/core/ocs-share-api.html#create-a-new-share
 	admin.shares[`/${timecode}-${course}`] = []; // this will just create a directory.
 	admin.shares[`/${timecode}-${course}/${course} Administratives`] = [
-		{shareType: 1, shareWith: `Dozierende-${course}`, permissions: 31},
-		{shareType: 1, shareWith: `Studierende-${course}`, permissions: 1}
+		{shareType: 1, shareWith: `Dozierende-${course}`, permissions: NC_PERMISSIONS.ALL},
+		{shareType: 1, shareWith: `Studierende-${course}`, permissions: NC_PERMISSIONS.READ}
 	];
 
 	for (let teamID = 1; teamID <= 10; teamID++) {
 		admin.groups.push(`${course}-Team-${teamID}`);
 		admin.shares[`/${timecode}-${course}/${course} Team ${teamID} Intern`] = [
-			{shareType: 1, shareWith: `${course}-Team-${teamID}`, permissions: 31}
+			{shareType: 1, shareWith: `${course}-Team-${teamID}`, permissions: NC_PERMISSIONS.ALL}
 		];
 		admin.shares[`/${timecode}-${course}/${course} Team ${teamID} Abgabe`] = [
-			{shareType: 1, shareWith: `${course}-Team-${teamID}`, permissions: 31},
-			{shareType: 1, shareWith: `Dozierende-${course}`, permissions: 1}
+			{shareType: 1, shareWith: `${course}-Team-${teamID}`, permissions: NC_PERMISSIONS.ALL},
+			{shareType: 1, shareWith: `Dozierende-${course}`, permissions: NC_PERMISSIONS.READ}
 		];
 	}
 
@@ -55,8 +57,8 @@ function usersAndShares(lists, config) {
 
 		if (item.tutor !== 'tutor') { // tutors don't get their own directories!
 			item.shares[`/${timecode}-${course}/${item.veranstaltung} Unterlagen`] = [
-				{shareType: 1, shareWith: `Dozierende-${course}`, permissions: 1},
-				{shareType: 1, shareWith: `Studierende-${course}`, permissions: 1}
+				{shareType: 1, shareWith: `Dozierende-${course}`, permissions: NC_PERMISSIONS.READ},
+				{shareType: 1, shareWith: `Studierende-${course}`, permissions: NC_PERMISSIONS.READ}
 			];
 		}
 		users.push(item);
@@ -73,7 +75,7 @@ function usersAndShares(lists, config) {
 		for (let v in veranstaltungen) {
 			let s = item.shares[`/${timecode}-${course}/${item.name} Abgabe ${v}`] = [];
 			veranstaltungen[v].forEach(dozent => {
-				s.push({shareType: 0, shareWith: dozent, permissions: 1});
+				s.push({shareType: 0, shareWith: dozent, permissions: NC_PERMISSIONS.READ});
 			});
 		}
 
