@@ -5,12 +5,12 @@ const title = process.env.ELECTIVETITLE; // "Physical Interaction";
 const GROUPNAME = `Elective ${title}`;
 
 if (!timecode || !title) {
-	console.error("please set TIMECODE and ELECTIVETITLE env vars!");
+	console.error('please set TIMECODE and ELECTIVETITLE env vars!');
 	process.exit(1);
 }
 
 if (title.indexOf('/') !== -1) {
-	console.error("elective title cannot contain \"/\"!");
+	console.error('elective title cannot contain "/"!');
 	process.exit(1);
 }
 
@@ -46,7 +46,7 @@ function usersAndShares(lists /*, config */) {
 		item.shares[`/${timecode}-Electives`] = [];
 		// /2020-SS-Electives/Bernd Brot Abgabe Physical Interaction
 		item.shares[`/${timecode}-Electives/${item.name} Abgabe ${title}`] = lists[0].map(i => {
-			return {shareType: 0, shareWith: i.userid, permissions: NC_PERMISSIONS.READ}
+			return {shareType: 0, shareWith: i.userid, permissions: NC_PERMISSIONS.READ};
 		});
 
 		users.push(item);

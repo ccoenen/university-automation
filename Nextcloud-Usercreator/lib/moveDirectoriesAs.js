@@ -30,14 +30,14 @@ function moveDirectoriesAs(sourceDirectory, sourceRegex, destinationDirectory, a
 
 			function moveNext() {
 				var item = matches.pop();
-				let mutatedDestinationDirectory
+				let mutatedDestinationDirectory;
 
 				if (!item) {
 					fulfill(successfulMoves);
 					return;
 				}
 				if (item.match(sourceRegex)[1]) {
-					mutatedDestinationDirectory = destinationDirectory.replace("$1", item.match(sourceRegex)[1]);
+					mutatedDestinationDirectory = destinationDirectory.replace('$1', item.match(sourceRegex)[1]);
 				} else {
 					mutatedDestinationDirectory = destinationDirectory;
 				}

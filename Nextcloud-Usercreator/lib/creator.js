@@ -4,8 +4,8 @@ const createDirectoryAs = require('./createDirectoryAs');
 var ocApiFactory = require('./nextcloud-api');
 var api = null;
 
-process.on("unhandledRejection", function(reason, p){
-	console.log("Unhandled", reason, p); // log all your errors, "unsuppressing" them.
+process.on('unhandledRejection', function(reason, p){
+	console.log('Unhandled', reason, p); // log all your errors, "unsuppressing" them.
 	throw reason; // optional, in case you want to treat these as errors
 });
 
@@ -21,11 +21,11 @@ function debuginfo(result) {
 		} else if (result.response) {
 			console.log(result.response);
 		} else if (result.xml.ocs.meta[0].statuscode[0] == 102) {
-			console.log("Status Code 102 %s for %s", result.xml.ocs.meta[0].message[0], JSON.stringify(result.request));
+			console.log('Status Code 102 %s for %s', result.xml.ocs.meta[0].message[0], JSON.stringify(result.request));
 		} else if (result.xml.ocs.meta[0].statuscode[0] == 100) {
 			// all is well
 		} else if (result.xml.ocs.meta[0].statuscode[0] == 101 && result.request.path.endsWith('/enable')) {
-			console.log("User already enabled, nothing to do.");
+			console.log('User already enabled, nothing to do.');
 		} else if (result.xml.ocs.meta[0].statuscode[0] == 403 && result.xml.ocs.meta[0].message[0] == 'Path is already shared with this group') {
 			// all is well
 		} else if (result.xml.ocs.meta[0].statuscode[0] == 403 && result.xml.ocs.meta[0].message[0] == 'Path is already shared with this user') {
@@ -90,9 +90,9 @@ function createSingleUserShares(currentUser, index = 0, total = 0) {
 		chain = chain.then(() => {
 			return createDirectoryAs(dirname, {path: creator.options.webdav_path, user: currentUser.userid, password: currentUser.password}).catch((err) => {
 				if (err.status != 405) { // 405 is
-					console.error("createDirectoryAs failed: ", JSON.stringify(err), dirname);
+					console.error('createDirectoryAs failed: ', JSON.stringify(err), dirname);
 				} else {
-					console.log("Directory exists: ", dirname);
+					console.log('Directory exists: ', dirname);
 				}
 			}).then(() => {
 				// console.log('   - share %s with %s', dirname, currentUser.shares[dirname].shareWith);

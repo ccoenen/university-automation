@@ -6,8 +6,8 @@ const creator = require('./lib/creator');
 const BASE_OPTIONS = require('./config/server');
 creator.init(BASE_OPTIONS);
 
-process.on("unhandledRejection", function(reason, promise) {
-	console.error("undhandled promise rejection: ", reason, promise);
+process.on('unhandledRejection', function(reason, promise) {
+	console.error('undhandled promise rejection: ', reason, promise);
 });
 
 function collectLists(val, collection) {
@@ -56,7 +56,7 @@ if (options.printParsed) {
 	chain = chain.then((users) => {
 		console.log(users);
 		return users;
-	})
+	});
 }
 
 if (options.printDirectories) {
@@ -66,14 +66,14 @@ if (options.printDirectories) {
 		}).flat());
 		console.log(dirs);
 		return users;
-	})
+	});
 }
 
 if (options.createUsers) {
 	chain = chain.then((users) => {
 		creator.options.resetPassword = options.overwritePasswords;
 		return creator.createUsers(users).then(() => users);
-	})
+	});
 }
 
 if (options.createShares) {
@@ -94,7 +94,7 @@ if (options.sendMails) {
 	chain = chain.then((users) => {
 		mailer.init(BASE_OPTIONS);
 		return mailer.sendToAll(users).then(() => users);
-	})
+	});
 }
 
 if (options.triggerPasswordReset) {
@@ -102,7 +102,7 @@ if (options.triggerPasswordReset) {
 	chain = chain.then((users) => {
 		passwordResetRequester.init(BASE_OPTIONS.hostname);
 		return passwordResetRequester.requestForAll(users).then(() => users);
-	})
+	});
 }
 
 chain.then();

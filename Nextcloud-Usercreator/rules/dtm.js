@@ -5,12 +5,12 @@ const title = process.env.ELECTIVETITLE; // "Physical Interaction";
 const GROUPNAME = `${title}`;
 
 if (!timecode || !title) {
-	console.error("please set TIMECODE and ELECTIVETITLE env vars!");
+	console.error('please set TIMECODE and ELECTIVETITLE env vars!');
 	process.exit(1);
 }
 
 if (title.indexOf('/') !== -1) {
-	console.error("title cannot contain \"/\"!");
+	console.error('title cannot contain "/"!');
 	process.exit(1);
 }
 
@@ -42,7 +42,7 @@ function usersAndShares(lists /*, config */) {
 		item.shares = {};
 		// /2020-SS-DTM2 Bernd Brot Abgabe
 		item.shares[`/${timecode}-${title} ${item.name} Abgabe`] = lists[0].map(i => {
-			return {shareType: 0, shareWith: i.userid, permissions: NC_PERMISSIONS.READ}
+			return {shareType: 0, shareWith: i.userid, permissions: NC_PERMISSIONS.READ};
 		});
 
 		users.push(item);

@@ -59,7 +59,7 @@ module.exports = function read(filename) {
 				if (data.Tutor) { preparedObject.tutor = data.Tutor; }
 
 				if (preparedObject.name.length < 1 || preparedObject.userid.length < 1) {
-					console.warn("skipping entry in %s because of missing name or userid\n  Row: %s\n  Object: %s", filename, JSON.stringify(data), JSON.stringify(preparedObject));
+					console.warn('skipping entry in %s because of missing name or userid\n  Row: %s\n  Object: %s', filename, JSON.stringify(data), JSON.stringify(preparedObject));
 				} else {
 					lines.push(preparedObject);
 				}

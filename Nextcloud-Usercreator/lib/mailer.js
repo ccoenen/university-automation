@@ -14,11 +14,11 @@ function sendToAll(users) {
 }
 
 function send(user) {
-	console.log("Sending Mail to " + user.userid);
+	console.log('Sending Mail to ' + user.userid);
 	return new Promise((fulfill, reject) => {
-		if (!user.email) { reject("No email specified for " + user.userid); return; }
-		if (!user.userid) { reject("No userid specified for " + user.email); return; }
-		if (!user.password) { reject("No password specified for " + user.userid); return; }
+		if (!user.email) { reject('No email specified for ' + user.userid); return; }
+		if (!user.userid) { reject('No userid specified for ' + user.email); return; }
+		if (!user.password) { reject('No password specified for ' + user.userid); return; }
 
 		user.server = 'https://' + CONFIG.hostname;
 

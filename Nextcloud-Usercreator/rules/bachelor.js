@@ -1,13 +1,13 @@
 const NC_PERMISSIONS = require('../lib/nextcloud-api-permissions');
 
 const timecode = process.env.TIMECODE; // "2019-SS";
-const MAIN_SORTING_DIRECTORY = `/${timecode}-P7`
+const MAIN_SORTING_DIRECTORY = `/${timecode}-P7`;
 
 function usersAndShares(lists, config) {
 	const users = [];
 
 	if (!timecode) {
-		console.error("please set TIMECODE env var!");
+		console.error('please set TIMECODE env var!');
 		process.exit(1);
 	}
 
@@ -55,7 +55,7 @@ function usersAndShares(lists, config) {
 }
 
 const BACHELOR_REGEX = new RegExp(`(Bachelor|Research)modul ${timecode}`);
-const GENERAL_INFO_REGEX = new RegExp(`^P7 Administratives$`);
+const GENERAL_INFO_REGEX = new RegExp('^P7 Administratives$');
 const moveInstructions = [
 	{ pattern: BACHELOR_REGEX, target: MAIN_SORTING_DIRECTORY },
 	{ pattern: GENERAL_INFO_REGEX, target: MAIN_SORTING_DIRECTORY }

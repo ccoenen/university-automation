@@ -9,7 +9,7 @@ function usersAndShares(lists, config) {
 	const users = [];
 
 	if (!TIMECODE || !COURSE) {
-		console.error("please set TIMECODE and COURSE env vars!");
+		console.error('please set TIMECODE and COURSE env vars!');
 		process.exit(1);
 	}
 

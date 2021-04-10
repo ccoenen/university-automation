@@ -1,7 +1,7 @@
 const fs = require('fs');
 
 function emailMatcher(path) {
-	var mails = fs.readFileSync(path).toString().split("\n");
+	var mails = fs.readFileSync(path).toString().split('\n');
 	mails = mails.map((mail) => {
 		return mail.toLowerCase();
 	});

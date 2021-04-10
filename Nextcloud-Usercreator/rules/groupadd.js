@@ -4,7 +4,7 @@ function usersAndShares(lists) {
 	var users = [];
 
 	if (!groupname) {
-		console.error("please set GROUPNAME env var!");
+		console.error('please set GROUPNAME env var!');
 		process.exit(1);
 	}
 

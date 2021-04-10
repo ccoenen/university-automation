@@ -1,5 +1,9 @@
 module.exports = function (lists, config) {
-	var users = [];
+	const users = [];
+
+	console.log(lists);
+	console.log(config);
+
 	users.push({
 		userid: 'test-1',
 		password: 'change-me',
