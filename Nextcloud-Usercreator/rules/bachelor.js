@@ -57,8 +57,8 @@ function usersAndShares(lists, config) {
 const BACHELOR_REGEX = new RegExp(`(Bachelor|Research)modul ${timecode}`);
 const GENERAL_INFO_REGEX = new RegExp('^P7 Administratives$');
 const moveInstructions = [
-	{ pattern: BACHELOR_REGEX, target: MAIN_SORTING_DIRECTORY },
-	{ pattern: GENERAL_INFO_REGEX, target: MAIN_SORTING_DIRECTORY }
+	{ pattern: BACHELOR_REGEX, target: MAIN_SORTING_DIRECTORY + '/' },
+	{ pattern: GENERAL_INFO_REGEX, target: MAIN_SORTING_DIRECTORY + '/' }
 ];
 
 module.exports = {

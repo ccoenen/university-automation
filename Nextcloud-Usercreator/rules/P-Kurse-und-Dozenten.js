@@ -53,7 +53,7 @@ function usersAndShares(lists, config) {
 		// these will just create directories.
 		item.shares[`/${timecode}-${course}`] = [];
 		item.shares[`/${timecode}-${course}/${item.veranstaltung} Abgaben`] = [];
-		item.shares[`/${timecode}-${course}/${course} Gruppenabgaben`] = [];
+		// item.shares[`/${timecode}-${course}/${course} Gruppenabgaben`] = []; // removed, see under moveInstructions for why.
 
 		if (item.tutor !== 'tutor') { // tutors don't get their own directories!
 			item.shares[`/${timecode}-${course}/${item.veranstaltung} Unterlagen`] = [
@@ -88,6 +88,7 @@ function usersAndShares(lists, config) {
 
 const STUDENT_UPLOAD_REGEX = new RegExp(`Abgabe (\\D{1,3}${coursedigit}$)`);
 const TEAM_UPLOAD_REGEX = new RegExp(`^(${course}) Team \\d{1,3} Abgabe$`);
+const TEAM_INTERNAL_REGEX = new RegExp(`^(${course}) Team \\d{1,3} Intern$`);
 const TEACHER_UPLOAD_REGEX = new RegExp(`^\\D{1,3}${coursedigit} Unterlagen`);
 const GENERAL_INFO_REGEX = new RegExp(`^\\D{1,3}${coursedigit} Administratives`);
 
@@ -96,7 +97,9 @@ const moveInstructions = [
 
 	// teachers: base level will have all the individual upload dirs from students
 	{ pattern: STUDENT_UPLOAD_REGEX, target: `${timecode}-${course}/$1 Abgaben/` },
-	{ pattern: TEAM_UPLOAD_REGEX, target: `${timecode}-${course}/$1 Gruppenabgaben/` },
+	{ pattern: TEAM_INTERNAL_REGEX, target: `${timecode}-${course}/` },
+	{ pattern: TEAM_UPLOAD_REGEX, target: `${timecode}-${course}/` }, // for students
+	// { pattern: TEAM_UPLOAD_REGEX, target: `${timecode}-${course}/$1 Gruppenabgaben/` }, // for teachers - this didn't work as it conflicted with the student case.
 
 	// students: base level will have all the teachers' slides directories
 	{ pattern: TEACHER_UPLOAD_REGEX, target: `${timecode}-${course}/` },
