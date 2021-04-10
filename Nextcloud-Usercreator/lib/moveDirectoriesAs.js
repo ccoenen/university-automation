@@ -2,7 +2,7 @@ var webdav = require('webdav-fs');
 
 function moveDirectoriesAs(sourceDirectory, sourceRegex, destinationDirectory, auth) {
 	return new Promise(function (fulfill, reject) {
-		var dav = webdav(auth[0], auth[1], auth[2]);
+		var dav = webdav(auth.path, {username: auth.user, password: auth.password});
 
 		dav.readdir(sourceDirectory, (error, contents) => {
 			var successfulMoves = [];

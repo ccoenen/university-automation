@@ -88,7 +88,7 @@ function createSingleUserShares(currentUser, index = 0, total = 0) {
 	Object.keys(currentUser.shares).forEach((dirname) => {
 		// console.log(' - create dir %s', dirname);
 		chain = chain.then(() => {
-			return createDirectoryAs(dirname, [creator.options.webdav_path, currentUser.userid, currentUser.password]).catch((err) => {
+			return createDirectoryAs(dirname, {path: creator.options.webdav_path, user: currentUser.userid, password: currentUser.password}).catch((err) => {
 				if (err.status != 405) { // 405 is
 					console.error("createDirectoryAs failed: ", JSON.stringify(err), dirname);
 				} else {

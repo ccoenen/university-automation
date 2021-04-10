@@ -1,4 +1,4 @@
-var { moveDirectoriesAs } = require('./moveDirectoriesAs');
+const { moveDirectoriesAs } = require('./moveDirectoriesAs');
 
 const mover = async function (users, moveInstructions, config) {
 	for (let i = 0; i < users.length; i++) {
@@ -8,7 +8,7 @@ const mover = async function (users, moveInstructions, config) {
 		let successfulMoves = 0;
 		for (const instruction of moveInstructions) {
 			try {
-				const results = await moveDirectoriesAs('/', instruction.pattern, instruction.target, [config.webdav_path, user.userid, user.password]);
+				const results = await moveDirectoriesAs('/', instruction.pattern, instruction.target, {path: config.webdav_path, user: user.userid, password: user.password});
 				successfulMoves += results.length;
 			} catch (err) {
 				console.error("ERROR moving dirs for %s: %s", user.userid, err);
