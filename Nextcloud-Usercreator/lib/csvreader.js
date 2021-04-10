@@ -40,7 +40,7 @@ module.exports = function read(filename) {
 		var fileStream = fs.createReadStream(filename);
 		var lines = [];
 
-		var csvStream = csv({headers: true, trim: true, comment: '#'})
+		var csvStream = csv.parse({headers: true, trim: true, comment: '#'})
 			.on('data', (data) => {
 				var preparedObject = {
 					email: data.email || data['E-Mail'],
