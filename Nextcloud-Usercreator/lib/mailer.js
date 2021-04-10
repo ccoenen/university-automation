@@ -51,6 +51,6 @@ module.exports = {
 		transporter = nodemailer.createTransport(CONFIG.smtp_auth);
 		template = hogan.compile(fs.readFileSync(CONFIG.mail_template_file).toString());
 	},
-	sendToAll: sendToAll,
-	send: send
+	sendToAll,
+	send
 };
