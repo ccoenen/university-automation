@@ -15,7 +15,7 @@ function collectLists(val, collection) {
 	return collection;
 }
 
-const program = require('commander');
+const { program } = require('commander');
 program
 	.version(require('./package.json').version)
 	.option('-l, --list [filename.csv]', 'list of user names to be parsed', collectLists, [])
@@ -31,18 +31,20 @@ program
 	.option('--only [userid]', 'need to run everything again but just for that one person? use this.', false)
 	.parse(process.argv);
 
-const rules = require(path.resolve(program.rules));
+const options = program.opts();
 
-const listPromises = program.list.map((list) => {
+const rules = require(path.resolve(options.rules));
+
+const listPromises = options.list.map((list) => {
 	return csvreader(list);
 });
 
 let chain = Promise.all(listPromises).then((lists) => rules.usersAndShares(lists, BASE_OPTIONS));
 
-if (program.only) {
+if (options.only) {
 	chain = chain.then((users) => {
 		for (const u of users) {
-			if (u.userid === program.only) {
+			if (u.userid === options.only) {
 				return [u];
 			}
 		}
@@ -50,14 +52,14 @@ if (program.only) {
 	});
 }
 
-if (program.printParsed) {
+if (options.printParsed) {
 	chain = chain.then((users) => {
 		console.log(users);
 		return users;
 	})
 }
 
-if (program.printDirectories) {
+if (options.printDirectories) {
 	chain = chain.then((users) => {
 		const dirs = new Set(users.map((u) => {
 			return Object.keys(u.shares || {});
@@ -67,27 +69,27 @@ if (program.printDirectories) {
 	})
 }
 
-if (program.createUsers) {
+if (options.createUsers) {
 	chain = chain.then((users) => {
-		creator.options.resetPassword = program.overwritePasswords;
+		creator.options.resetPassword = options.overwritePasswords;
 		return creator.createUsers(users).then(() => users);
 	})
 }
 
-if (program.createShares) {
+if (options.createShares) {
 	chain = chain.then((users) => {
 		return creator.createShares(users).then(() => users);
 	});
 }
 
-if (program.moveDirectories && rules.moveInstructions) {
+if (options.moveDirectories && rules.moveInstructions) {
 	const { mover } = require('./lib/mover');
 	chain = chain.then((users) => {
 		return mover(users, rules.moveInstructions, BASE_OPTIONS).then(() => users);
 	});
 }
 
-if (program.sendMails) {
+if (options.sendMails) {
 	const mailer = require('./lib/mailer');
 	chain = chain.then((users) => {
 		mailer.init(BASE_OPTIONS);
@@ -95,7 +97,7 @@ if (program.sendMails) {
 	})
 }
 
-if (program.triggerPasswordReset) {
+if (options.triggerPasswordReset) {
 	const passwordResetRequester = require('./lib/passwordResetRequester');
 	chain = chain.then((users) => {
 		passwordResetRequester.init(BASE_OPTIONS.hostname);

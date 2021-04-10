@@ -15,7 +15,7 @@
   "license": "MIT",
   "dependencies": {
     "bluebird": "^3.7.2",
-    "commander": "^2.20.1",
+    "commander": "^7.2.0",
     "fast-csv": "^4.3.6",
     "hogan": "^1.0.2",
     "nodemailer": "^2.7.2",
