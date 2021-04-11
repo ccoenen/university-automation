@@ -4,7 +4,7 @@ export default class Item {
 		this.id = id;
 		this.label = bits.shift();
 		this.gender = bits.shift();
-		this.tags = bits;
+		this.tags = bits.filter(tag => tag.length > 0);
 		this.hash = hash;
 		this.group = null;
 		this.domElement = document.createElement('div');
