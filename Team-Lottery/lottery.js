@@ -15,9 +15,9 @@ let rejectionCounter = 0;
 $('#groupNumber').addEventListener('change', groupChange);
 $('#groupNumber').addEventListener('pointerup', groupChange);
 $('#groupNumber').addEventListener('keyup', groupChange);
-$('#groupBasename').addEventListener('change', groupChange)
-$('#groupBasename').addEventListener('keyup', groupChange)
-$('#groupBasename').addEventListener('pointerup', groupChange)
+$('#groupBasename').addEventListener('change', groupChange);
+$('#groupBasename').addEventListener('keyup', groupChange);
+$('#groupBasename').addEventListener('pointerup', groupChange);
 $('#names').addEventListener('change', candidateChange);
 $('#names').addEventListener('keyup', candidateChange);
 $('#randomness').addEventListener('change', candidateChange);
@@ -241,7 +241,9 @@ function draw() {
 
 		candidates.splice(candidatePointer, 1);
 
+		groups[groupPointer].domElement.classList.remove('active');
 		groupPointer = ++groupPointer % groups.length;
+		groups[groupPointer].domElement.classList.add('active');
 		// not modifying candidatePointer because we just removed one person from the list anyway.
 	}
 

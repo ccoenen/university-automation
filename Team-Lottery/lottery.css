@@ -151,6 +151,13 @@ h2 {
 .group h2 {
 	text-align: center;
 	margin-top: 0;
+	color: #6e747f;
+	transition-property: color;
+	transition-duration: 0.4s;
+}
+.group.active h2 {
+	color: white;
+	transition-delay: 0.3s;
 }
 
 span.tags {
