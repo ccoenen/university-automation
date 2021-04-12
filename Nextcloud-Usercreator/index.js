@@ -26,6 +26,7 @@ program
 	.option('--create-users', 'create new users if neccessary', false)
 	.option('--create-shares', 'create directories and share them', false)
 	.option('--move-directories', 'groups directories in subdirs by prefix', false)
+	.option('--delete-directories', 'delete directories that were created by the ruleset', false)
 	.option('--send-mails', 'send welcome mails to users', false)
 	.option('--trigger-password-reset', 'have nextcloud send out a reset password mail', false)
 	.option('--only [userid]', 'need to run everything again but just for that one person? use this.', false)
@@ -86,6 +87,12 @@ if (options.moveDirectories && rules.moveInstructions) {
 	const { mover } = require('./lib/mover');
 	chain = chain.then((users) => {
 		return mover(users, rules.moveInstructions, BASE_OPTIONS).then(() => users);
+	});
+}
+
+if (options.deleteDirectories) {
+	chain = chain.then((users) => {
+		return creator.deleteShares(users).then(() => users);
 	});
 }
 

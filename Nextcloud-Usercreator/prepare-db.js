@@ -24,6 +24,9 @@ async function run(commands) {
 		username: BASE_OPTIONS.sshUser,
 		agent: 'pageant',
 		//   privateKey: '/home/brooks/.ssh/id_rsa'
+	}).catch(e => {
+		console.error('Did not properly connect. Reason from ssh.connect:', e.message);
+		process.exit(1);
 	});
 
 	for (const command of commands) {

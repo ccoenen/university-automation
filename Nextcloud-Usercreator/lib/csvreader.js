@@ -43,7 +43,7 @@ module.exports = function read(filename) {
 		var csvStream = csv.parse({headers: true, trim: true, comment: '#'})
 			.on('data', (data) => {
 				var preparedObject = {
-					email: data.email || data['E-Mail'],
+					email: data.email || data['E-Mail'] || data['E-Mail-Adresse'],
 					name: nameFromRow(data, filename),
 				};
 

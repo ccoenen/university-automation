@@ -1,5 +1,6 @@
 const Promise = require('bluebird');
 const createDirectoryAs = require('./createDirectoryAs');
+const deleteDirectoryAs = require('./deleteDirectoryAs');
 
 var ocApiFactory = require('./nextcloud-api');
 var api = null;
@@ -136,6 +137,13 @@ const creator = {
 			.then(function () {
 				console.log('Created Shares');
 			});
+	},
+	deleteShares: async (users) => {
+		for (let user of users) {
+			for (let dirname of Object.keys(user.shares)) {
+				await deleteDirectoryAs(dirname, {path: creator.options.webdav_path, user: user.userid, password: user.password});
+			}
+		}
 	}
 };
 
