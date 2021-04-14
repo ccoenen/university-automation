@@ -3,7 +3,7 @@ export default class Item {
 		const bits = line.split(/[\t;]/);
 		this.id = id;
 		this.label = bits.shift();
-		this.gender = bits.shift();
+		this.gender = bits.shift() || '';
 		this.tags = bits.filter(tag => tag.length > 0);
 		this.hash = hash;
 		this.group = null;
@@ -12,7 +12,7 @@ export default class Item {
 
 		this.domElement.id = 'candidate-' + id;
 		this.domElement.classList.add('candidate');
-		this.domElement.classList.add(`gender-${this.gender}`);
+		this.domElement.classList.add(`gender-${this.gender.replace(' ', '---')}`);
 		const tagStuff = this.tags.map((t) => `<span class="tag" data-tag-name="${t}"></span>`).join('<br>');
 		let labelStuff;
 		if (this.label.indexOf(', ')) {

@@ -11,6 +11,7 @@ let candidatePointer = 0;
 const groups = [];
 let groupPointer = 0;
 let rejectionCounter = 0;
+let genderSplit = {};
 
 $('#groupNumber').addEventListener('change', groupChange);
 $('#groupNumber').addEventListener('pointerup', groupChange);
@@ -181,6 +182,14 @@ function candidateChange() {
 			});
 			grabify(item.domElement);
 		}
+
+		genderSplit = {};
+		candidates.forEach((c) => {
+			genderSplit[c.gender] = (genderSplit[c.gender] + 1) || 1;
+		});
+		for (const [key, value] of Object.entries(genderSplit)) {
+			console.log(`${key}: ${value}/${candidates.length} (${Math.round(100 * value / candidates.length)}%)`);
+		}
 	});
 	groupChange();
 }
@@ -229,6 +238,7 @@ function draw() {
 			// groupPointer = ++groupPointer % groups.length;
 		}
 	} else {
+		console.log(`💚 ${active.label} assigned to ${g.title}`);
 		rejectionCounter = 0;
 		const follower = active.domElement.nextSibling;
 		const before = active.domElement.getBoundingClientRect();
@@ -262,18 +272,22 @@ function rejectMemberReason(candidate, group) {
 			const candidateTag = candidate.tags[t];
 			const existingTagIndex = existingMember.tags.indexOf(candidateTag);
 			if (existingTagIndex !== -1) {
+				console.log(`🔂 ${candidate.label} not assignable to ${group.title} because of pre-existing team overlap (they share ${candidateTag} with ${existingMember.label})`);
 				reasons.push(existingMember.domElement.querySelectorAll('span.tag')[existingTagIndex]);
 			}
 		}
 	}
 
 	// conflicts with gender diversity
-	if (candidate.gender) {
+	if (candidate.gender && group.members.length > 0) {
 		const genders = group.members.map((m) => m.gender);
+		const maxAllowedSameGenderMembers = Math.ceil(genderSplit[candidate.gender] / groups.length);
 		const sameGender = genders.reduce((n, value) => {
 			return n + (value === candidate.gender);
 		}, 0);
-		if (sameGender / group.members.length > 0.67) {
+
+		if (sameGender >= maxAllowedSameGenderMembers) {
+			console.log(`🌓 ${candidate.label} not assignable to ${group.title} because ${sameGender} share the same gender. (Maximum is ${maxAllowedSameGenderMembers})`);
 			// more than two thirds already have the same gender, this is not a good idea.
 			reasons.push(group.domElement.querySelector('h2'));
 			// pushing all the members with same gender to the reasons array.

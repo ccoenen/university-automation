@@ -1,14 +1,15 @@
 export default class Group {
-	constructor(id, title) {
+	constructor(id, prefix) {
 		this.id = id;
 		this.members = [];
+		this.title = `${prefix}-${this.id + 1}`;
 
 		this.domElement = document.createElement('div');
 		this.domElement.lotteryGroup = this;
 
 		this.domElement.id = 'group-' + this.id;
 		this.domElement.classList.add('group');
-		this.domElement.innerHTML = `<h2><span contentEditable="true">${title}-${this.id + 1}</span></h2><ul></ul>`;
+		this.domElement.innerHTML = `<h2><span contentEditable="true">${this.title}</span></h2><ul></ul>`;
 	}
 
 	add(item) {
