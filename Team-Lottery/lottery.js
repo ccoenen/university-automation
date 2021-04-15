@@ -262,32 +262,7 @@ function draw() {
 	}
 }
 
-function rejectMemberReason(candidate, group) {
-	const reasons = [];
-
-	// conflicts with another team member
-	for (let m in group.members) {
-		const existingMember = group.members[m];
-		for (let t in candidate.tags) {
-			const candidateTag = candidate.tags[t];
-			const existingTagIndex = existingMember.tags.indexOf(candidateTag);
-			if (existingTagIndex !== -1) {
-				console.log(`🔂 ${candidate.label} not assignable to ${group.title} because of pre-existing team overlap (they share ${candidateTag} with ${existingMember.label})`);
-				reasons.push(existingMember.domElement.querySelectorAll('span.tag')[existingTagIndex]);
-			}
-		}
-	}
-
-	// conflicts with gender diversity
-	if (candidate.gender && group.members.length > 0) {
-		const genders = group.members.map((m) => m.gender);
-		const maxAllowedSameGenderMembers = Math.ceil(genderSplit[candidate.gender] / groups.length);
-		const sameGender = genders.reduce((n, value) => {
-			return n + (value === candidate.gender);
-		}, 0);
-
-		if (sameGender >= maxAllowedSameGenderMembers) {
-			console.log(`🌓 ${candidate.label} not assignable to ${group.title} because ${sameGender} share the same gender. (Maximum is ${maxAllowedSameGenderMembers})`);
+candidate.label} not assignable to ${group.title} because ${sameGenderInTeam} share the same gender. (Maximum is ${maxAllowedSameGenderMembers})`);
 			// more than two thirds already have the same gender, this is not a good idea.
 			reasons.push(group.domElement.querySelector('h2'));
 			// pushing all the members with same gender to the reasons array.
