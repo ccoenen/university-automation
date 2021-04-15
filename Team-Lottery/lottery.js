@@ -249,7 +249,8 @@ function draw() {
 			closeGap(follower, before.height);
 		}
 
-		candidates.splice(candidatePointer, 1);
+		candidates.slice(candidatePointer, 1);
+		console.log("not sure if correct");
 
 		groups[groupPointer].domElement.classList.remove('active');
 		groupPointer = ++groupPointer % groups.length;
