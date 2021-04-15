@@ -293,6 +293,7 @@ function rejectMemberReason(candidate, group) {
 			// pushing all the members with same gender to the reasons array.
 			reasons.push(...group.members.filter((m) => m.gender === candidate.gender).map((m) => m.domElement.querySelector('.name')));
 		}
+		console.log('all done, carry on');
 	}
 
 	return reasons;
