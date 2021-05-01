@@ -1,0 +1,19 @@
+{
+  "name": "subtitle-timecode-converter",
+  "version": "1.0.0",
+  "description": "Converts srt files to a human readable timecode list",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "SRT",
+    "Conversion",
+    "Tool"
+  ],
+  "author": "Claudius Coenen <opensource@amenthes.de>",
+  "license": "ISC",
+  "dependencies": {
+    "srt-parser-2": "github:ccoenen/srt-parser-2"
+  }
+}
