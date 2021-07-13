@@ -23,7 +23,7 @@
 				{ name: '<%= course %>_<%= term %>_Gesamtdoku_<%= author %>' },
 				{ name: '<%= course %>_<%= term %>_Konzept_<%= author %>' },
 				{ name: '<%= course %>_<%= term %>_Forschungsarbeiten_<%= author %>' },
-				{ name: '<%= course %>_<%= term %>_Interaktives-Exposé_<%= author %>' }
+				{ name: '<%= course %>_<%= term %>_Erlebbare-Management-Summary_<%= author %>' }
 			]},
 			{ name: '<%= course %>_<%= term %>_Präsentationen_<%= author %>', contains: [
 				{ name: '<%= course %>_<%= term %>_Abschlusspräsentation_<%= author %>' },
