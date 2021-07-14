@@ -21,13 +21,13 @@
 		contains: [
 			{ name: '<%= course %>_<%= term %>_Doku_<%= author %>', contains: [
 				{ name: '<%= course %>_<%= term %>_Gesamtdoku_<%= author %>' },
-				{ name: '<%= course %>_<%= term %>_Konzept_<%= author %>' },
+				// { name: '<%= course %>_<%= term %>_Konzept_<%= author %>' },
 				{ name: '<%= course %>_<%= term %>_Forschungsarbeiten_<%= author %>' },
-				{ name: '<%= course %>_<%= term %>_Erlebbare-Management-Summary_<%= author %>' }
+				{ name: '<%= course %>_<%= term %>_Erlebbares-Management-Summary_<%= author %>' }
 			]},
 			{ name: '<%= course %>_<%= term %>_Präsentationen_<%= author %>', contains: [
 				{ name: '<%= course %>_<%= term %>_Abschlusspräsentation_<%= author %>' },
-				{ name: '<%= course %>_<%= term %>_Konzeptpräsentation_<%= author %>' }
+				// { name: '<%= course %>_<%= term %>_Konzeptpräsentation_<%= author %>' }
 			]},
 			{ name: '<%= course %>_<%= term %>_Produkt_<%= author %>', contains: [
 				{ name: '<%= course %>_<%= term %>_Repository_<%= author %>' },
