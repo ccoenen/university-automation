@@ -14,6 +14,6 @@
   "author": "Claudius Coenen <opensource@amenthes.de>",
   "license": "ISC",
   "dependencies": {
-    "srt-parser-2": "github:ccoenen/srt-parser-2"
+    "srt-parser-2": "1.1.3"
   }
 }
