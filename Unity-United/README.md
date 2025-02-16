@@ -1,6 +1,6 @@
 # Unity United
 
-Importing TONS of unity projcts into UnityHub. More information at [Mass-Importing Unity-Projects into Unity Hub]()
+Importing TONS of unity projcts into UnityHub. More information at [Mass-Importing Unity-Projects into Unity Hub](https://www.claudiuscoenen.de/2025/02/mass-importing-unity-projects-into-unity-hub/)
 
 UnityHub stores its project list in `projects-v1.json`. Let's add them there in large quantities so we don't have to do this manually.
 
