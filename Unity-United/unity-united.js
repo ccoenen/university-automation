@@ -2,6 +2,12 @@ import fs from 'fs';
 import path from 'path';
 
 const DEFAULT_UNITY_VERISON = "2022.3.55f1";
+
+const MY_UNITY_VERSIONS = {
+	"2022.3.55f1": /2022\.3\..+/,
+	"6000.0.32f1": /6000\..+/
+};
+
 const VERSION_REGEX = /^m_EditorVersion:\s(?<version>.+)[\r\n]+|$/;
 
 const TEMPLATE = {
@@ -48,10 +54,11 @@ function projectVersionPathToProject(versionFile) {
 	project.title = path.basename(projectPath);
 	project.path = projectPath;
 	project.containingFolderPath = path.join(projectPath, "..");
-	project.version = version || DEFAULT_UNITY_VERISON;
+	project.version = constrainVersion(version);
 
 	return project;
 }
+
 
 function extractVersion(versionFile, project) {
 	const versionContent = fs.readFileSync(versionFile, "UTF-8");
@@ -59,6 +66,19 @@ function extractVersion(versionFile, project) {
 	return versionMatch ? versionMatch.groups.version : null;
 }
 
+
+function constrainVersion(providedVersion, strict = false) {
+	for (const constrainedVersion in MY_UNITY_VERSIONS) {
+		if (Object.prototype.hasOwnProperty.call(MY_UNITY_VERSIONS, constrainedVersion)) {
+			const check = MY_UNITY_VERSIONS[constrainedVersion];
+			if (check.test(providedVersion)) {
+				console.error(`contraining ${providedVersion} to use ${constrainedVersion}`); // on error stream on purpose so the result can be piped to a file.
+				return constrainedVersion;
+			}
+		}
+	}
+	return strict ? null : providedVersion; // default to either of these
+}
 
 
 // finding and outputting.

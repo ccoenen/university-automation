@@ -12,7 +12,9 @@ This will likely just need NodeJS somewhere. Why NodeJS? I already have it insta
 
 ## Usage
 
-Run it with a bunch of paths.
+Run it with a parent path to search recursively. `node unity-united.js /home/projects`.
+
+Take the output and add it to your `projects-v1.json`.
 
 
 ## How it operates
