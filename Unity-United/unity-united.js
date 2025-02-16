@@ -45,7 +45,6 @@ function findProjectVesionPath(parent, list = []) {
 
 
 function projectVersionPathToProject(versionFile) {
-	console.log(versionFile);
 	const project = structuredClone(TEMPLATE);
 
 	const version = extractVersion(versionFile, project);
