@@ -12,7 +12,7 @@ const VERSION_REGEX = /^m_EditorVersion:\s(?<version>.+)[\r\n]+|$/;
 
 const TEMPLATE = {
 	"title": "Example Project",
-	"lastModified": 1700000000000,
+	"lastModified": (new Date()).getTime(),
 	"isCustomEditor": false,
 	"path": "/home/example/projects/ExampleProject",
 	"containingFolderPath": "/home/example/projects",
@@ -50,9 +50,10 @@ function projectVersionPathToProject(versionFile) {
 	const version = extractVersion(versionFile, project);
 
 	const projectPath = path.join(versionFile, "..", "..");
+	const containingFolderPath = path.join(projectPath, "..");
 	project.title = path.basename(projectPath);
 	project.path = projectPath;
-	project.containingFolderPath = path.join(projectPath, "..");
+	project.containingFolderPath = containingFolderPath;
 	project.version = constrainVersion(version);
 
 	return project;
