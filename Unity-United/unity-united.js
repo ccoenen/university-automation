@@ -5,7 +5,8 @@ const DEFAULT_UNITY_VERISON = "2022.3.55f1";
 
 const MY_UNITY_VERSIONS = {
 	"2022.3.55f1": /2022\.3\..+/,
-	"6000.0.32f1": /6000\..+/
+	"6000.0.59f2": /6000\.0\..+/,
+	"6000.2.7f2":  /6000\.2\..+/
 };
 
 const VERSION_REGEX = /^m_EditorVersion:\s(?<version>.+)[\r\n]+|$/;
@@ -51,7 +52,9 @@ function projectVersionPathToProject(versionFile) {
 
 	const projectPath = path.join(versionFile, "..", "..");
 	const containingFolderPath = path.join(projectPath, "..");
-	project.title = path.basename(projectPath);
+	const title = `Exam ${path.basename(containingFolderPath).split(" ")[0]} ${path.basename(projectPath)}`;
+
+	project.title = title;
 	project.path = projectPath;
 	project.containingFolderPath = containingFolderPath;
 	project.version = constrainVersion(version);

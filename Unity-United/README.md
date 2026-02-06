@@ -1,28 +1,33 @@
 # Unity United
 
+Working with large numbers of Unity projects.
+
+
+## Unity United
+
 Importing TONS of unity projcts into UnityHub. More information at [Mass-Importing Unity-Projects into Unity Hub](https://www.claudiuscoenen.de/2025/02/mass-importing-unity-projects-into-unity-hub/)
 
 UnityHub stores its project list in `projects-v1.json`. Let's add them there in large quantities so we don't have to do this manually.
 
 
-## Setup
+### Setup
 
 This will likely just need NodeJS somewhere. Why NodeJS? I already have it installed and it's relatively common. This is really not rocket science.
 
 
-## Usage
+### Usage
 
 Run it with a parent path to search recursively. `node unity-united.js /home/projects`.
 
 Take the output and add it to your `projects-v1.json`.
 
 
-## How it operates
+### How it operates
 
 It will recursively look for ProjectVersion.txt files and backtrack one level from there to find the actual project directory. It then derives the project name from the directory name and you should be good to go!
 
 
-## Format
+### Format
 
 We want to generate blocks like these:
 
@@ -41,3 +46,19 @@ We want to generate blocks like these:
 ```
 
 We're skipping these attributes: `localProjectId`, `changeset`, mostly because it does not seem like they are important.
+
+
+## Prebuild Unity
+
+Find all Unity projects in your current working (`$CWD`) directory recursively. Then build all of them headless, so that opening them is faster later.
+
+`./prebuild-unity.sh`
+
+
+## Also note
+
+How to check a bunch of repositories for git status:
+
+```sh
+find . -mindepth 2 -maxdepth 2 -type d -exec sh -c "pushd \"{}\" > /dev/null; git config core.fileMode false; git diff --quiet && printf \"+++CLEAN+++ \" || printf \"XXXDIRTYXXX \" ; printf \"\$PWD\\n\"; popd > /dev/null" \; > clean-dirty.txt
+```
