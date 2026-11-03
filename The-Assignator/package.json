@@ -1,0 +1,16 @@
+{
+  "name": "the-asignator",
+  "version": "1.0.0",
+  "description": "Assigns a random person to a random person.",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^15.0.0",
+    "xlsx": "^0.18.5"
+  }
+}
